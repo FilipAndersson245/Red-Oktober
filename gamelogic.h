@@ -5,6 +5,7 @@
 #include "gridobject.h"
 #include "line.h"
 #include "node.h"
+#include <QDebug>
 // defines //
 
 using namespace std;
@@ -14,7 +15,7 @@ public:
     GameLogic();
     void addNodeToGameObjects(void);
 private:
-    vector<vector<int> > _allGameObjects;
+    vector<vector<GridObject*> > _allGameObjects;
 };
 
 #endif // GAMELOGIC_H

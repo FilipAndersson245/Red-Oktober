@@ -7,8 +7,10 @@ class Node : public GridObject
 {
 public:
     Node();
+    void paintMember(QPainter &painter);
 private:
 
+int _value;
 };
 
 #endif // NODE_H
