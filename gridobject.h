@@ -9,7 +9,7 @@ public:
    virtual void paintMember(QPainter &painter) = 0;
 private:
    int _maxNodeConnectors = 0;
-   QPoint position;
+
 };
 
 #endif // GRIDOBJECT_H

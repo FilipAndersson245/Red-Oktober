@@ -7,13 +7,14 @@
 #include "node.h"
 // defines //
 
-
+using namespace std;
 class GameLogic
 {
 public:
     GameLogic();
+    void addNodeToGameObjects(void);
 private:
-    std::vector<GridObject*> _allGameObjects;
+    vector<vector<int> > _allGameObjects;
 };
 
 #endif // GAMELOGIC_H

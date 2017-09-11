@@ -1,4 +1,4 @@
-q#include "line.h"
+#include "line.h"
 
 Line::Line()
 {
