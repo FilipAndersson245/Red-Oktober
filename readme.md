@@ -1,5 +1,6 @@
 # Red-Oktober
-GIT HOWTO:
+
+## GIT HOWTO:
 hämta master branch:
 git init
 git remote add origin  https://github.com/Filipa245/Red-Oktober.git
