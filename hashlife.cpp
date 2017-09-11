@@ -8,6 +8,19 @@ Hashlife::Hashlife(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void Hashlife::mousePressEvent(QMouseEvent *event)
+{
+    _clickedPos = event->pos();
+    // do collision check here //
+}
+
+void Hashlife::paintEvent(QPaintEvent *event)
+{
+
+        QPainter Painter(this);
+        _logic.paintAll(&Painter);
+}
+
 Hashlife::~Hashlife()
 {
     delete ui;

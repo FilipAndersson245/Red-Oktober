@@ -7,9 +7,9 @@ class GridObject
 public:
    GridObject();
    virtual void paintMember(QPainter &painter) = 0;
-private:
-   int _maxNodeConnectors = 0;
-
+protected:
+   int _maxNoOfConnectors;
+   QPoint _locationOfNode;
 };
 
 #endif // GRIDOBJECT_H

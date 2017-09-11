@@ -6,7 +6,7 @@ class Line : public GridObject
 {
 public:
     Line();
-
+     void paintMember(QPainter &painter);
 private:
     bool _isVertical = 0;
 

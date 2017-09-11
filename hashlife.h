@@ -2,7 +2,7 @@
 #define HASHLIFE_H
 #include "gamelogic.h"
 #include <QMainWindow>
-
+#include <QMouseEvent>
 namespace Ui {
 class Hashlife;
 }
@@ -13,11 +13,13 @@ class Hashlife : public QMainWindow
 
 public:
     explicit Hashlife(QWidget *parent = 0);
+    void mousePressEvent(QMouseEvent* event);
     ~Hashlife();
 
 private:
     Ui::Hashlife *ui;
     GameLogic _logic;
+    QPoint _clickedPos;
 };
 
 #endif // HASHLIFE_H
