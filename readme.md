@@ -29,5 +29,6 @@ git push origin yournamehere
 ## Concept Mockup:
 
 **Board with color indications**
-
 ![](https://i.imgur.com/vXNLupq.png)
+**UML DIAGRAM **
+![](https://i.imgur.com/xXiyiNo.jpg)
