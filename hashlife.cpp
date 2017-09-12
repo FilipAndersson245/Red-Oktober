@@ -11,4 +11,5 @@ Hashlife::Hashlife(QWidget *parent) :
 Hashlife::~Hashlife()
 {
     delete ui;
-}
+}//
+

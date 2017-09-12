@@ -21,3 +21,4 @@ private:
 };
 
 #endif // HASHLIFE_H
+//

@@ -24,7 +24,7 @@ NodeConnect *DirConections::selectConnection(Direction direction)
     }
 }
 
-std::map<Direction,int> DirConections::checkForFreeSides()
+std::map<Direction,int> DirConections::getSlotMap()
 {
     std::map<Direction,int> freeSlots;
     freeSlots = {
@@ -35,3 +35,5 @@ std::map<Direction,int> DirConections::checkForFreeSides()
     };
     return freeSlots;
 }
+//
+

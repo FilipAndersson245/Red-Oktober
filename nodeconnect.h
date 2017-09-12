@@ -16,6 +16,7 @@ public:
     bool setAmountOfConnects(int amount);
     bool setTarget(Node* target);
 
+
 private:
     int _connections = 0;
     Node* _target = nullptr;
@@ -23,3 +24,4 @@ private:
 };
 
 #endif // NODECONNECT_H
+//

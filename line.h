@@ -13,3 +13,4 @@ private:
 };
 
 #endif // LINE_H
+//
