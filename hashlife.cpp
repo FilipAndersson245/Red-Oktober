@@ -11,7 +11,21 @@ Hashlife::Hashlife(QWidget *parent) :
 void Hashlife::mousePressEvent(QMouseEvent *event)
 {
     _clickedPos = event->pos();
+    if (!_logic.isCloseToNode(event->pos()).isNull())
+    {
+        //_logic.setNodeConnection(QPoint firstNodeVectorPos, QPoint secondVectorPos);
+    }
     // do collision check here //
+}
+
+void Hashlife::mouseMoveEvent(QMouseEvent *event)
+{
+if (!_logic.isCloseToNode(event->pos()).isNull())
+{
+
+        qDebug() << _logic.isCloseToNode(event->pos());
+
+}
 }
 
 void Hashlife::paintEvent(QPaintEvent *event)

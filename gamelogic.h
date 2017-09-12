@@ -17,8 +17,9 @@ public:
     GameLogic();
     void addNodeToGameObjects(void);
     QPoint returnPosition(int index);
-    void paintTextures(QPainter* painthere);
-
+    void paintAll(QPainter* painthere);
+    bool setNodeConnection(QPoint firstNodeVectorPos, QPoint secondVectorPos);
+    QPoint isCloseToNode(QPoint position);
 private:
     vector<vector<GridObject*> > _allGameObjects;
 };

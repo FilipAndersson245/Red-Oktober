@@ -1,16 +1,32 @@
 #include "node.h"
+#define SIZEOFNODEPAINTED 40
+#define MINDISTANCE 10
 Node::Node(QPoint aLocation)
 {
     _maxNoOfConnectors = 1 + returnRandom(5);
     _locationOfNode = aLocation;
+
 }
 
 
 // to be implemented //
-void Node::paintMember(QPainter &painter)
+void Node::paintMember(QPainter *painter,int operation)
 {
-
+QString noOfNodes = "0";
+noOfNodes = QString::number(_maxNoOfConnectors);
+ painter->setBrush(QBrush(Qt::blue));
+    painter->drawEllipse(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED);
+  painter->setBrush(QBrush(Qt::green));
+    painter->drawText(_locationOfNode.x()+SIZEOFNODEPAINTED/2,_locationOfNode.y()+SIZEOFNODEPAINTED/2,noOfNodes);
+   // painter->drawPixmap(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED,_picture);
 }
+
+
+QPoint Node::returnPosition(void)
+{
+    return _locationOfNode;
+}
+
 int Node::returnRandom(int limit)
 {
     return rand() % limit;
