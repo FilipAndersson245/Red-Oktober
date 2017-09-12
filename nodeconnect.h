@@ -1,6 +1,7 @@
 #ifndef NODECONNECT_H
 #define NODECONNECT_H
-#include "node.h"
+
+class Node;
 
 class NodeConnect
 {
@@ -11,6 +12,9 @@ public:
     bool disconnect();
     int getAmountOfConnects();
     Node *getTarget();
+
+    bool setAmountOfConnects(int amount);
+    bool setTarget(Node* target);
 
 private:
     int _connections = 0;

@@ -1,6 +1,7 @@
 #ifndef DIRCONNECTIONS_H
 #define DIRCONNECTIONS_H
 #include "nodeconnect.h"
+#include <map>
 
 enum class Direction
 {
@@ -12,11 +13,11 @@ class DirConections
 public:
     DirConections(int maxConnections);
 
-    NodeConnect* selectConnection(Direction direction);
+    NodeConnect *selectConnection(Direction direction);
     bool checkIfFull();
 
     //todo
-    //std::vector<Direction> checkForFreeSides();
+    std::map<Direction,int> getSlotMap();
 
 private:
       const int _maximumConnections;

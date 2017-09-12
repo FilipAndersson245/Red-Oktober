@@ -9,6 +9,7 @@ bool NodeConnect::connect(Node *target)
 {
     if(this->_connections<2)
     {
+
         this->_target = target;
         this->_connections++;
         return true;
@@ -39,4 +40,14 @@ int NodeConnect::getAmountOfConnects()
 Node *NodeConnect::getTarget()
 {
     return this->_target;
+}
+
+bool NodeConnect::setAmountOfConnects(int amount)
+{
+
+}
+
+bool NodeConnect::setTarget(Node *target)
+{
+
 }

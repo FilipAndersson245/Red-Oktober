@@ -1,7 +1,7 @@
 #include "node.h"
-Node::Node()
+Node::Node(int size):_connectionHandler(size)
 {
-    _value = 1;
+
 }
 
 void Node::paintMember(QPainter &painter)
@@ -17,4 +17,9 @@ void Node::connectNodes(Direction side, Node *nodePtr)
 void Node::disconnectNodes(Direction side)
 {
     this->_connectionHandler.selectConnection(side)->disconnect();
+}
+
+std::map<Direction, int> Node::getSlotMap()
+{
+    return this->_connectionHandler.getSlotMap();
 }
