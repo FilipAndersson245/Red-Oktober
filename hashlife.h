@@ -47,4 +47,3 @@ private:
 
     vector<vector<GridObject*> > _allGameObjects;
 };
-

@@ -4,7 +4,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QDebug>
+#include <QGraphicsItemGroup>
 
+#define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
 
 class Line : public GridObject
@@ -13,13 +15,11 @@ public:
 
     Line(bool vertical);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    //void setPos(int xPos, int yPos);
 
     void addSecondLine();
 
     void removeLine();
-
-    void rectClicked();
 
 private:
 
@@ -27,5 +27,6 @@ private:
 
     bool _isDouble = 0;
 
+    QGraphicsRectItem *_lineRect;
 };
 

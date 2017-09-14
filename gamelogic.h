@@ -22,6 +22,6 @@ private:
 
     vector<vector<GridObject*> > _allGameObjects;
 
-    QGraphicsScene _gameScene;
+    QGraphicsScene *_gameScene;
 
 };
