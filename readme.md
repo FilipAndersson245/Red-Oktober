@@ -1,11 +1,15 @@
 # Red-Oktober
-Project hashlife:
-To implement
-1. github spot for code with diagrams and list of features to implement.
 
-2. general shell to get everyone to start working
+## GIT HOWTO:
+hämta master branch:
+git init
+git remote add origin  https://github.com/Filipa245/Red-Oktober.git
+git pull origin master
 
-3. 
+gör egen branch:
+git checkout -b yournamehere
+git push origin yournamehere
+
 ---
 ## Todo list
 
@@ -25,5 +29,6 @@ To implement
 ## Concept Mockup:
 
 **Board with color indications**
-
 ![](https://i.imgur.com/vXNLupq.png)
+**UML DIAGRAM **
+![](https://i.imgur.com/xXiyiNo.jpg)

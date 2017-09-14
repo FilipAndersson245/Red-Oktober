@@ -12,7 +12,6 @@ public:
 protected:
    int _maxNoOfConnectors;
    QPoint _locationOfNode;
-   QPixmap _picture;
-};
+   };
 
 #endif // GRIDOBJECT_H

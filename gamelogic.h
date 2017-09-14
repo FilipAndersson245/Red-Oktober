@@ -20,6 +20,7 @@ public:
     void paintAll(QPainter* painthere);
     bool setNodeConnection(QPoint firstNodeVectorPos, QPoint secondVectorPos);
     QPoint isCloseToNode(QPoint position);
+    vector<vector<GridObject*> > getGameVector(void);
 private:
     vector<vector<GridObject*> > _allGameObjects;
 };

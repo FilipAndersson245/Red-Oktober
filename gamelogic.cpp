@@ -73,3 +73,8 @@ QPoint GameLogic::isCloseToNode(QPoint position)
         }
     }
 }
+
+vector<vector<GridObject *> > GameLogic::getGameVector()
+{
+    return _allGameObjects;
+}
