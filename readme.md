@@ -12,16 +12,15 @@ git push origin yournamehere
 
 ---
 ## Todo list
+* Mouse tracking and responsive UI
+* Logic class function to make node connections
+* Logic class function to apply lines to grid
+* scene graphic work
 
-* Powerpoint
-* UML
-  * klassdiagram
-  * sekvensdiagram
-* Kolla hur Hashi gameboard funkar
-  * Försöka implementera EN spelplan i vårt program
-* Jobba på Node-klassen
-* Jobba på Line-klassen
-* Kolla hur Scene och view, graphic object funkar
+
+## Known issues 
+* Thrown file error not showing or stopping program 
+* File path only working while full path hardcoded 
 
 
 ---
@@ -32,3 +31,5 @@ git push origin yournamehere
 ![](https://i.imgur.com/vXNLupq.png)
 **UML DIAGRAM **
 ![](https://i.imgur.com/xXiyiNo.jpg)
+**Data input idea and first board data **
+![](https://i.imgur.com/WKVpzzi.jpg)

@@ -8,6 +8,9 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPaintEvent>
+#include <iostream>
+#include <fstream>
+#include <QFile>
 // defines //
 
 using namespace std;
@@ -21,6 +24,8 @@ public:
     bool setNodeConnection(QPoint firstNodeVectorPos, QPoint secondVectorPos);
     QPoint isCloseToNode(QPoint position);
     vector<vector<GridObject*> > getGameVector(void);
+    void loadGameBoardFromFile(QString pathToBoard);
+    void setUpNodesWithFileInfo(QByteArray infoFromFile);
 private:
     vector<vector<GridObject*> > _allGameObjects;
 };

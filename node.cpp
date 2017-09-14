@@ -18,7 +18,17 @@ noOfNodes = QString::number(_maxNoOfConnectors);
     painter->drawEllipse(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED);
   painter->setBrush(QBrush(Qt::green));
     painter->drawText(_locationOfNode.x()+SIZEOFNODEPAINTED/2,_locationOfNode.y()+SIZEOFNODEPAINTED/2,noOfNodes);
-   // painter->drawPixmap(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED,_picture);
+    // painter->drawPixmap(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED,_picture);
+}
+
+void Node::setMaximumNodeConnections(int newMax)
+{
+    _maxNoOfConnectors = newMax;
+}
+
+int Node::returnNoOfConnections()
+{
+    return _maxNoOfConnectors;
 }
 
 

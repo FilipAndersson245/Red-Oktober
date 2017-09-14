@@ -15,7 +15,7 @@ GameLogic::GameLogic()
             temp.push_back(hej);
         }
         _allGameObjects.push_back(temp);
-    qDebug () << "hrj";
+
     }
 
 }
@@ -77,4 +77,35 @@ QPoint GameLogic::isCloseToNode(QPoint position)
 vector<vector<GridObject *> > GameLogic::getGameVector()
 {
     return _allGameObjects;
+}
+
+void GameLogic::loadGameBoardFromFile(QString pathToBoard)
+{
+   QFile boardFile(pathToBoard);
+       if (!boardFile.open(QIODevice::ReadOnly | QIODevice::Text))
+          {
+           throw (QString("file cant be opened!"));
+
+       }
+        else
+           while (!boardFile.atEnd()) {
+                  QByteArray nodePositionData = boardFile.readLine();
+                  setUpNodesWithFileInfo(nodePositionData);
+           }
+}
+
+void GameLogic::setUpNodesWithFileInfo(QByteArray infoFromFile)
+{
+    int infoNodeCounter = 0;
+    for (int i = 0; i < _allGameObjects.size(); ++i)
+    {
+
+        for (int j = 0; j < _allGameObjects.size(); j++)
+        {
+
+            _allGameObjects[i][j]->setMaximumNodeConnections(infoFromFile[infoNodeCounter]-'0');
+            ++infoNodeCounter;
+        }
+}
+    qDebug() << "All nodes loaded correctly from file-data";
 }

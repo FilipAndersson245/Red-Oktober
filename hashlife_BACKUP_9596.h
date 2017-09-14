@@ -1,18 +1,17 @@
 #ifndef HASHLIFE_H
 #define HASHLIFE_H
 #include "gamelogic.h"
+<<<<<<< HEAD
 #include <QMainWindow>
 #include <QMouseEvent>
+=======
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QVBoxLayout>
 #include <iostream>
-#include <QGraphicsEllipseItem>
-#include <QErrorMessage>
-#include <QFont>
-#include <QGraphicsTextItem>
 
+>>>>>>> origin/Scene
 namespace Ui {
 class Hashlife;
 }
@@ -23,11 +22,15 @@ class Hashlife : public QWidget
 
 public:
     explicit Hashlife(QWidget *parent = 0);
+<<<<<<< HEAD
     void mousePressEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
-    void paintEvent(QPaintEvent *event);
-    void addGraphicObjects();
+=======
+
+>>>>>>> origin/Scene
     ~Hashlife();
+
+    void paintEvent(QPaintEvent *event);
 private:
     void resizeEvent(QResizeEvent *event) override;
     void autoScaleView();

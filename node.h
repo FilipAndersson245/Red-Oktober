@@ -12,6 +12,8 @@ public:
     void paintMember(QPainter *painter,int operation = 0);
     void setCoordinates(QPoint position);
     bool isCloseToNode(QPoint position);
+    void setMaximumNodeConnections(int newMax);
+    int returnNoOfConnections(void);
     QPoint returnPosition(void);
 private:
 
