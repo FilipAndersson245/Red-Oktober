@@ -27,23 +27,25 @@ QPoint GameLogic::returnPosition(int index)
 
 void GameLogic::paintAll(QPainter* painter)
 {
-    QPoint vectorpos;
-    int k = 0;
-    for (int i = 0; i < _allGameObjects.size(); ++i)
-    {
-//        vectorpos.setX(i);
-//        vectorpos.setY(0);
+    // painting is now done in seperate class //
 
-      //  _allGameObjects[i][0]->paintMember(painter,vectorpos);
-        for (int j = 0; j < GAMEGRIDSIZE; j++)
-        {
+//    QPoint vectorpos;
+//    int k = 0;
+//    for (int i = 0; i < _allGameObjects.size(); ++i)
+//    {
+////        vectorpos.setX(i);
+////        vectorpos.setY(0);
 
-           _allGameObjects[j][i]->paintMember(painter);
-           ++k;
+//      //  _allGameObjects[i][0]->paintMember(painter,vectorpos);
+//        for (int j = 0; j < GAMEGRIDSIZE; j++)
+//        {
 
-        }
-    }
-}
+//           _allGameObjects[j][i]->paintMember(painter);
+//           ++k;
+
+//        }
+ }
+
 
 bool GameLogic::setNodeConnection(QPoint firstNodeVectorPos, QPoint secondVectorPos)
 {
@@ -84,7 +86,7 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
    QFile boardFile(pathToBoard);
        if (!boardFile.open(QIODevice::ReadOnly | QIODevice::Text))
           {
-           throw (QString("file cant be opened!"));
+           throw (QString("board info file cant be opened! I looked here: "+pathToBoard));
 
        }
         else

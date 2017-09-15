@@ -12,13 +12,13 @@ Node::Node(QPoint aLocation)
 // to be implemented //
 void Node::paintMember(QPainter *painter,int operation)
 {
-QString noOfNodes = "0";
-noOfNodes = QString::number(_maxNoOfConnectors);
- painter->setBrush(QBrush(Qt::blue));
-    painter->drawEllipse(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED);
-  painter->setBrush(QBrush(Qt::green));
-    painter->drawText(_locationOfNode.x()+SIZEOFNODEPAINTED/2,_locationOfNode.y()+SIZEOFNODEPAINTED/2,noOfNodes);
-    // painter->drawPixmap(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED,_picture);
+//QString noOfNodes = "0";
+//noOfNodes = QString::number(_maxNoOfConnectors);
+// painter->setBrush(QBrush(Qt::blue));
+//    painter->drawEllipse(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED);
+//  painter->setBrush(QBrush(Qt::green));
+//    painter->drawText(_locationOfNode.x()+SIZEOFNODEPAINTED/2,_locationOfNode.y()+SIZEOFNODEPAINTED/2,noOfNodes);
+//    // painter->drawPixmap(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED,_picture);
 }
 
 void Node::setMaximumNodeConnections(int newMax)

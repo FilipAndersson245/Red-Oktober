@@ -13,8 +13,8 @@ Hashlife::Hashlife(QWidget *parent) :
     try{
      _logic.loadGameBoardFromFile(BOARDPATH);
     }catch(QString ERRORCODE)
-            // not showing :( //
-    {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE);}
+            // now working //
+    {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();}
 
 
     _mainScene = new QGraphicsScene();
@@ -90,9 +90,7 @@ void Hashlife::addGraphicObjects()
              QPen penForEllipse(Qt::blue);
              QBrush brushForEllipse(Qt::blue,Qt::SolidPattern);
 
-
-
-
+           // change later when line implementation is finished //
 
              if (noOfConnections != "0")
 
