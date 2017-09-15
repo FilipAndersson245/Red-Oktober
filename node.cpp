@@ -23,3 +23,14 @@ std::map<Direction, int> Node::getSlotMap()
 {
     return this->_connectionHandler.getSlotMap();
 }
+
+bool Node::isFull()
+{
+    if(this->_connectionHandler.getRemaining()==0) return true;
+    return false;
+}
+
+int Node::getRemaining()
+{
+    this->_connectionHandler.getRemaining();
+}

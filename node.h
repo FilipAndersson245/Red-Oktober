@@ -10,10 +10,14 @@ public:
     Node(int size);
     void paintMember(QPainter &painter);
 
-    //wip
     void connectNodes(Direction side,Node* nodePtr);
     void disconnectNodes(Direction side);
     std::map<Direction,int> getSlotMap();
+
+    //wip
+    bool isFull();
+    int getRemaining();
+
 private:
     DirConections _connectionHandler;
 };

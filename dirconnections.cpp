@@ -35,5 +35,10 @@ std::map<Direction,int> DirConections::getSlotMap()
     };
     return freeSlots;
 }
+
+int DirConections::getRemaining()
+{
+    return this->_maximumConnections - this->_currentConnections;
+}
 //
 

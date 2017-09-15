@@ -14,18 +14,18 @@ public:
     DirConections(int maxConnections);
 
     NodeConnect *selectConnection(Direction direction);
-    bool checkIfFull();
-
-    //todo
     std::map<Direction,int> getSlotMap();
+
+    //wip
+    int getRemaining();
 
 private:
       const int _maximumConnections;
             int _currentConnections = 0;
-    NodeConnect _leftValues;
-    NodeConnect _topValues;
-    NodeConnect _rightValues;
-    NodeConnect _bottomValues;
+    NodeConnect _leftValues = 0;
+    NodeConnect _topValues = 0;
+    NodeConnect _rightValues = 0;
+    NodeConnect _bottomValues = 0;
 };
 #endif // DIRCONNECTIONS_H
 //
