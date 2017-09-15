@@ -9,8 +9,8 @@ GameLogic::GameLogic()
         vector<GridObject*> temp;
         for (int j = 0; j < GAMEGRIDSIZE; j++)
         {
-            GridObject* hej = new Node(2);
-            temp.push_back(hej);
+            //GridObject* hej = new Node(2);
+            //temp.push_back(hej);
         }
         _allGameObjects.push_back(temp);
 

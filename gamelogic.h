@@ -5,6 +5,7 @@
 #include "gridobject.h"
 #include "line.h"
 #include "node.h"
+#include "empty.h"
 #include <QDebug>
 // defines //
 

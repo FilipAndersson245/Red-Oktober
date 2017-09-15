@@ -5,28 +5,51 @@
 #include <QGraphicsView>
 #include <QDebug>
 #include <QGraphicsItemGroup>
+#include <QGraphicsSceneMouseEvent>
 
 #define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
 
+enum class Orientation
+{
+    horizontal = 0, vertical
+};
+
 class Line : public GridObject
 {
+
+    Q_OBJECT
+
 public:
 
-    Line(bool vertical);
+    Line(Orientation orientation, QPoint point, int size);
 
-    //void setPos(int xPos, int yPos);
-
-    void addSecondLine();
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     void removeLine();
 
+public slots:
+
+    void addSecondLine();
+
+    void removeSecondLine();
+
+signals:
+
+    void clicked();
+
+    void rightClicked();
+
 private:
 
-    bool _isVertical = 0;
+    bool _isDouble = false;
 
-    bool _isDouble = 0;
+    Orientation _orientation;
 
     QGraphicsRectItem *_lineRect;
+
+    QGraphicsRectItem *_secondLineRect;
+
+    int _gridSize;
 };
 

@@ -9,17 +9,6 @@ GridObject::GridObject()
     qDebug() << "rect created";
 }
 
-void GridObject::setPos(int xPos, int yPos)
-{
-    _xPos = xPos;
-    _yPos = yPos;
-    this->setRect(_xPos, _yPos, WINDOWSIZE/GAMEGRIDSIZE, WINDOWSIZE/GAMEGRIDSIZE);
-    QBrush brush(Qt::transparent);
-    this->setBrush(brush);
-    QPen pen(Qt::transparent);
-    this->setPen(pen);
-}
-
 void GridObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     emit clicked();
@@ -50,19 +39,23 @@ void GridObject::rectClicked()
 
 void GridObject::rectEntered()
 {
+    /*
     if(!_alreadyClicked)
     {
         QBrush brush(Qt::lightGray);
         this->setBrush(brush);
     }
+    */
 }
 
 void GridObject::rectLeft()
 {
+    /*
     if(!_alreadyClicked)
     {
         QBrush brush(Qt::transparent);
         this->setBrush(brush);
     }
+    */
 }
 

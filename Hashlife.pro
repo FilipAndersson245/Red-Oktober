@@ -31,7 +31,8 @@ SOURCES += \
     line.cpp \
     gamelogic.cpp \
     dirconnections.cpp \
-    nodeconnect.cpp
+    nodeconnect.cpp \
+    empty.cpp
 
 HEADERS += \
         hashlife.h \
@@ -40,7 +41,8 @@ HEADERS += \
     line.h \
     gamelogic.h \
     dirconnections.h \
-    nodeconnect.h
+    nodeconnect.h \
+    empty.h
 
 FORMS += \
         hashlife.ui

@@ -6,9 +6,12 @@
 
 class Node : public GridObject
 {
+
+    Q_OBJECT
+
 public:
 
-    Node(int size);
+    Node(int nodeSize, QPoint point, int size);
 
     void paintMember(QPainter &painter);
 
@@ -24,5 +27,9 @@ public:
 private:
 
     DirConections _connectionHandler;
+
+    QGraphicsEllipseItem *_nodeCircle;
+
+    QGraphicsTextItem *_nodeText;
 
 };

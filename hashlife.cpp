@@ -8,7 +8,7 @@ Hashlife::Hashlife(QWidget *parent) :
     _mainScene = new QGraphicsScene();
     _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
     _mainView = new QGraphicsView(_mainScene);
-    //QGraphicsRectItem *rect = _mainScene->addRect(QRectF(_mainScene->sceneRect()));
+
 
     QVBoxLayout* vlayout = new QVBoxLayout(this);
 
@@ -30,11 +30,24 @@ void Hashlife::addNodeToGameObjects()
         vector<GridObject*> temp;
         for (int j = 0; j < GAMEGRIDSIZE; j++)
         {
-            GridObject* hej = new Line(0);
+            QPoint posPoint(xposition, yposition);
+            Orientation orient = Orientation::horizontal;
 
-            temp.push_back(hej);
-
-            temp.at(j)->setPos(xposition, yposition);
+            if ((j == 4 && i == 5) || (j == 6 && i == 5))
+            {
+                GridObject* hej = new Node(2, posPoint, WINDOWSIZE/GAMEGRIDSIZE);
+                temp.push_back(hej);
+            }
+            else if (j == 5 && i == 5)
+            {
+                GridObject* hej = new Line(orient, posPoint, WINDOWSIZE/GAMEGRIDSIZE);
+                temp.push_back(hej);
+            }
+            else
+            {
+                GridObject* hej = new Empty(posPoint, WINDOWSIZE/GAMEGRIDSIZE);
+                temp.push_back(hej);
+            }
 
             _mainScene->addItem(temp.at(j));
             xposition+= WINDOWSIZE/GAMEGRIDSIZE;

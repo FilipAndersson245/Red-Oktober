@@ -20,15 +20,13 @@ public:
 
     GridObject();
 
-    void setPos(int xPos, int yPos);
-
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
-    ~GridObject();
+    virtual ~GridObject();
 
 public slots:
 
@@ -48,9 +46,7 @@ signals:
 
 protected:
 
-    int _xPos;
-
-    int _yPos;
+    QPoint _pos;
 
     bool _alreadyClicked = false;
 
