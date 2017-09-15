@@ -83,17 +83,43 @@ vector<vector<GridObject *> > GameLogic::getGameVector()
 
 void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 {
-   QFile boardFile(pathToBoard);
+
+     QByteArray nodePositionData;
+     QByteArray nodePositionDataFormatted;
+     QFile boardFile(pathToBoard);
+
        if (!boardFile.open(QIODevice::ReadOnly | QIODevice::Text))
           {
            throw (QString("board info file cant be opened! I looked here: "+pathToBoard));
+          }
 
-       }
         else
            while (!boardFile.atEnd()) {
-                  QByteArray nodePositionData = boardFile.readLine();
-                  setUpNodesWithFileInfo(nodePositionData);
+                  nodePositionData.append(boardFile.readLine());
            }
+       if (boardFile.atEnd())
+       {
+
+           for (int i = 0; i < nodePositionData.length(); ++i)
+               if (nodePositionData[i] != '\n')
+               {
+
+                   nodePositionDataFormatted.append(nodePositionData[i]);
+               }
+
+           if(nodePositionDataFormatted.length() != (GAMEGRIDSIZE*GAMEGRIDSIZE))
+           {
+               throw (QString("Board file data is wrong/corrupt please fix"));
+           }
+
+           else
+               {
+               setUpNodesWithFileInfo(nodePositionDataFormatted);
+
+           }
+
+
+       }
 }
 
 void GameLogic::setUpNodesWithFileInfo(QByteArray infoFromFile)
@@ -104,8 +130,8 @@ void GameLogic::setUpNodesWithFileInfo(QByteArray infoFromFile)
 
         for (int j = 0; j < _allGameObjects.size(); j++)
         {
-
-            _allGameObjects[i][j]->setMaximumNodeConnections(infoFromFile[infoNodeCounter]-'0');
+              qDebug() << infoFromFile[infoNodeCounter]-'0';
+            _allGameObjects[j][i]->setMaximumNodeConnections(infoFromFile[infoNodeCounter]-'0');
             ++infoNodeCounter;
         }
 }

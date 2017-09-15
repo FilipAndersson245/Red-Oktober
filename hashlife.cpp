@@ -4,6 +4,7 @@
 #define NODEHEIGHT 40
 #define XCOMPENSATION +11
 #define YCOMPENSATION +6
+#include <QDir>
 // get this to work with relative path //
 #define BOARDPATH "c:/hashi/gameBoardToLoad.txt"
 Hashlife::Hashlife(QWidget *parent) :
@@ -92,16 +93,16 @@ void Hashlife::addGraphicObjects()
 
            // change later when line implementation is finished //
 
-             if (noOfConnections != "0")
 
 
-             {
 
+                if (noOfConnections != "0")
+{
              _mainScene->addEllipse(boundingRectForGraphicItem);
               QGraphicsTextItem* connectionDescription = _mainScene->addText(noOfConnections);
               connectionDescription->setPos(boundingRectForGraphicItem.x()+XCOMPENSATION,boundingRectForGraphicItem.y()+YCOMPENSATION);
+}
 
-             }
              }
     }
 
