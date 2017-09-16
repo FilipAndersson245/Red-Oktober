@@ -17,7 +17,6 @@ bool NodeConnect::connect(Node *target)
     return false;
 }
 
-
 bool NodeConnect::disconnect()
 {
     if(this->_connections>1)

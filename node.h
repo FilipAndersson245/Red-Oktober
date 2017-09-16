@@ -18,6 +18,8 @@ public:
     bool isFull();
     int getRemaining();
 
+    std::map<Direction, std::vector<GridObject *> > getAllPotentialLines(std::vector<std::vector<GridObject*>> *board);
+
 private:
     DirConections _connectionHandler;
 };

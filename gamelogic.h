@@ -16,6 +16,8 @@ public:
     void addNodeToGameObjects(void);
 private:
     vector<vector<GridObject*> > _allGameObjects;
+
+
 };
 
 #endif // GAMELOGIC_H

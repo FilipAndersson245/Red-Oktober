@@ -2,6 +2,10 @@
 #define DIRCONNECTIONS_H
 #include "nodeconnect.h"
 #include <map>
+#include <vector>
+
+//
+#include<gridobject.h>
 
 enum class Direction
 {
@@ -18,14 +22,17 @@ public:
 
     //wip
     int getRemaining();
+    std::vector<GridObject *> getPotentialLinesDir(Direction direction,std::vector<std::vector<GridObject*>> *board,Node * node);
+
+
 
 private:
       const int _maximumConnections;
             int _currentConnections = 0;
-    NodeConnect _leftValues = 0;
-    NodeConnect _topValues = 0;
-    NodeConnect _rightValues = 0;
-    NodeConnect _bottomValues = 0;
+    NodeConnect _leftValues;
+    NodeConnect _topValues;
+    NodeConnect _rightValues;
+    NodeConnect _bottomValues;
 };
 #endif // DIRCONNECTIONS_H
 //

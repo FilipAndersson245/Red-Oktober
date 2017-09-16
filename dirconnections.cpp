@@ -40,5 +40,25 @@ int DirConections::getRemaining()
 {
     return this->_maximumConnections - this->_currentConnections;
 }
-//
+
+std::vector<GridObject *> DirConections::getPotentialLinesDir(Direction direction, std::vector<std::vector<GridObject *> > *board, Node *node)
+{
+    std::vector<GridObject *> potentialLine;
+    switch (direction) {
+    case Direction::top:
+
+
+        break;
+    case Direction::right:
+
+        break;
+    case Direction::bottom:
+
+        break;
+    case Direction::left:
+
+        break;
+    }
+
+}
 
