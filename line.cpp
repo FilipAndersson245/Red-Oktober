@@ -20,17 +20,11 @@ Line::Line(Orientation orientation, QPoint point, int size)
     case Orientation::horizontal:
     {
         _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2), _gridSize, _gridSize/40);
-        _itemGroup->addToGroup(_lineRect);
-        _lineRect->setBrush(brush2);
-        _lineRect->setPen(pen2);
         break;
     }
     case Orientation::vertical:
     {
         _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y(), _gridSize/40, _gridSize);
-        _itemGroup->addToGroup(_lineRect);
-        _lineRect->setBrush(brush2);
-        _lineRect->setPen(pen2);
         break;
     }
     default:
@@ -39,6 +33,9 @@ Line::Line(Orientation orientation, QPoint point, int size)
         break;
     }
     }
+    _itemGroup->addToGroup(_lineRect);
+    _lineRect->setBrush(brush2);
+    _lineRect->setPen(pen2);
     qDebug() << "line created";
 }
 
@@ -64,25 +61,13 @@ void Line::addSecondLine()
     case Orientation::horizontal:
     {
         _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2.5), _gridSize, _gridSize/40);
-        _itemGroup->addToGroup(_lineRect);
-        _lineRect->setBrush(brush);
-        _lineRect->setPen(pen);
         _secondLineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/1.66), _gridSize, _gridSize/40);
-        _itemGroup->addToGroup(_secondLineRect);
-        _secondLineRect->setBrush(brush);
-        _secondLineRect->setPen(pen);
         break;
     }
     case Orientation::vertical:
     {
         _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2.5), _pos.y(), _gridSize/40, _gridSize);
-        _itemGroup->addToGroup(_lineRect);
-        _lineRect->setBrush(brush);
-        _lineRect->setPen(pen);
         _secondLineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/1.66), _pos.y(), _gridSize/40, _gridSize);
-        _itemGroup->addToGroup(_secondLineRect);
-        _secondLineRect->setBrush(brush);
-        _secondLineRect->setPen(pen);
         break;
     }
     default:
@@ -91,7 +76,12 @@ void Line::addSecondLine()
         break;
     }
     }
-
+    _itemGroup->addToGroup(_lineRect);
+    _lineRect->setBrush(brush);
+    _lineRect->setPen(pen);
+    _itemGroup->addToGroup(_secondLineRect);
+    _secondLineRect->setBrush(brush);
+    _secondLineRect->setPen(pen);
 
     qDebug() << "Second line added";
 }

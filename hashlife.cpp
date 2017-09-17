@@ -1,10 +1,17 @@
 #include "hashlife.h"
 #include "ui_hashlife.h"
-
+#define BOARDPATH "c:/level1.hashiboard"
 Hashlife::Hashlife(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Hashlife)
 {
+    // loading game info from level file and setting up board //
+    try{
+         _logic.loadGameBoardFromFile(BOARDPATH);
+        }catch(QString ERRORCODE)
+        {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();}
+
+
     _mainScene = new QGraphicsScene();
     _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
     _mainView = new QGraphicsView(_mainScene);
@@ -13,48 +20,29 @@ Hashlife::Hashlife(QWidget *parent) :
     QVBoxLayout* vlayout = new QVBoxLayout(this);
 
     vlayout->addWidget(_mainView);
-
-    addNodeToGameObjects();
-
     autoScaleView();
+    addGraphics();
     this->show();
 }
 
-void Hashlife::addNodeToGameObjects()
+void Hashlife::addGraphics()
 {
 
-    int yposition = 0;
-    for (int i = 0; i < GAMEGRIDSIZE; i++)
-    {
-        int xposition = 0;
-        vector<GridObject*> temp;
-        for (int j = 0; j < GAMEGRIDSIZE; j++)
-        {
-            QPoint posPoint(xposition, yposition);
-            Orientation orient = Orientation::horizontal;
+          // retrieve vector from logic class and add to scene //
+       vector<vector<GridObject*> > returnedVector;
+       returnedVector = _logic.getGameVector();
 
-            if ((j == 4 && i == 5) || (j == 6 && i == 5))
-            {
-                GridObject* hej = new Node(2, posPoint, WINDOWSIZE/GAMEGRIDSIZE);
-                temp.push_back(hej);
-            }
-            else if (j == 5 && i == 5)
-            {
-                GridObject* hej = new Line(orient, posPoint, WINDOWSIZE/GAMEGRIDSIZE);
-                temp.push_back(hej);
-            }
-            else
-            {
-                GridObject* hej = new Empty(posPoint, WINDOWSIZE/GAMEGRIDSIZE);
-                temp.push_back(hej);
-            }
+       for (int i = 0; i < returnedVector.size(); ++i)
+       {
 
-            _mainScene->addItem(temp.at(j));
-            xposition+= WINDOWSIZE/GAMEGRIDSIZE;
-        }
-        _allGameObjects.push_back(temp);
-        yposition += WINDOWSIZE/GAMEGRIDSIZE;
-    }
+           for (int j = 0; j < returnedVector.size(); j++)
+           {
+
+               _mainScene->addItem(returnedVector[i][j]);
+
+           }
+       }
+
 }
 
 void Hashlife::resizeEvent(QResizeEvent *event)

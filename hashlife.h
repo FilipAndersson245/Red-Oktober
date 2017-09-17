@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <iostream>
 #include <QDialog>
+#include <QErrorMessage>
 
 #define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
@@ -24,9 +25,7 @@ public:
 
     explicit Hashlife(QWidget *parent = 0);
 
-    //test
-    void addNodeToGameObjects(void);
-
+    void addGraphics();
     ~Hashlife();
 
 private:
