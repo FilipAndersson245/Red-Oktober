@@ -24,6 +24,9 @@ public:
 
     void paint();
 
+
+
+    bool isHovered();
 private:
 
     DirConections _connectionHandler;

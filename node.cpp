@@ -34,3 +34,8 @@ std::map<Direction, int> Node::getSlotMap()
 {
     return this->_connectionHandler.getSlotMap();
 }
+
+bool Node::isHovered()
+{
+   return _nodeCircle->isUnderMouse();
+}

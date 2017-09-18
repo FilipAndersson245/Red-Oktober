@@ -26,6 +26,8 @@ public:
 
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
+
+
     virtual ~GridObject();
 
 public slots:

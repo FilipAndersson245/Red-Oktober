@@ -39,13 +39,13 @@ void GridObject::rectClicked()
 
 void GridObject::rectEntered()
 {
-    /*
+
     if(!_alreadyClicked)
     {
         QBrush brush(Qt::lightGray);
         this->setBrush(brush);
     }
-    */
+
 }
 
 void GridObject::rectLeft()

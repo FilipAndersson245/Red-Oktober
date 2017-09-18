@@ -9,3 +9,8 @@ Empty::Empty(QPoint point, int size)
     QPen pen(Qt::transparent);
     this->setPen(pen);
 }
+
+bool Empty::isUnderMouse()
+{
+
+}

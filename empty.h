@@ -14,5 +14,5 @@ class Empty : public GridObject
 public:
 
     Empty(QPoint point, int size);
-
+    bool isUnderMouse();
 };

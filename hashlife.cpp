@@ -1,6 +1,6 @@
 #include "hashlife.h"
 #include "ui_hashlife.h"
-#define BOARDPATH "c:/level1.hashiboard"
+#define BOARDPATH "c:/hashi/level1.hashiboard.txt"
 Hashlife::Hashlife(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Hashlife)
@@ -27,22 +27,7 @@ Hashlife::Hashlife(QWidget *parent) :
 
 void Hashlife::addGraphics()
 {
-
-          // retrieve vector from logic class and add to scene //
-       vector<vector<GridObject*> > returnedVector;
-       returnedVector = _logic.getGameVector();
-
-       for (int i = 0; i < returnedVector.size(); ++i)
-       {
-
-           for (int j = 0; j < returnedVector.size(); j++)
-           {
-
-               _mainScene->addItem(returnedVector[i][j]);
-
-           }
-       }
-
+_logic.addGameGraphics(_mainScene);
 }
 
 void Hashlife::resizeEvent(QResizeEvent *event)

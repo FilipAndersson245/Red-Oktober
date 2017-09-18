@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QByteArray>
+#include <QGraphicsScene>
 // defines //
 
 using namespace std;
@@ -26,6 +27,8 @@ public:
     void loadLevel(QByteArray infoFromFile);
 
     vector<vector<GridObject*> > getGameVector(void);
+
+    void addGameGraphics(QGraphicsScene* aScene);
 private:
 
     vector<vector<GridObject*> > _allGameObjects;

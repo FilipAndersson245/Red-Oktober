@@ -42,7 +42,6 @@ private:
 
     GameLogic _logic;
 
-    //test, behöver skicka med qwidget/qscene som argument till gamelogic på något sätt.
 
-    vector<vector<GridObject*> > _allGameObjects;
+
 };
