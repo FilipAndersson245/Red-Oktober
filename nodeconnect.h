@@ -13,8 +13,8 @@ public:
     int getAmountOfConnects();
     Node *getTarget();
 
-    bool setAmountOfConnects(int amount);
-    bool setTarget(Node* target);
+    void setAmountOfConnects(int amount);
+    void setTarget(Node* target);
 
 
 private:

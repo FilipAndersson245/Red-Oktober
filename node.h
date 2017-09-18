@@ -17,6 +17,7 @@ public:
     //wip
     bool isFull();
     int getRemaining();
+    ClassTypes getClass();
 
     std::map<Direction, std::vector<GridObject *> > getAllPotentialLines(std::vector<std::vector<GridObject*>> *board);
 

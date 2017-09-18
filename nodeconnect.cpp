@@ -42,14 +42,13 @@ Node *NodeConnect::getTarget()
     return this->_target;
 }
 
-bool NodeConnect::setAmountOfConnects(int amount)
+void NodeConnect::setAmountOfConnects(int amount)
 {
-
+    this->_connections = amount;
 }
 
-bool NodeConnect::setTarget(Node *target)
+void NodeConnect::setTarget(Node *target)
 {
-
+    this->_target = target;
 }
-//
 

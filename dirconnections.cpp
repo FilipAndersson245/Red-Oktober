@@ -2,36 +2,28 @@
 
 DirConections::DirConections(int size): _maximumConnections(size)
 {
+    this->_DirConections = {
+        {Direction::top, NodeConnect()},
+        {Direction::right, NodeConnect()},
+        {Direction::bottom, NodeConnect()},
+        {Direction::left, NodeConnect()},
+    };
 }
 
 NodeConnect *DirConections::selectConnection(Direction direction)
 {
-    switch (direction) {
-    case Direction::top:
-            return &this->_topValues;
-        break;
-    case Direction::left:
-        return &this->_leftValues;
-        break;
-    case Direction::bottom:
-        return &this->_bottomValues;
-        break;
-    case Direction::right:
-        return &this->_rightValues;
-    default:
-        return nullptr;
-        break;
-    }
+    return &this->_DirConections[direction];
+
 }
 
 std::map<Direction,int> DirConections::getSlotMap()
 {
     std::map<Direction,int> freeSlots;
     freeSlots = {
-        {Direction::top,this->_topValues.getAmountOfConnects()},
-        {Direction::right,this->_rightValues.getAmountOfConnects()},
-        {Direction::bottom,this->_bottomValues.getAmountOfConnects()},
-        {Direction::left,this->_leftValues.getAmountOfConnects()},
+        {Direction::top,this->_DirConections[Direction::top].getAmountOfConnects()},
+        {Direction::right,this->_DirConections[Direction::right].getAmountOfConnects()},
+        {Direction::bottom,this->_DirConections[Direction::bottom].getAmountOfConnects()},
+        {Direction::left,this->_DirConections[Direction::left].getAmountOfConnects()},
     };
     return freeSlots;
 }
@@ -44,21 +36,23 @@ int DirConections::getRemaining()
 std::vector<GridObject *> DirConections::getPotentialLinesDir(Direction direction, std::vector<std::vector<GridObject *> > *board, Node *node)
 {
     std::vector<GridObject *> potentialLine;
-    switch (direction) {
-    case Direction::top:
+    this->_DirConections[direction]
 
 
-        break;
-    case Direction::right:
+            return potentialLine;
+}
 
-        break;
-    case Direction::bottom:
-
-        break;
-    case Direction::left:
-
-        break;
+QPoint DirConections::getIndexFromBoard(std::vector<std::vector<GridObject *> > *board, Node *node)
+{
+    for(int x = 0; x<board->size();x++)
+    {
+        for(int y = 0; y<board[x].size();y++)
+        {
+            if(board[x][y] == node)
+            {
+                return QPoint(x,y);
+            }
+        }
     }
-
 }
 

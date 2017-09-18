@@ -5,7 +5,8 @@
 class Line : public GridObject
 {
 public:
-    Line();
+    Line(int x, int y);
+    ClassTypes getClass();
 
 private:
     bool _isVertical = 0;

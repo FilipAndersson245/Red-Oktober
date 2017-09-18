@@ -29,10 +29,10 @@ public:
 private:
       const int _maximumConnections;
             int _currentConnections = 0;
-    NodeConnect _leftValues;
-    NodeConnect _topValues;
-    NodeConnect _rightValues;
-    NodeConnect _bottomValues;
+
+    std::map<Direction,NodeConnect> _DirConections;
+
+    QPoint getIndexFromBoard(std::vector<std::vector<GridObject*>> *board, Node * node);
 };
 #endif // DIRCONNECTIONS_H
 //

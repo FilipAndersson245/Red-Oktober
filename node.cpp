@@ -35,14 +35,19 @@ int Node::getRemaining()
     this->_connectionHandler.getRemaining();
 }
 
+ClassTypes Node::getClass()
+{
+    return ClassTypes::node;
+}
+
 std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::vector<std::vector<GridObject *> > *board)
 {
     //todo functions
     std::map<Direction, std::vector<GridObject *>> potentialLines = {
         {Direction::top,this->_connectionHandler.getPotentialLinesDir(Direction::top,board,this)},
-        {Direction::top,this->_connectionHandler.getPotentialLinesDir(Direction::right,board,this)},
-        {Direction::top,this->_connectionHandler.getPotentialLinesDir(Direction::bottom,board,this)},
-        {Direction::top,this->_connectionHandler.getPotentialLinesDir(Direction::left,board,this)},
+        {Direction::right,this->_connectionHandler.getPotentialLinesDir(Direction::right,board,this)},
+        {Direction::bottom,this->_connectionHandler.getPotentialLinesDir(Direction::bottom,board,this)},
+        {Direction::left,this->_connectionHandler.getPotentialLinesDir(Direction::left,board,this)},
     };
         return potentialLines;
 }
