@@ -2,6 +2,7 @@
 #define GAMEGRIDSIZE 10
 #define DISPLACEMENTX 20
 #define  DISPLACEMENTY 20
+
 GameLogic::GameLogic()
 {
 
@@ -67,8 +68,8 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
 
         for (int j = 0; j < GAMEGRIDSIZE; j++)
         {
-            passVectorElementIDAsPOS.setX(i*DISPLACEMENTX);
-            passVectorElementIDAsPOS.setY(j*DISPLACEMENTY);
+            passVectorElementIDAsPOS.setX(j*DISPLACEMENTX);
+            passVectorElementIDAsPOS.setY(i*DISPLACEMENTY);
             if((infoFromFile[infoNodeCounter]-'0') == 0)
             {
                 pushThisToVector = new Empty(passVectorElementIDAsPOS, WINDOWSIZE/GAMEGRIDSIZE);

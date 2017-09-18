@@ -1,16 +1,18 @@
 #include "hashlife.h"
 #include "ui_hashlife.h"
-#define BOARDPATH "c:/hashi/level1.hashiboard.txt"
+#define STARTPATH ":/levels"
 Hashlife::Hashlife(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Hashlife)
 {
+    QString choosenBoardPath = "";
     // loading game info from level file and setting up board //
+    QFileDialog userInput(this,"Choose level file",STARTPATH,"*.hashiboard");
+    choosenBoardPath = userInput.getOpenFileName();
     try{
-         _logic.loadGameBoardFromFile(BOARDPATH);
+         _logic.loadGameBoardFromFile(choosenBoardPath);
         }catch(QString ERRORCODE)
         {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();}
-
 
     _mainScene = new QGraphicsScene();
     _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));

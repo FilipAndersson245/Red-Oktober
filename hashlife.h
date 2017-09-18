@@ -9,6 +9,8 @@
 #include <iostream>
 #include <QDialog>
 #include <QErrorMessage>
+#include <QDir>
+#include <QFileDialog>
 
 #define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
