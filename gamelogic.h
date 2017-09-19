@@ -11,6 +11,11 @@
 #include <iostream>
 #include <fstream>
 #include <QFile>
+#include <math.h>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+
 // defines //
 
 using namespace std;
@@ -18,16 +23,24 @@ class GameLogic
 {
 public:
     GameLogic();
+
     void addNodeToGameObjects(void);
-    QPoint returnPosition(int index);
-    void paintAll(QPainter* painthere);
-    bool setNodeConnection(QPoint firstNodeVectorPos, QPoint secondVectorPos);
-    QPoint isCloseToNode(QPoint position);
+
     vector<vector<GridObject*> > getGameVector(void);
     void loadGameBoardFromFile(QString pathToBoard);
     void setUpNodesWithFileInfo(QByteArray infoFromFile);
+    void loadLevel(QByteArray infoFromFile);
+    void addGraphicObjects(QGraphicsScene *aScene);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    bool tryConnection(GridObject *firstNode, GridObject *secondNode, bool isRightClick);
+
+
+    QPoint computeClick(QPoint position, QGraphicsScene *aScene, bool isRightClick);
 private:
     vector<vector<GridObject*> > _allGameObjects;
+
+    GridObject* _firstChoosenNode;
+    GridObject* _secondChoosenNode;
 };
 
 #endif // GAMELOGIC_H

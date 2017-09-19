@@ -1,29 +1,140 @@
 #include "node.h"
-#define SIZEOFNODEPAINTED 40
+#define SIZEOFNODEPAINTED 20
 #define MINDISTANCE 10
-Node::Node(QPoint aLocation)
+#define NODEGRAPHICSIZE 20
+#define MAGICNUMBER 6
+#define MAGICNUMBER2 10
+Node::Node(QPoint aLocation, int aType, int aSize)
 {
-    _maxNoOfConnectors = 1 + returnRandom(5);
     _locationOfNode = aLocation;
-
+    _type = aType;
+    _maxNoOfConnectors = aSize;
+    _startSize = aSize;
+       this->setRect(_locationOfNode.x(), _locationOfNode.y(), NODEGRAPHICSIZE, NODEGRAPHICSIZE);
+       QBrush brush(Qt::transparent);
+       this->setBrush(brush);
+       QPen pen(Qt::transparent);
+       this->setPen(pen);
+       _nodeCircle = new QGraphicsEllipseItem(_locationOfNode.x(), _locationOfNode.y(), NODEGRAPHICSIZE, NODEGRAPHICSIZE);
+       _nodeText = new QGraphicsTextItem(QString::number(_maxNoOfConnectors));
+       _nodeText->setPos(_locationOfNode.x() + NODEGRAPHICSIZE/MAGICNUMBER, _locationOfNode.y() - NODEGRAPHICSIZE/MAGICNUMBER2);
+       _itemGroup = new QGraphicsItemGroup(this);
+       _itemGroup->addToGroup(_nodeCircle);
+       _itemGroup->addToGroup(_nodeText);
+       QBrush brush2(Qt::cyan);
+       QPen pen2(Qt::darkBlue);
+       _nodeCircle->setBrush(brush2);
+       _nodeCircle->setPen(pen2);
 }
 
-
-// to be implemented //
-void Node::paintMember(QPainter *painter,int operation)
+void Node::toggleClickedColor (bool onOff)
 {
-//QString noOfNodes = "0";
-//noOfNodes = QString::number(_maxNoOfConnectors);
-// painter->setBrush(QBrush(Qt::blue));
-//    painter->drawEllipse(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED);
-//  painter->setBrush(QBrush(Qt::green));
-//    painter->drawText(_locationOfNode.x()+SIZEOFNODEPAINTED/2,_locationOfNode.y()+SIZEOFNODEPAINTED/2,noOfNodes);
-//    // painter->drawPixmap(_locationOfNode.x(),_locationOfNode.y(),SIZEOFNODEPAINTED,SIZEOFNODEPAINTED,_picture);
+    switch(onOff)
+    {
+    case false:
+    {
+        QBrush brush2(Qt::cyan);
+        QPen pen2(Qt::darkBlue);
+        _nodeCircle->setBrush(brush2);
+        _nodeCircle->setPen(pen2);
+        _isClicked = false;
+        break;
+    }
+     case true:
+    {
+
+        _nodeCircle->setBrush(QBrush(Qt::green,Qt::SolidPattern));
+        _isClicked = true;
+        break;
+    }
+    default:
+        {}
+    }
+
 }
+
+bool Node::isInside(QPoint pointToCheck)
+{
+   return this->contains(pointToCheck);
+}
+int Node::getType(void)
+{
+
+    return _type;
+}
+
+void Node::setPos(QPoint newPos)
+{
+    _locationOfNode = newPos;
+
+}
+
+void Node::connectNode(GridObject* node)
+{
+    this->_nodePointers.push_back(node);
+    this->updateMaxNoOfConnectors();
+}
+
+void Node::updateMaxNoOfConnectors()
+{
+    if (_maxNoOfConnectors > 0)
+    {
+        _maxNoOfConnectors = _startSize - _nodePointers.size();
+        this->_nodeText->setPlainText(QString::number(_maxNoOfConnectors));
+    }
+
+}
+bool Node::hasExceededConnectionLimit(GridObject* node)
+{
+    int noOfTimes = 0;
+    for (int i = 0; i < _nodePointers.size();++i)
+    {
+        if (_nodePointers[i] == node)
+            ++noOfTimes;
+    }
+    if (noOfTimes == 2)
+        return true;
+}
+
+void Node::disconnectNode(GridObject *node)
+{
+    for (int i = 0; i < _nodePointers.size();++i)
+    {
+        if (_nodePointers[i] == node)
+        {
+            delete _nodePointers[i];
+            _nodePointers[i] = nullptr;
+        }
+    }
+    this->updateMaxNoOfConnectors();
+}
+
+Orientation Node::getLineOrientation()
+{
+
+}
+
+void Node::toggleDoubleLine()
+{
+
+}
+bool Node::hasConnectionWith(GridObject *node)
+{
+
+    for (int i = 0; i < _nodePointers.size();++i)
+    {
+        if (_nodePointers[i] == node)
+             return true;
+    }
+
+
+}
+
 
 void Node::setMaximumNodeConnections(int newMax)
 {
-    _maxNoOfConnectors = newMax;
+   // _maxNoOfConnectors += newMax;
+   // this->_nodeText->setPlainText(QString::number(_maxNoOfConnectors));
 }
 
 int Node::returnNoOfConnections()
@@ -37,13 +148,4 @@ QPoint Node::returnPosition(void)
     return _locationOfNode;
 }
 
-int Node::returnRandom(int limit)
-{
-    return rand() % limit;
 
-    std::default_random_engine dre(std::chrono::steady_clock::now().time_since_epoch().count());     // provide seed
-
-    std::uniform_int_distribution<int> uid{ 1,limit };   // help dre to generate nos from 0 to lim (lim included);
-    return uid(dre);    // pass dre as an argument to uid to generate the random no
-
-}

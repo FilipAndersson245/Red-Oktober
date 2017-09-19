@@ -29,14 +29,16 @@ SOURCES += \
     gridobject.cpp \
     node.cpp \
     line.cpp \
-    gamelogic.cpp
+    gamelogic.cpp \
+    gamemenu.cpp
 
 HEADERS += \
         hashlife.h \
     gridobject.h \
     node.h \
     line.h \
-    gamelogic.h
+    gamelogic.h \
+    gamemenu.h
 
 FORMS += \
         hashlife.ui
