@@ -1,17 +1,63 @@
-#ifndef GRIDOBJECT_H
-#define GRIDOBJECT_H
-#include <QPainter>
-#include <QPoint>
-class GridObject
+#pragma once
+
+#define GAMEGRIDSIZE 10
+#define WINDOWSIZE 200
+
+#include <QGraphicsItem>
+#include <QObject>
+#include <QBrush>
+#include <QPen>
+#include <QHoverEvent>
+#include <QDebug>
+#include <QGraphicsItemGroup>
+
+class GridObject : public QObject, public QGraphicsRectItem
 {
+
+    Q_OBJECT
+
 public:
-   GridObject();
-   virtual void paintMember(QPainter &painter) = 0;
-private:
-   int _maxNodeConnectors = 0;
+
+    GridObject(int x, int y);
+
+    //void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+    //void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+
+    //void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+
+    int getXPos();
+
+    int getYPos();
+
+    virtual ~GridObject();
+
+public slots:
+
+    //void rectClicked();
+
+    //void rectEntered();
+
+    //void rectLeft();
+
+signals:
+
+    //void clicked();
+
+    //void hoverEnter();
+
+    //void hoverLeft();
+
+protected:
+
+    QPoint _pos;
+
+    bool _alreadyClicked = false;
+
+    QGraphicsItemGroup *_itemGroup;
+
+    int _xVectorPos;
+
+    int _yVectorPos;
 
 };
-
-#endif // GRIDOBJECT_H
-//
-

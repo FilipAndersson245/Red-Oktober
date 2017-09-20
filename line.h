@@ -1,16 +1,57 @@
-#ifndef LINE_H
-#define LINE_H
+#pragma once
+
 #include "gridobject.h"
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QDebug>
+#include <QGraphicsItemGroup>
+#include <QGraphicsSceneMouseEvent>
+
+#define GAMEGRIDSIZE 10
+#define WINDOWSIZE 200
+
+enum class Orientation
+{
+    horizontal = 0, vertical
+};
 
 class Line : public GridObject
 {
+
+    Q_OBJECT
+
 public:
-    Line();
+
+    Line(int x, int y, Orientation orientation, QPoint point, int size);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+    ~Line();
+
+public slots:
+
+    void addSecondLine();
+
+    void removeSecondLine();
+
+signals:
+
+    void clicked();
+
+    void rightClicked();
+
+    void addEmpty(Line*);
 
 private:
-    bool _isVertical = 0;
 
+    bool _isDouble = false;
+
+    Orientation _orientation;
+
+    QGraphicsRectItem *_lineRect;
+
+    QGraphicsRectItem *_secondLineRect;
+
+    int _gridSize;
 };
 
-#endif // LINE_H
-//

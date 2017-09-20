@@ -1,7 +1,10 @@
-#ifndef DIRCONNECTIONS_H
-#define DIRCONNECTIONS_H
+#pragma once
+
 #include "nodeconnect.h"
 #include <map>
+#include <vector>
+
+#include <gridobject.h>
 
 enum class Direction
 {
@@ -10,22 +13,23 @@ enum class Direction
 
 class DirConections
 {
+
 public:
+
     DirConections(int maxConnections);
 
     NodeConnect *selectConnection(Direction direction);
-    bool checkIfFull();
 
-    //todo
     std::map<Direction,int> getSlotMap();
 
+    int getRemaining();
+
 private:
-      const int _maximumConnections;
-            int _currentConnections = 0;
-    NodeConnect _leftValues;
-    NodeConnect _topValues;
-    NodeConnect _rightValues;
-    NodeConnect _bottomValues;
+
+    const int _maximumConnections;
+
+    int _currentConnections = 0;
+
+    std::map<Direction,NodeConnect> _DirConections;
 };
-#endif // DIRCONNECTIONS_H
-//
+
