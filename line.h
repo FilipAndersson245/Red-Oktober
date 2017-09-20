@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gridobject.h"
+#include "node.h"
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QDebug>
@@ -43,6 +44,10 @@ signals:
     void addEmpty(Line*);
 
 private:
+
+    Node * _firstConnection;
+
+    Node * _secondConnection;
 
     bool _isDouble = false;
 

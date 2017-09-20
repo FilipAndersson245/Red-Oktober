@@ -60,4 +60,6 @@ protected:
 
     int _yVectorPos;
 
+    bool _isPotentialLine = false;
+
 };

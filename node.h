@@ -35,6 +35,15 @@ public:
     bool isHovered();
 
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+
+signals:
+
+    void mouseEnter(Node*);
+
+
 private:
 
     std::vector<GridObject *> getPotentialLinesDir(Direction direction,std::vector<std::vector<GridObject*>> *board);

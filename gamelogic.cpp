@@ -40,7 +40,6 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
             {
                 loadLevel(nodePositionDataFormatted);
                 connectNodes(nodePositionDataFormatted, this->_allGameObjects);
-                int a = 5;
             }
         }
     }
@@ -68,6 +67,7 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
             else
             {
                 pushThisToVector = new Node(i, j, (currentNumber), passVectorElementIDAsPOS, WINDOWSIZE/GAMEGRIDSIZE);
+                connect(pushThisToVector, SIGNAL(mouseEnter(Node*)), this, SLOT(viewPotential(Node*)));
             }
             temp.push_back(pushThisToVector);
         }
@@ -115,6 +115,23 @@ void GameLogic::linetoEmpty(Line *line)
     _allGameObjects[x][y] = empty;
     _gameScene->removeItem(line);
     _gameScene->addItem(_allGameObjects[x][y]);
+}
+
+void GameLogic::viewPotential(Node *node)
+{
+    for(auto &objectVector : node->getAllPotentialLines(&_allGameObjects))
+    {
+        int a = 5;
+        for(GridObject * object : objectVector.second)
+        {
+            if(object == nullptr)
+            {
+                break;
+            }
+            Empty * gridTile = dynamic_cast<Empty *>(object);
+            gridTile->setBrush(QBrush(Qt::yellow));
+        }
+    }
 }
 
 void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *>> board)

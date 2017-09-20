@@ -62,6 +62,7 @@ std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::
         {Direction::left,this->getPotentialLinesDir(Direction::left,board)},
     };
 
+    int a = 5;
     return potentialLines;
 }
 
@@ -69,6 +70,17 @@ bool Node::isHovered()
 {
     return _nodeCircle->isUnderMouse();
 }
+
+void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    emit mouseEnter(this);
+}
+
+void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+
+}
+
 
 std::vector<GridObject *> Node::getPotentialLinesDir(Direction direction, std::vector<std::vector<GridObject *> > *board)
 {
@@ -94,6 +106,7 @@ std::vector<GridObject *> Node::getPotentialLinesDir(Direction direction, std::v
         case Direction::bottom:
             for(int i = this->getYPos() + 1 ;i < this->_connectionHandler.selectConnection(Direction::bottom)->getTarget()->getYPos(); i++)
             {
+                if()
                 potentialLines.push_back(board[0][this->getXPos()][i]);
             }
             break;
@@ -106,5 +119,6 @@ std::vector<GridObject *> Node::getPotentialLinesDir(Direction direction, std::v
             break;
     }
 
+    int a = 5;
     return potentialLines;
 }

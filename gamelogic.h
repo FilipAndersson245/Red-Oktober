@@ -37,6 +37,8 @@ public slots:
 
     void linetoEmpty(Line *line);
 
+    void viewPotential(Node *node);
+
 private:
 
     void connectNodes(QByteArray infoFromFile,vector<vector<GridObject*>> board);
