@@ -43,7 +43,8 @@ HEADERS += \
     dirconnections.h \
     nodeconnect.h \
     empty.h
-
+RESOURCES += \
+    hashiGameResources.qrc
 FORMS += \
         hashlife.ui
 
