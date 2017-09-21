@@ -8,7 +8,7 @@ Hashlife::Hashlife(QWidget *parent) :
     // loading game info from level file and setting up board //
     try
     {
-        int difficultyChoosen = 1;
+        int difficultyChoosen = 2;
         int boardSizeChoosen = 1;
         choosenMap(difficultyChoosen,boardSizeChoosen);
 

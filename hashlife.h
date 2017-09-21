@@ -12,7 +12,6 @@
 #include <time.h>
 
 #define ROOTDIR ":/levels/"
-#define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
 #define NOOFLEVELS 4
 
