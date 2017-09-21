@@ -9,9 +9,12 @@
 #include <iostream>
 #include <QDialog>
 #include <QErrorMessage>
+#include <time.h>
 
+#define ROOTDIR ":/levels/"
 #define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
+#define NOOFLEVELS 4
 
 namespace Ui {
 class Hashlife;
@@ -29,6 +32,10 @@ public:
 
     ~Hashlife();
 
+    // calling map load with user specified map //
+    void choosenMap(int userDifficultyChoice, int userBoardSize);
+    // returns random int for board path loading //
+    int returnRandom();
 private:
 
     void resizeEvent(QResizeEvent *event) override;

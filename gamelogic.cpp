@@ -7,14 +7,14 @@ GameLogic::GameLogic()
 
 }
 
-void GameLogic::loadGameBoardFromFile(QString pathToBoard)
+void GameLogic::loadGameBoardFromFile(QString userLevelChoice)
 {
     QByteArray nodePositionData;
     QByteArray nodePositionDataFormatted;
-    QFile boardFile(pathToBoard);
+    QFile boardFile(userLevelChoice);
     if (!boardFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        throw (QString("board info file cant be opened! I looked here: "+pathToBoard));
+        throw (QString("board info file cant be opened! I looked here: "+userLevelChoice));
     }
     else
     {
