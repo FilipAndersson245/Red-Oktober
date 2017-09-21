@@ -9,7 +9,7 @@ Hashlife::Hashlife(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Hashlife)
 {
-_gameMenu.show();
+
 QString choosenBoardPath = "";
     // loading game info from level file and setting up board //
     QFileDialog userInput(this,"Choose level file",STARTPATH,"*.hashiboard");
@@ -49,8 +49,9 @@ void Hashlife::mousePressEvent(QMouseEvent *event)
     bool isRightClick = false;
     QPointF returnedPoint = _mainView->mapToScene(event->pos());
 
-    if (event->type() == Qt::RightButton)
+    if (event->button() == Qt::RightButton)
     {
+       qDebug() << event->type();
         isRightClick = true;
     }
     QPoint reMappedPoint;
@@ -58,6 +59,7 @@ void Hashlife::mousePressEvent(QMouseEvent *event)
     reMappedPoint.setY(returnedPoint.y());
 
     // run main event //
+    qDebug() << isRightClick;
     _logic.computeClick(reMappedPoint, _mainScene,isRightClick);
 
 }

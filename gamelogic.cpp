@@ -76,8 +76,8 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
 
         for (int j = 0; j < GAMEGRIDSIZE; j++)
         {
-            passVectorElementIDAsPOS.setX(j*DISPLACEMENTX);
-            passVectorElementIDAsPOS.setY(i*DISPLACEMENTY);
+            passVectorElementIDAsPOS.setX(i*DISPLACEMENTX);
+            passVectorElementIDAsPOS.setY(j*DISPLACEMENTY);
             if((infoFromFile[infoNodeCounter]-'0') == 0)
             {
                 pushThisToVector = nullptr;
@@ -145,7 +145,64 @@ QPoint GameLogic::computeClick(QPoint position, QGraphicsScene* aScene, bool isR
                     // checks for line//
                     if (_allGameObjects[i][j]->getType() != 1)
                     {
+                        if (isRightClick)
+                        {
+                            _allGameObjects[i][j]->disconnectLine();
 
+                            if(_allGameObjects[i][j]->getLineOrientation() == Orientation::horizontal)
+                            {
+                                // look for repeated line x pos inc//
+                                int k = i;
+                                while(_allGameObjects[k][j]->getType() !=1)
+                                {
+
+                                    delete _allGameObjects[k][j];
+                                    _allGameObjects[k][j] = nullptr;
+
+
+                                    ++k;
+
+                                }
+                                // look for repeated line x pos dec//
+                                if (true)
+                                {
+                                    k = i - 1;
+                                    while(_allGameObjects[k][j]->getType() !=1)
+                                    {
+
+                                        delete _allGameObjects[k][j];
+                                        _allGameObjects[k][j] = nullptr;
+                                        --k;
+                                    }
+                                }
+                            break;
+                            }
+                            else if(_allGameObjects[i][j]->getLineOrientation() == Orientation::vertical)
+                            {
+                                // look for repeated line x pos inc//
+                                int k = j;
+                                while(_allGameObjects[i][k]->getType() !=1)
+                                {
+
+                                    delete _allGameObjects[i][k];
+                                    _allGameObjects[i][k] = nullptr;
+                                    ++k;
+                                }
+                                // look for repeated line x pos dec//
+                                if (true)
+                                {
+                                    k = j - 1;
+                                    while(_allGameObjects[i][k]->getType() !=1)
+                                    {
+
+                                        delete _allGameObjects[i][k];
+                                        _allGameObjects[i][k] = nullptr;
+                                        --k;
+                                    }
+                                }
+                                break;
+                            }
+                        }
                         continue;
                     }
 
@@ -156,16 +213,14 @@ QPoint GameLogic::computeClick(QPoint position, QGraphicsScene* aScene, bool isR
                         gridobjectClicked = true;
                         qDebug() << "First clicked " << i << j <<endl << "@" <<_allGameObjects[i][j]->returnPosition() ;
                         _firstChoosenNode = _allGameObjects[i][j];
+                        _allGameObjects[i][j]->toggleClickedColor(1);
                         break;
                     }
 
                     else if (_secondChoosenNode == nullptr)
                     {
-                        if (_allGameObjects[i][j] == _firstChoosenNode)
-                        {
-                            break;
-                        }
-                        gridobjectClicked = false;
+
+                        gridobjectClicked = true;
                         qDebug() << "SEC clicked " << i << j <<endl << "@" <<_allGameObjects[i][j]->returnPosition() ;
                         _secondChoosenNode = _allGameObjects[i][j];
 
@@ -182,6 +237,8 @@ QPoint GameLogic::computeClick(QPoint position, QGraphicsScene* aScene, bool isR
                 }
 
             }
+            if (_allGameObjects[i][j] != nullptr)
+            _allGameObjects[i][j]->toggleClickedColor(0);
         }
 
     }
@@ -197,11 +254,21 @@ QPoint GameLogic::computeClick(QPoint position, QGraphicsScene* aScene, bool isR
 }
 bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, bool isRightClick)
 {
+    firstNode->toggleClickedColor(1);
+    secondNode->toggleClickedColor(1);
     int firstConnectionToInputNode = 0;
     int dontDoConnection = 0;
+    // check if same node choosen //
+
+    if (firstNode == secondNode)
+    {
+        return false;
+    }
     // check if any slots left //
+
     if (firstNode->returnNoOfConnections() == 0 || secondNode->returnNoOfConnections() == 0)
     {
+
         dontDoConnection = 1;
             // DEBUG DEBUG DEBUG //
         return false;
@@ -225,7 +292,7 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
     secondNodeVectorPos.setX(secondNode->returnPosition().x()/DISPLACEMENTX);
     secondNodeVectorPos.setY(secondNode->returnPosition().y()/DISPLACEMENTY);
 
-    // check same X or same Y //
+
     if (_firstChoosenNode->returnPosition().x() == _secondChoosenNode->returnPosition().x())
     {
 
@@ -237,7 +304,12 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                 {
                     if (_allGameObjects[firstNodeVectorPos.x()][i]->getLineOrientation() == Orientation::horizontal)
                     {
+
                         return false;
+                    }
+                    else if (_allGameObjects[firstNodeVectorPos.x()][i]->getLineOrientation() == Orientation::vertical)
+                    {
+                        _allGameObjects[firstNodeVectorPos.x()][i]->toggleDoubleLine();
                     }
                 }
 
@@ -247,7 +319,7 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                     delete _allGameObjects[firstNodeVectorPos.x()][i];
                     _allGameObjects[firstNodeVectorPos.x()][i] = nullptr;
 
-                    GridObject* pushLine = new Line(Orientation::vertical,QPoint(firstNodeVectorPos.x()*DISPLACEMENTX,i*DISPLACEMENTY),20);
+                    GridObject* pushLine = new Line(Orientation::vertical,QPoint(firstNodeVectorPos.x()*DISPLACEMENTX,i*DISPLACEMENTY),20,firstNode,secondNode);
 
                     pushLine->setPos(QPoint(firstNodeVectorPos.x()*DISPLACEMENTX,i*DISPLACEMENTY));
                     _allGameObjects[firstNodeVectorPos.x()][i] = pushLine;
@@ -270,7 +342,10 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                     {
                         return false;
                     }
-
+                    else if (_allGameObjects[firstNodeVectorPos.x()][i]->getLineOrientation() == Orientation::vertical)
+                    {
+                        _allGameObjects[firstNodeVectorPos.x()][i]->toggleDoubleLine();
+                    }
 
                 }
 
@@ -279,7 +354,7 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                     delete _allGameObjects[firstNodeVectorPos.x()][i];
                     _allGameObjects[firstNodeVectorPos.x()][i] = nullptr;
 
-                    GridObject* pushLine = new Line(Orientation::vertical,QPoint(secondNodeVectorPos.x()*DISPLACEMENTX,i*DISPLACEMENTY),20);
+                    GridObject* pushLine = new Line(Orientation::vertical,QPoint(secondNodeVectorPos.x()*DISPLACEMENTX,i*DISPLACEMENTY),20,firstNode,secondNode);
                     _allGameObjects[firstNodeVectorPos.x()][i] = pushLine;
                 }
             }
@@ -306,7 +381,10 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                     {
                         return false;
                     }
-
+                    else if (_allGameObjects[i][firstNodeVectorPos.y()]->getLineOrientation() == Orientation::horizontal)
+                    {
+                        _allGameObjects[i][firstNodeVectorPos.y()]->toggleDoubleLine();
+                    }
 
                 }
 
@@ -315,7 +393,7 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                     delete _allGameObjects[i][firstNodeVectorPos.y()];
                     _allGameObjects[i][firstNodeVectorPos.y()] = nullptr;
 
-                    GridObject* pushLine = new Line(Orientation::horizontal,QPoint(i*DISPLACEMENTX,firstNodeVectorPos.y()*DISPLACEMENTY),20);
+                    GridObject* pushLine = new Line(Orientation::horizontal,QPoint(i*DISPLACEMENTX,firstNodeVectorPos.y()*DISPLACEMENTY),20,firstNode,secondNode);
                     _allGameObjects[i][firstNodeVectorPos.y()] = pushLine;
                 }
             }
@@ -324,22 +402,25 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
         {    for (int i = secondNodeVectorPos.x()+1; i < firstNodeVectorPos.x();++i)
             {
 
-                if(_allGameObjects[i][firstNodeVectorPos.y()] != nullptr)
+                if(_allGameObjects[i][secondNodeVectorPos.y()] != nullptr)
                 {
-                    if (_allGameObjects[i][firstNodeVectorPos.y()]->getLineOrientation() == Orientation::vertical)
+                    if (_allGameObjects[i][secondNodeVectorPos.y()]->getLineOrientation() == Orientation::vertical)
                     {
 
                         return false;
                     }
-
+                    else if (_allGameObjects[i][secondNodeVectorPos.y()]->getLineOrientation() == Orientation::horizontal)
+                    {
+                        _allGameObjects[i][secondNodeVectorPos.y()]->toggleDoubleLine();
+                    }
 
                 }
 
-                delete _allGameObjects[i][firstNodeVectorPos.y()];
-                _allGameObjects[i][firstNodeVectorPos.y()] = nullptr;
+                delete _allGameObjects[i][secondNodeVectorPos.y()];
+                _allGameObjects[i][secondNodeVectorPos.y()] = nullptr;
 
-                GridObject* pushLine = new Line(Orientation::horizontal,QPoint(i*DISPLACEMENTX,firstNodeVectorPos.y()*DISPLACEMENTY),20);
-                _allGameObjects[i][firstNodeVectorPos.y()] = pushLine;
+                GridObject* pushLine = new Line(Orientation::horizontal,QPoint(i*DISPLACEMENTX,firstNodeVectorPos.y()*DISPLACEMENTY),20,firstNode,secondNode);
+                _allGameObjects[i][secondNodeVectorPos.y()] = pushLine;
             }
 
         }

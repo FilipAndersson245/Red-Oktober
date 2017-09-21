@@ -29,29 +29,35 @@ Node::Node(QPoint aLocation, int aType, int aSize)
 
 void Node::toggleClickedColor (bool onOff)
 {
-    switch(onOff)
+    if (_maxNoOfConnectors > 0)
     {
-    case false:
-    {
-        QBrush brush2(Qt::cyan);
-        QPen pen2(Qt::darkBlue);
-        _nodeCircle->setBrush(brush2);
-        _nodeCircle->setPen(pen2);
-        _isClicked = false;
-        break;
-    }
-     case true:
-    {
+        switch(onOff)
+        {
+        case false:
+        {
+            QBrush brush2(Qt::cyan);
+            QPen pen2(Qt::darkBlue);
+            _nodeCircle->setBrush(brush2);
+            _nodeCircle->setPen(pen2);
+            _isClicked = false;
+            break;
+        }
+         case true:
+        {
 
-        _nodeCircle->setBrush(QBrush(Qt::green,Qt::SolidPattern));
-        _isClicked = true;
-        break;
+            _nodeCircle->setBrush(QBrush(Qt::green,Qt::SolidPattern));
+            _isClicked = true;
+            break;
+        }
+        default:
+            {}
+        }
     }
-    default:
-        {}
+else
+    {
+      _nodeCircle->setBrush(QBrush(Qt::darkBlue,Qt::SolidPattern));
     }
-
-}
+    }
 
 bool Node::isInside(QPoint pointToCheck)
 {
@@ -77,11 +83,19 @@ void Node::connectNode(GridObject* node)
 
 void Node::updateMaxNoOfConnectors()
 {
+for (int i = 0; i < _nodePointers.size();++i)
+{
+    if (_nodePointers[i] == nullptr)
+    _nodePointers.erase(_nodePointers.begin() + i);
+}
+    _maxNoOfConnectors = _startSize - _nodePointers.size();
+     this->_nodeText->setPlainText(QString::number(_maxNoOfConnectors));
     if (_maxNoOfConnectors > 0)
     {
-        _maxNoOfConnectors = _startSize - _nodePointers.size();
-        this->_nodeText->setPlainText(QString::number(_maxNoOfConnectors));
+        this->toggleClickedColor(0);
     }
+
+
 
 }
 bool Node::hasExceededConnectionLimit(GridObject* node)
@@ -98,12 +112,15 @@ bool Node::hasExceededConnectionLimit(GridObject* node)
 
 void Node::disconnectNode(GridObject *node)
 {
+
     for (int i = 0; i < _nodePointers.size();++i)
     {
-        if (_nodePointers[i] == node)
+
+       if (_nodePointers[i] == node)
         {
-            delete _nodePointers[i];
+            //delete _nodePointers[i];
             _nodePointers[i] = nullptr;
+
         }
     }
     this->updateMaxNoOfConnectors();
@@ -115,6 +132,11 @@ Orientation Node::getLineOrientation()
 }
 
 void Node::toggleDoubleLine()
+{
+
+}
+
+void Node::disconnectLine()
 {
 
 }
@@ -133,8 +155,9 @@ bool Node::hasConnectionWith(GridObject *node)
 
 void Node::setMaximumNodeConnections(int newMax)
 {
-   // _maxNoOfConnectors += newMax;
-   // this->_nodeText->setPlainText(QString::number(_maxNoOfConnectors));
+   _maxNoOfConnectors += newMax;
+    this->_nodeText->setPlainText(QString::number(_maxNoOfConnectors));
+
 }
 
 int Node::returnNoOfConnections()

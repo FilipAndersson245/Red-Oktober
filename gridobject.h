@@ -28,6 +28,7 @@ public:
    virtual void toggleDoubleLine(void) = 0;
    virtual Orientation getLineOrientation(void) = 0;
    virtual void disconnectNode(GridObject* node) = 0;
+    virtual void disconnectLine() = 0;
 protected:
    int _maxNoOfConnectors;
    QPoint _locationOfNode;

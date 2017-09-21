@@ -26,11 +26,13 @@ public:
     void disconnectNode(GridObject* node);
     Orientation getLineOrientation(void);
     void toggleDoubleLine(void);
+    void disconnectLine();
 private:
     QGraphicsEllipseItem *_nodeCircle;
     QGraphicsTextItem *_nodeText;
     std::vector<GridObject*>_nodePointers;
     int _startSize;
+
 };
 
 #endif // NODE_H

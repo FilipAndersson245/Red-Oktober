@@ -38,7 +38,6 @@ private:
     QGraphicsView* _mainView;
     GameLogic _logic;
     QPoint _clickedPos;
-    GameMenu _gameMenu;
 
 };
 

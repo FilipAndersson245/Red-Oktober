@@ -1,8 +1,10 @@
 #include "line.h"
 
 
-Line::Line(Orientation orientation, QPoint point, int size)
+Line::Line(Orientation orientation, QPoint point, int size, GridObject* aNode1Connected, GridObject* aNode2Connected)
 {
+    _node1Connected = aNode1Connected;
+    _node2Connected = aNode2Connected;
     _type = 0;
     connect(this, SIGNAL(clicked()), this, SLOT(addSecondLine()));
     connect(this, SIGNAL(rightClicked()), this, SLOT(removeSecondLine()));
@@ -139,6 +141,7 @@ Line::~Line()
 {
     delete _lineRect;
     delete _itemGroup;
+
 }
 
 
@@ -169,7 +172,7 @@ void Line::toggleClickedColor(bool onOff)
 
 bool Line::isInside(QPoint pointToCheck)
 {
-
+return this->contains(pointToCheck);
 }
 
 void Line::setPos(QPoint newPos)
@@ -208,7 +211,17 @@ void Line::toggleDoubleLine()
 
 }
 
-void Line::disconnectNode(GridObject *node)
+void Line::disconnectNode(GridObject* node)
 {
+
+}
+
+void Line::disconnectLine()
+{
+
+        _node1Connected->disconnectNode(_node2Connected);
+        _node2Connected->disconnectNode(_node1Connected);
+        _node2Connected = nullptr;
+        _node1Connected = nullptr;
 
 }

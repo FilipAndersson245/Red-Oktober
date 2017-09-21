@@ -1,4 +1,23 @@
 # Red-Oktober
+## RC 1
+Fully playable version (no ending AI check)
+
+## Known bugs
+right to left no visible double line (easy fix)
+
+
+## features left to implement
+
+
+
+
+
+
+
+
+
+
+
 
 ## GIT HOWTO:
 hämta master branch:

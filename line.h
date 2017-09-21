@@ -15,7 +15,7 @@ class Line : public GridObject
     Q_OBJECT
 
 public:
-     Line(Orientation orientation, QPoint point, int size);
+    Line(Orientation orientation, QPoint point, int size, GridObject* node1Connected, GridObject* node2Connected);
     QPoint returnPosition(void)override;
     void setMaximumNodeConnections(int newMax)override;
     int returnNoOfConnections(void)override;
@@ -27,8 +27,8 @@ public:
     bool hasConnectionWith(GridObject* node)override;
     bool hasExceededConnectionLimit(GridObject* node)override;
     void toggleDoubleLine(void) override;
-  void disconnectNode(GridObject* node);
-
+    void disconnectNode(GridObject* node);
+    void disconnectLine();
     Orientation getLineOrientation(void);
    // void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
@@ -59,5 +59,8 @@ private:
     QGraphicsRectItem *_secondLineRect;
 
     int _gridSize;
+
+    GridObject* _node1Connected;
+    GridObject* _node2Connected;
 };
 
