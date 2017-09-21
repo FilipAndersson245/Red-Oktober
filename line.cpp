@@ -1,10 +1,9 @@
 #include "line.h"
 
-Line::Line(int x, int y, Orientation orientation, QPoint point, int size): GridObject(x, y)
+Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* conn1, Node* conn2): GridObject(x, y)
 {
-    connect(this, SIGNAL(clicked()), this, SLOT(addSecondLine()));
-    connect(this, SIGNAL(rightClicked()), this, SLOT(removeSecondLine()));
-
+    _firstConnection = conn1;
+    _secondConnection = conn2;
 
     _pos = point;
     _orientation = orientation;
@@ -43,6 +42,15 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size): GridO
 
 void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (event->button() == Qt::LeftButton)
+    {
+        emit clickedLine(this);
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        emit rightClickedLine(this);
+    }
+    /*
     if(event->button() == Qt::RightButton && _isDouble)
     {
         emit rightClicked();
@@ -55,11 +63,27 @@ void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         emit clickedEmpty(this);
     }
+    */
 }
 
 Orientation Line::getOrientation()
 {
     return this->_orientation;
+}
+
+Node *Line::getFirstConnection()
+{
+    return this->_firstConnection;
+}
+
+Node *Line::getSecondConnection()
+{
+    return this->_secondConnection;
+}
+
+bool Line::checkIsDouble()
+{
+    return this->_isDouble;
 }
 
 void Line::addSecondLine()

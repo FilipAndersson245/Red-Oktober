@@ -8,14 +8,25 @@ Node::Node(int x, int y, int nodeSize, QPoint point, int size):_connectionHandle
     this->setBrush(brush);
     QPen pen(Qt::transparent);
     this->setPen(pen);
+
     _nodeCircle = new QGraphicsEllipseItem(_pos.x(), _pos.y(), size, size);
+    _nodeCircle->setZValue(1000);
+    QGraphicsDropShadowEffect * _dropShadow = new QGraphicsDropShadowEffect();
+    _dropShadow->setBlurRadius(12);
+    _dropShadow->setColor(QColor(0,0,0,200));
+    _dropShadow->setOffset(QPoint(2,2));
+    _nodeCircle->setGraphicsEffect(_dropShadow);
     QString nodeString = QString::number(nodeSize);
+    QFont serifFont("Gill Sans MT", 12);
     _nodeText = new QGraphicsTextItem(nodeString);
-    _nodeText->setPos(point.x() + size/6, point.y() - size/10);
+    _nodeText->setDefaultTextColor(Qt::white);
+    _nodeText->setFont(serifFont);
+    _nodeText->setPos(point.x() + (4-_nodeText->boundingRect().width()/8)  , point.y()-7);
+    _nodeText->setZValue(1010);
+    _nodeText->setAcceptHoverEvents(false);
     _itemGroup = new QGraphicsItemGroup(this);
     _itemGroup->addToGroup(_nodeCircle);
     _itemGroup->addToGroup(_nodeText);
-    QBrush brush2(Qt::cyan);
     updateColor();
     _nodeCircle->setPen(pen);
 }
@@ -41,7 +52,7 @@ void Node::removeBridge(Direction side)
 
 int Node::getRemaining()
 {
-    this->_connectionHandler.getRemaining();
+    return this->_connectionHandler.getRemaining();
 }
 
 std::map<Direction, int> Node::getSlotMap()

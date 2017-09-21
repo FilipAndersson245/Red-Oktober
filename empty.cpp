@@ -11,14 +11,8 @@ Empty::Empty(int x, int y, QPoint point, int size): GridObject(x, y)
     _itemGroup = new QGraphicsItemGroup(this);
 }
 
-bool Empty::isUnderMouse()
-{
-
-}
-
 void Empty::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "clicked";
     if (event->button() == Qt::LeftButton)
     {
         emit clickedEmpty(this);

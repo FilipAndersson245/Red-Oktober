@@ -14,6 +14,7 @@ Hashlife::Hashlife(QWidget *parent) :
     _mainScene = new QGraphicsScene();
     _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
     _mainView = new QGraphicsView(_mainScene);
+    _mainView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     QVBoxLayout* vlayout = new QVBoxLayout(this);
     vlayout->addWidget(_mainView);
     autoScaleView();

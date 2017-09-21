@@ -16,8 +16,6 @@ public:
 
     Empty(int x, int y, QPoint point, int size);
 
-    bool isUnderMouse();
-
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     ~Empty();

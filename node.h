@@ -2,6 +2,8 @@
 
 #include "gridobject.h"
 #include "dirconnections.h"
+#include <QFont>
+#include <QGraphicsDropShadowEffect>
 
 
 class Node : public GridObject

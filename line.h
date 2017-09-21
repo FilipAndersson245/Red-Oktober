@@ -23,27 +23,36 @@ class Line : public GridObject
 
 public:
 
-    Line(int x, int y, Orientation orientation, QPoint point, int size);
+    Line(int x, int y, Orientation orientation, QPoint point, int size, Node* conn1, Node* conn2 );
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     Orientation getOrientation();
 
-    ~Line();
+    Node *getFirstConnection();
 
-public slots:
+    Node *getSecondConnection();
+
+    bool checkIsDouble();
 
     void addSecondLine();
 
     void removeSecondLine();
 
+    ~Line();
+
+public slots:
+
 signals:
 
-    void clicked();
+    void clickedLine(Line*);
 
-    void rightClicked();
+    void rightClickedLine(Line*);
+    //void clicked();
 
-    void clickedEmpty(Line*);
+    //void rightClicked();
+
+    //void clickedEmpty(Line*);
 
 private:
 

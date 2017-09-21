@@ -35,6 +35,8 @@ public slots:
 
     void clickedLine(Line *line);
 
+    void rightClickedLine(Line *line);
+
     void clickedEmpty(Empty *empty);
 
 
@@ -57,7 +59,7 @@ private:
 
     void activateDirection(Direction direction);
 
-    void emptyToLine(Empty *empty);
+    void emptyToLine(Empty *empty, Node *conn1, Node *conn2);
 
     void linetoEmpty(Line *line);
 
