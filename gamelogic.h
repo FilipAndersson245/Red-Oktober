@@ -33,17 +33,44 @@ public:
 
 public slots:
 
-    void emptyToLine(Empty *empty);
+    void clickedLine(Line *line);
 
-    void linetoEmpty(Line *line);
+    void clickedEmpty(Empty *empty);
 
-    void viewPotential(Node *node);
+
+    void enterMouseGridObj(GridObject *gridObj);
+
+    void exitMouseGridObj(GridObject *gridObj);
+
+
+    void enterMouseNode(Node *node);
+
+    void exitMouseNode(Node *node);
 
 private:
 
     void connectNodes(QByteArray infoFromFile,vector<vector<GridObject*>> board);
 
+    void updateHighlighted();
 
+    void clearHighlighted();
+
+    void activateDirection(Direction direction);
+
+    void emptyToLine(Empty *empty);
+
+    void linetoEmpty(Line *line);
+
+    static bool isDirectionOrientationAligned(Direction, Orientation);
+
+
+    QPoint _activeNodeCoords;
+
+    Node * _activeNode;
+
+    Direction _currentDirection;
+
+    std::map<Direction, std::vector<GridObject *> > _highLightedObjects;
 
     vector<vector<GridObject*> > _allGameObjects;
 

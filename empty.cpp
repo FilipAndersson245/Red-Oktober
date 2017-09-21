@@ -21,8 +21,7 @@ void Empty::mousePressEvent(QGraphicsSceneMouseEvent *event)
     qDebug() << "clicked";
     if (event->button() == Qt::LeftButton)
     {
-        emit addLine(this);
-        delete this;
+        emit clickedEmpty(this);
     }
 }
 

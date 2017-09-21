@@ -22,15 +22,19 @@ public:
 
     //void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
-    //void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
-    //void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     int getXPos();
 
     int getYPos();
 
     virtual ~GridObject();
+
+    void setPotentialLine(bool value);
+
+    bool isPotentialLine();
 
 public slots:
 
@@ -44,9 +48,9 @@ signals:
 
     //void clicked();
 
-    //void hoverEnter();
+    void hoverEnter(GridObject*);
 
-    //void hoverLeft();
+    void hoverLeft(GridObject*);
 
 protected:
 

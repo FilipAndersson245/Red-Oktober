@@ -24,5 +24,5 @@ public:
 
 signals:
 
-    void addLine(Empty*);
+    void clickedEmpty(Empty*);
 };

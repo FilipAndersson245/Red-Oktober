@@ -9,6 +9,8 @@ class Node : public GridObject
 
     Q_OBJECT
 
+
+
 public:
 
     Node(int x, int y, int nodeSize, QPoint point, int size);
@@ -34,6 +36,10 @@ public:
 
     bool isHovered();
 
+    std::map<Direction, Node *> getConnectedNodes();
+
+    void updateColor();
+
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
@@ -43,6 +49,7 @@ signals:
 
     void mouseEnter(Node*);
 
+    void mouseLeave(Node*);
 
 private:
 

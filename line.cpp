@@ -4,6 +4,8 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size): GridO
 {
     connect(this, SIGNAL(clicked()), this, SLOT(addSecondLine()));
     connect(this, SIGNAL(rightClicked()), this, SLOT(removeSecondLine()));
+
+
     _pos = point;
     _orientation = orientation;
     _gridSize = size;
@@ -51,9 +53,13 @@ void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(event->button() == Qt::RightButton && !_isDouble)
     {
-        emit addEmpty(this);
-        delete this;
+        emit clickedEmpty(this);
     }
+}
+
+Orientation Line::getOrientation()
+{
+    return this->_orientation;
 }
 
 void Line::addSecondLine()

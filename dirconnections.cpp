@@ -1,5 +1,20 @@
 #include "dirconnections.h"
 
+Direction DirConections::getOppositeDirection(Direction inDir)
+{
+    switch(inDir)
+    {
+    case Direction::right:
+        return Direction::left;
+    case Direction::top:
+        return Direction::bottom;
+    case Direction::bottom:
+        return Direction::top;
+    case Direction::left:
+        return Direction::right;
+    }
+}
+
 DirConections::DirConections(int size): _maximumConnections(size)
 {
     this->_DirConections = {
@@ -31,4 +46,14 @@ std::map<Direction,int> DirConections::getSlotMap()
 int DirConections::getRemaining()
 {
     return this->_maximumConnections - this->_currentConnections;
+}
+
+void DirConections::setConnections(int newVal)
+{
+    this->_currentConnections = newVal;
+}
+
+int DirConections::getConnections()
+{
+    return this->_currentConnections;
 }

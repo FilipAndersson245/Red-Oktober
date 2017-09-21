@@ -27,6 +27,8 @@ public:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
+    Orientation getOrientation();
+
     ~Line();
 
 public slots:
@@ -41,7 +43,7 @@ signals:
 
     void rightClicked();
 
-    void addEmpty(Line*);
+    void clickedEmpty(Line*);
 
 private:
 

@@ -5,29 +5,27 @@ GridObject::GridObject(int x, int y)
     _xVectorPos = x;
     _yVectorPos = y;
     setAcceptHoverEvents(true);
-    //connect(this, SIGNAL(clicked()), this, SLOT(rectClicked()));
-    //connect(this, SIGNAL(hoverEnter()), this, SLOT(rectEntered()));
-    //connect(this, SIGNAL(hoverLeft()), this, SLOT(rectLeft()));
     //qDebug() << "rect created";
 }
+
 /*
 void GridObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     emit clicked();
 }
 */
-/*
+
 void GridObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    emit hoverEnter();
+    emit hoverEnter(this);
 }
-*/
-/*
+
+
 void GridObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    emit hoverLeft();
+    emit hoverLeft(this);
 }
-*/
+
 
 int GridObject::getXPos()
 {
@@ -43,6 +41,17 @@ GridObject::~GridObject()
 {
 
 }
+
+void GridObject::setPotentialLine(bool value)
+{
+    this->_isPotentialLine = value;
+}
+
+bool GridObject::isPotentialLine()
+{
+    return this->_isPotentialLine;
+}
+
 /*
 void GridObject::rectClicked()
 {

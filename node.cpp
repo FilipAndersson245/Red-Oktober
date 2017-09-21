@@ -1,6 +1,6 @@
 #include "node.h"
 
-Node::Node(int x, int y, int nodeSize, QPoint point, int size):_connectionHandler(size), GridObject(x, y)
+Node::Node(int x, int y, int nodeSize, QPoint point, int size):_connectionHandler(nodeSize), GridObject(x, y)
 {
     _pos = point;
     this->setRect(_pos.x(), _pos.y(), size, size);
@@ -16,9 +16,8 @@ Node::Node(int x, int y, int nodeSize, QPoint point, int size):_connectionHandle
     _itemGroup->addToGroup(_nodeCircle);
     _itemGroup->addToGroup(_nodeText);
     QBrush brush2(Qt::cyan);
-    QPen pen2(Qt::darkBlue);
-    _nodeCircle->setBrush(brush2);
-    _nodeCircle->setPen(pen2);
+    updateColor();
+    _nodeCircle->setPen(pen);
 }
 
 void Node::connectNodes(Direction side, Node *nodePtr)
@@ -28,12 +27,16 @@ void Node::connectNodes(Direction side, Node *nodePtr)
 
 void Node::addBridge(Direction side)
 {
-    this->_connectionHandler.selectConnection(side)->addBridge();
+    this->_connectionHandler.selectConnection(side)->addBridge();    
+    this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() + 1);
+    this->updateColor();
 }
 
 void Node::removeBridge(Direction side)
 {
     this->_connectionHandler.selectConnection(side)->removeBridge();
+    this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() - 1);
+    this->updateColor();
 }
 
 int Node::getRemaining()
@@ -62,13 +65,39 @@ std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::
         {Direction::left,this->getPotentialLinesDir(Direction::left,board)},
     };
 
-    int a = 5;
     return potentialLines;
 }
 
 bool Node::isHovered()
 {
     return _nodeCircle->isUnderMouse();
+}
+
+std::map<Direction, Node *> Node::getConnectedNodes()
+{
+
+    std::map<Direction, Node *> nodeMap = {
+        {Direction::top,this->_connectionHandler.selectConnection(Direction::top)->getTarget()},
+        {Direction::right,this->_connectionHandler.selectConnection(Direction::right)->getTarget()},
+        {Direction::bottom,this->_connectionHandler.selectConnection(Direction::bottom)->getTarget()},
+        {Direction::left,this->_connectionHandler.selectConnection(Direction::left)->getTarget()}
+    };
+    return nodeMap;
+}
+
+void Node::updateColor()
+{
+    QColor mycolor;
+    int connectionLeft = this->_connectionHandler.getRemaining();
+    int H = 232;
+    int S = int((14 + (8*connectionLeft)) * 2.55);
+    int L = int((77 - (6.875*connectionLeft)) * 2.55);
+    mycolor.setHsl(H,S,L);
+    if(connectionLeft == 0)
+    {
+        mycolor.setHsl(123, int(60*2.55), int(62*2.55));
+    }
+    _nodeCircle->setBrush(QBrush(mycolor));
 }
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -78,7 +107,7 @@ void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-
+    emit mouseLeave(this);
 }
 
 
@@ -89,32 +118,43 @@ std::vector<GridObject *> Node::getPotentialLinesDir(Direction direction, std::v
     switch(direction)
     {
         case Direction::right:
-            for(int i = this->getXPos() + 1 ;i < this->_connectionHandler.selectConnection(Direction::right)->getTarget()->getXPos();i++)
+            if(this->_connectionHandler.selectConnection(Direction::right)->getTarget() != nullptr)
             {
-                potentialLines.push_back(board[0][i][this->_pos.y()]);
+                for(int i = this->getXPos() + 1 ;i < this->_connectionHandler.selectConnection(Direction::right)->getTarget()->getXPos();i++)
+                {
+                    potentialLines.push_back(board[0][i][this->getYPos()]);
+                }
             }
             break;
 
         case Direction::left:
-            for(int i = this->getXPos() - 1 ;i > this->_connectionHandler.selectConnection(Direction::left)->getTarget()->getXPos();i--)
+            if(this->_connectionHandler.selectConnection(Direction::left)->getTarget() != nullptr)
             {
-                potentialLines.push_back(board[0][i][this->getYPos()]);
+                for(int i = this->getXPos() - 1 ;i > this->_connectionHandler.selectConnection(Direction::left)->getTarget()->getXPos();i--)
+                {
+                    potentialLines.push_back(board[0][i][this->getYPos()]);
+                }
             }
             break;
 
 
         case Direction::bottom:
-            for(int i = this->getYPos() + 1 ;i < this->_connectionHandler.selectConnection(Direction::bottom)->getTarget()->getYPos(); i++)
+            if(this->_connectionHandler.selectConnection(Direction::bottom)->getTarget() != nullptr)
             {
-                if()
-                potentialLines.push_back(board[0][this->getXPos()][i]);
+                for(int i = this->getYPos() + 1 ;i < this->_connectionHandler.selectConnection(Direction::bottom)->getTarget()->getYPos(); i++)
+                {
+                    potentialLines.push_back(board[0][this->getXPos()][i]);
+                }
             }
             break;
 
         case Direction::top:
-            for(int i = this->getYPos() - 1 ;i > this->_connectionHandler.selectConnection(Direction::top)->getTarget()->getYPos(); i--)
+            if(this->_connectionHandler.selectConnection(Direction::top)->getTarget() != nullptr)
             {
-                potentialLines.push_back(board[0][this->getXPos()][i]);
+                for(int i = this->getYPos() - 1 ;i > this->_connectionHandler.selectConnection(Direction::top)->getTarget()->getYPos(); i--)
+                {
+                    potentialLines.push_back(board[0][this->getXPos()][i]);
+                }
             }
             break;
     }

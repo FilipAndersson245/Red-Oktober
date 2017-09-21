@@ -16,6 +16,8 @@ class DirConections
 
 public:
 
+    static Direction getOppositeDirection(Direction inDir);
+
     DirConections(int maxConnections);
 
     NodeConnect *selectConnection(Direction direction);
@@ -23,6 +25,10 @@ public:
     std::map<Direction,int> getSlotMap();
 
     int getRemaining();
+
+    void setConnections(int);
+
+    int getConnections();
 
 private:
 
