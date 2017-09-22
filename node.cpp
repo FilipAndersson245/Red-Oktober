@@ -38,7 +38,8 @@ void Node::connectNodes(Direction side, Node *nodePtr)
 
 void Node::addBridge(Direction side)
 {
-    this->_connectionHandler.selectConnection(side)->addBridge();    
+    //add
+    this->_connectionHandler.selectConnection(side)->addBridge();
     this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() + 1);
     this->updateColor();
 }
@@ -106,6 +107,11 @@ void Node::updateColor()
     if(connectionLeft == 0)
     {
         mycolor.setHsl(123, int(60*2.55), int(62*2.55));
+    }
+    else if(connectionLeft < 0 || connectionLeft > (this->_connectionHandler.getRemaining() + this->_connectionHandler.getConnections()))
+    {
+        //debugging for wrong value
+        mycolor.setRgb(255,0,0);
     }
     _nodeCircle->setBrush(QBrush(mycolor));
 }

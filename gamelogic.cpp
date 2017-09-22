@@ -159,14 +159,14 @@ void GameLogic::clickedEmpty(Empty *empty)
     if(empty->isPotentialLine())
     {
         vector<GridObject*> directionObjects = _highLightedObjects[_currentDirection];
+        Node * node1 = _activeNode;
+        Node * node2 = _activeNode->getConnectedNodes()[_currentDirection];
+
+        node1->addBridge(_currentDirection);
+        node2->addBridge(DirConections::getOppositeDirection(_currentDirection));
+
         for(GridObject * object : directionObjects)
         {
-            Node * node1 = _activeNode;
-            Node * node2 = _activeNode->getConnectedNodes()[_currentDirection];
-
-            node1->addBridge(_currentDirection);
-            node2->addBridge(DirConections::getOppositeDirection(_currentDirection));
-
             emptyToLine(dynamic_cast<Empty *>(object), node1, node2);
 
 
