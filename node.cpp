@@ -68,7 +68,6 @@ bool Node::isFull()
 
 std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::vector<std::vector<GridObject *> > *board)
 {
-    //todo functions
     std::map<Direction, std::vector<GridObject *>> potentialLines = {
         {Direction::top,this->getPotentialLinesDir(Direction::top,board)},
         {Direction::right,this->getPotentialLinesDir(Direction::right,board)},

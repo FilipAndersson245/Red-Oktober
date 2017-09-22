@@ -94,8 +94,12 @@ void GameLogic::clickedLine(Line *line)
 {
     qDebug() << "left";
 
-    if(!line->checkIsDouble())
+    if(line->isPotentialLine() && !line->checkIsDouble())
     {
+        //adds double line
+
+        line->getFirstConnection()->addBridge(_currentDirection);
+        line->getSecondConnection()->addBridge(DirConections::getOppositeDirection(_currentDirection));
         for(GridObject * item : _highLightedObjects[_currentDirection])
         {
             if(this->_gridTypeIndicator[item->getXPos()][item->getYPos()] == -1)
@@ -112,6 +116,42 @@ void GameLogic::clickedLine(Line *line)
 void GameLogic::rightClickedLine(Line *line)
 {
     qDebug() << "right";
+
+    if(line->checkIsDouble())
+    {
+        line->getFirstConnection()->removeBridge(_currentDirection);
+        line->getSecondConnection()->removeBridge(DirConections::getOppositeDirection(_currentDirection));
+
+        //get items between nodes
+        vector<GridObject*> directionObjects = line->getFirstConnection()->getAllPotentialLines(&_allGameObjects)[_currentDirection];
+
+        for(GridObject * item : directionObjects)
+        {
+            if(this->_gridTypeIndicator[item->getXPos()][item->getYPos()] == -1)
+            {
+                Line * selectedLine = dynamic_cast<Line *>(item);
+                selectedLine->removeSecondLine();
+            }
+        }
+
+    }
+    else
+    {
+        line->getFirstConnection()->removeBridge(_currentDirection);
+        line->getSecondConnection()->removeBridge(DirConections::getOppositeDirection(_currentDirection));
+
+        //get items between nodes
+        vector<GridObject*> directionObjects = line->getFirstConnection()->getAllPotentialLines(&_allGameObjects)[_currentDirection];
+
+        for(GridObject * item : directionObjects)
+        {
+            if(this->_gridTypeIndicator[item->getXPos()][item->getYPos()] == -1)
+            {
+                Line * selectedLine = dynamic_cast<Line *>(item);
+                linetoEmpty(selectedLine);
+            }
+        }
+    }
 }
 
 void GameLogic::clickedEmpty(Empty *empty)
@@ -131,8 +171,9 @@ void GameLogic::clickedEmpty(Empty *empty)
 
 
             delete object;
+
+            updateHighlighted();
         }
-        clearHighlighted();
     }
 }
 
@@ -152,7 +193,11 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
         ori = Orientation::vertical;
     }
 
+
+
     GridObject* line = new Line(x, y, ori, point, WINDOWSIZE/GAMEGRIDSIZE, conn1, conn2);
+
+
 
     connect(line, SIGNAL(clickedLine(Line*)), this, SLOT(clickedLine(Line*)));
     connect(line, SIGNAL(rightClickedLine(Line*)), this, SLOT(rightClickedLine(Line*)));
@@ -164,6 +209,17 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
     _gridTypeIndicator[x][y] = -1;
     _gameScene->removeItem(empty);
     _gameScene->addItem(_allGameObjects[x][y]);
+
+    if(conn1->isFull() || conn2->isFull())
+    {
+        clearHighlighted();
+    }
+    else
+    {
+        _highLightedObjects.clear();
+        _highLightedObjects[_currentDirection].push_back(line);
+        line->setPotentialLine(true);
+    }
 }
 
 void GameLogic::linetoEmpty(Line *line)
@@ -174,7 +230,12 @@ void GameLogic::linetoEmpty(Line *line)
     QPoint point(x*(WINDOWSIZE/GAMEGRIDSIZE), y*(WINDOWSIZE/GAMEGRIDSIZE));
     GridObject* empty = new Empty(x, y, point, WINDOWSIZE/GAMEGRIDSIZE);
     connect(empty, SIGNAL(clickedEmpty(Empty*)), this, SLOT(clickedEmpty(Empty*)));
+
+    connect(empty, SIGNAL(hoverEnter(GridObject*)), this, SLOT(enterMouseGridObj(GridObject*)));
+    connect(empty, SIGNAL(hoverLeft(GridObject*)), this, SLOT(exitMouseGridObj(GridObject*)));
+
     _allGameObjects[x][y] = empty;
+    _gridTypeIndicator[x][y] = 0;
     _gameScene->removeItem(line);
     _gameScene->addItem(_allGameObjects[x][y]);
 }
@@ -208,28 +269,31 @@ void GameLogic::enterMouseGridObj(GridObject *gridObj)
         _highLightedObjects.clear();
 
         Line * selectedLine = dynamic_cast<Line *>(gridObj);
-        selectedLine->setPotentialLine(true);
         Node * firstNode = selectedLine->getFirstConnection();
         Node * secondNode = selectedLine->getSecondConnection();
 
-        for(int i = 0; i < firstNode->getConnectedNodes().size(); i++)
+        if(!(firstNode->isFull() || secondNode->isFull()) && !selectedLine->checkIsDouble())
         {
-            _currentDirection = static_cast<Direction>(i+1);
-            if(firstNode->getConnectedNodes()[_currentDirection] == secondNode)
+            selectedLine->setPotentialLine(true);
+            for(int i = 0; i < firstNode->getConnectedNodes().size(); i++)
             {
-                vector<GridObject*> directionObjects = firstNode->getAllPotentialLines(&_allGameObjects)[_currentDirection];
-                clearHighlighted();
-                firstNode->setPotentialLine(true);
-                secondNode->setPotentialLine(true);
-                for(GridObject* item: directionObjects)
+                _currentDirection = static_cast<Direction>(i+1);
+                if(firstNode->getConnectedNodes()[_currentDirection] == secondNode)
                 {
-                    _highLightedObjects[_currentDirection].push_back(item);
-                    item->setPotentialLine(true);
+                    vector<GridObject*> directionObjects = firstNode->getAllPotentialLines(&_allGameObjects)[_currentDirection];
+                    clearHighlighted();
+                    firstNode->setPotentialLine(true);
+                    secondNode->setPotentialLine(true);
+                    for(GridObject* item: directionObjects)
+                    {
+                        _highLightedObjects[_currentDirection].push_back(item);
+                        item->setPotentialLine(true);
+                    }
+                    updateHighlighted();
+
+
+                    break;
                 }
-                updateHighlighted();
-
-
-                break;
             }
         }
     }
@@ -271,66 +335,80 @@ void GameLogic::exitMouseGridObj(GridObject *gridObj)
 
 void GameLogic::enterMouseNode(Node *node)
 {
-    _activeNode = node;
-
-    _activeNodeCoords = QPoint(node->getXPos(), node->getYPos());
-
-    clearHighlighted();
-
-    node->setPotentialLine(true);
-
-    for(int i = 0; i < node->getConnectedNodes().size(); i++)
+    if(!node->isFull())
     {
-        if(node->getConnectedNodes()[static_cast<Direction>(i+1)] != nullptr)
+        _activeNode = node;
+
+        _activeNodeCoords = QPoint(node->getXPos(), node->getYPos());
+
+        clearHighlighted();
+
+        node->setPotentialLine(true);
+
+        for(int i = 0; i < node->getConnectedNodes().size(); i++)
         {
-            node->getConnectedNodes()[static_cast<Direction>(i+1)]->setPotentialLine(true);
-        }
-    }
-
-    //highlight spaces inbetween
-    std::map<Direction, std::vector<GridObject *> > objectsToHighlight = node->getAllPotentialLines(&_allGameObjects);;
-    for(int i = 0; i < objectsToHighlight.size(); i++)
-    {
-        Direction localCurrentDirection = static_cast<Direction>(i+1);
-        vector<GridObject *> objectVector = objectsToHighlight[localCurrentDirection];
-        vector<GridObject *> objectsToAdd;
-        for(GridObject * object : objectVector)
-        {
-
-            bool isLine = (this->_gridTypeIndicator[object->getXPos()][object->getYPos()] == -1);
-
-            if(isLine)
+            if(node->getConnectedNodes()[static_cast<Direction>(i+1)] != nullptr)
             {
-                GridObject * selectedObject = this->_allGameObjects[object->getXPos()][object->getYPos()];
-                Line * objectToTest = dynamic_cast<Line * >(selectedObject);
-                bool isCorrectOrient = this->isDirectionOrientationAligned(localCurrentDirection, objectToTest->getOrientation());
+                node->getConnectedNodes()[static_cast<Direction>(i+1)]->setPotentialLine(true);
+            }
+        }
 
-                if(!isCorrectOrient)
+        //highlight spaces inbetween
+        std::map<Direction, std::vector<GridObject *> > objectsToHighlight = node->getAllPotentialLines(&_allGameObjects);;
+        for(int i = 0; i < objectsToHighlight.size(); i++)
+        {
+            Direction localCurrentDirection = static_cast<Direction>(i+1);
+
+            //clears direction if direction's node target is full
+            if(node->getConnectedNodes()[localCurrentDirection] != nullptr)
+            {
+                if(node->getConnectedNodes()[localCurrentDirection]->isFull())
                 {
+                    objectsToHighlight[localCurrentDirection].clear();
                     node->getConnectedNodes()[localCurrentDirection]->setPotentialLine(false);
-                    objectsToAdd.clear();
-                    break;
                 }
             }
-            if(object == nullptr)
+
+            vector<GridObject *> objectVector = objectsToHighlight[localCurrentDirection];
+            vector<GridObject *> objectsToAdd;
+            for(GridObject * object : objectVector)
             {
-                break;
+
+                bool isLine = (this->_gridTypeIndicator[object->getXPos()][object->getYPos()] == -1);
+
+                if(isLine)
+                {
+                    GridObject * selectedObject = this->_allGameObjects[object->getXPos()][object->getYPos()];
+                    Line * objectToTest = dynamic_cast<Line * >(selectedObject);
+                    bool isCorrectOrient = this->isDirectionOrientationAligned(localCurrentDirection, objectToTest->getOrientation());
+
+                    if(!isCorrectOrient)
+                    {
+                        node->getConnectedNodes()[localCurrentDirection]->setPotentialLine(false);
+                        objectsToAdd.clear();
+                        break;
+                    }
+                }
+                if(object == nullptr)
+                {
+                    break;
+                }
+
+                objectsToAdd.push_back(object);
             }
 
-            objectsToAdd.push_back(object);
+            for(GridObject * object : objectsToAdd)
+            {
+                object->setPotentialLine(true);
+            }
+
+            _highLightedObjects[localCurrentDirection] = objectsToAdd;
         }
 
-        for(GridObject * object : objectsToAdd)
-        {
-            object->setPotentialLine(true);
-        }
 
-        _highLightedObjects[localCurrentDirection] = objectsToAdd;
+
+        updateHighlighted();
     }
-
-
-
-    updateHighlighted();
 }
 
 void GameLogic::exitMouseNode(Node *node)
