@@ -220,7 +220,7 @@ QPoint GameLogic::computeClick(QPoint position, QGraphicsScene* aScene, bool isR
                     else if (_secondChoosenNode == nullptr)
                     {
 
-                        gridobjectClicked = true;
+
                         qDebug() << "SEC clicked " << i << j <<endl << "@" <<_allGameObjects[i][j]->returnPosition() ;
                         _secondChoosenNode = _allGameObjects[i][j];
 
@@ -232,6 +232,7 @@ QPoint GameLogic::computeClick(QPoint position, QGraphicsScene* aScene, bool isR
                         }
 
                         qDebug() << "set connection";
+                        gridobjectClicked = false;
                         break;
                     }
                 }
@@ -415,6 +416,7 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                     }
 
                 }
+            else{
 
                 delete _allGameObjects[i][secondNodeVectorPos.y()];
                 _allGameObjects[i][secondNodeVectorPos.y()] = nullptr;
@@ -422,6 +424,7 @@ bool GameLogic::tryConnection(GridObject* firstNode, GridObject* secondNode, boo
                 GridObject* pushLine = new Line(Orientation::horizontal,QPoint(i*DISPLACEMENTX,firstNodeVectorPos.y()*DISPLACEMENTY),20,firstNode,secondNode);
                 _allGameObjects[i][secondNodeVectorPos.y()] = pushLine;
             }
+                }
 
         }
         if(!dontDoConnection)

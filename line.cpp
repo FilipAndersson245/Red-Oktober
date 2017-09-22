@@ -218,7 +218,11 @@ void Line::disconnectNode(GridObject* node)
 
 void Line::disconnectLine()
 {
-
+        if(_type == 2)
+        {
+            _node1Connected->disconnectNode(_node2Connected);
+            _node2Connected->disconnectNode(_node1Connected);
+        }
         _node1Connected->disconnectNode(_node2Connected);
         _node2Connected->disconnectNode(_node1Connected);
         _node2Connected = nullptr;

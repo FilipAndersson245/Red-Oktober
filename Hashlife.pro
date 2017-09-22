@@ -42,3 +42,5 @@ HEADERS += \
 
 FORMS += \
         hashlife.ui
+RESOURCES += \
+	hashiGameResources.qrc

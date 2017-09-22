@@ -4,7 +4,7 @@
 
 #include <QDir>
 // get this to work with relative path //
-#define BOARDPATH "c:/hashi/gameBoardToLoad.txt"
+#define BOARDPATH ":/levels/EASY_10x10_level1.hashiboard"
 Hashlife::Hashlife(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Hashlife)
@@ -12,10 +12,10 @@ Hashlife::Hashlife(QWidget *parent) :
 
 QString choosenBoardPath = "";
     // loading game info from level file and setting up board //
-    QFileDialog userInput(this,"Choose level file",STARTPATH,"*.hashiboard");
-    choosenBoardPath = userInput.getOpenFileName();
+   // QFileDialog userInput(this,"Choose level file",STARTPATH,"*.hashiboard");
+    //choosenBoardPath = userInput.getOpenFileName();
     try{
-         _logic.loadGameBoardFromFile(choosenBoardPath);
+         _logic.loadGameBoardFromFile(BOARDPATH);
         }catch(QString ERRORCODE)
         {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();}
 
