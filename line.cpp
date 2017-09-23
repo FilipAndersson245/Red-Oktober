@@ -19,27 +19,22 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* 
     switch(_orientation)
     {
     case Orientation::horizontal:
-    {
+
         _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2), _gridSize, _gridSize/40);
         break;
-    }
+
     case Orientation::vertical:
-    {
+
         _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y(), _gridSize/40, _gridSize);
         break;
-    }
-    default:
-    {
-        qDebug() << "line has no direction";
-        break;
-    }
+
     }
     _itemGroup->addToGroup(_lineRect);
     _lineRect->setBrush(brush2);
     _lineRect->setPen(pen2);
-    qDebug() << "line created";
 }
 
+//emit left or right click function
 void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
@@ -50,20 +45,6 @@ void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         emit rightClickedLine(this);
     }
-    /*
-    if(event->button() == Qt::RightButton && _isDouble)
-    {
-        emit rightClicked();
-    }
-    else if (event->button() == Qt::LeftButton && !_isDouble)
-    {
-        emit clicked();
-    }
-    else if(event->button() == Qt::RightButton && !_isDouble)
-    {
-        emit clickedEmpty(this);
-    }
-    */
 }
 
 Orientation Line::getOrientation()
@@ -107,11 +88,6 @@ void Line::addSecondLine()
         _secondLineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/1.66), _pos.y(), _gridSize/40, _gridSize);
         break;
     }
-    default:
-    {
-        qDebug() << "line has no direction";
-        break;
-    }
     }
     _itemGroup->addToGroup(_lineRect);
     _lineRect->setBrush(brush);
@@ -119,7 +95,6 @@ void Line::addSecondLine()
     _itemGroup->addToGroup(_secondLineRect);
     _secondLineRect->setBrush(brush);
     _secondLineRect->setPen(pen);
-    qDebug() << "Second line added";
 }
 
 void Line::removeSecondLine()
@@ -127,35 +102,22 @@ void Line::removeSecondLine()
     _isDouble = false;
     _itemGroup->removeFromGroup(_lineRect);
     _itemGroup->removeFromGroup(_secondLineRect);
-    delete _lineRect;
     delete _secondLineRect;
+    delete _lineRect;
     QBrush brush2(Qt::black);
     QPen pen2(Qt::black);
     switch(_orientation)
     {
     case Orientation::horizontal:
-    {
         _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2), _gridSize, _gridSize/40);
-        _itemGroup->addToGroup(_lineRect);
-        _lineRect->setBrush(brush2);
-        _lineRect->setPen(pen2);
         break;
-    }
     case Orientation::vertical:
-    {
         _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y(), _gridSize/40, _gridSize);
-        _itemGroup->addToGroup(_lineRect);
-        _lineRect->setBrush(brush2);
-        _lineRect->setPen(pen2);
         break;
     }
-    default:
-    {
-        qDebug() << "line has no direction";
-        break;
-    }
-    }
-    qDebug() << "Second line removed";
+    _itemGroup->addToGroup(_lineRect);
+    _lineRect->setBrush(brush2);
+    _lineRect->setPen(pen2);
 }
 
 Line::~Line()

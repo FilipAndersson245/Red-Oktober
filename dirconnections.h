@@ -32,9 +32,9 @@ public:
 
 private:
 
-    const int _maximumConnections;
+    const int _maximumAmountOfBridges;
 
-    int _currentConnections = 0;
+    int _currentAmountOfBridges = 0;
 
     std::map<Direction,NodeConnect> _DirConections;
 };

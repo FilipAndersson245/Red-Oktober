@@ -11,7 +11,13 @@
 #include <QByteArray>
 #include <QGraphicsScene>
 #include <QObject>
+
 // defines //
+#define LINE -1
+#define EMPTY 0
+#define GAMEGRIDSIZE 10
+#define DISPLACEMENTX 20
+#define  DISPLACEMENTY 20
 
 using namespace std;
 class GameLogic : public QObject

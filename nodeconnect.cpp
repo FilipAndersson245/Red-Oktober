@@ -2,14 +2,14 @@
 
 NodeConnect::NodeConnect()
 {
-
+    this->_connections = 0;
+    this->_target = nullptr;
 }
 
 void NodeConnect::connect(Node *target)
 {
     this->_target = target;
 }
-
 
 bool NodeConnect::addBridge()
 {

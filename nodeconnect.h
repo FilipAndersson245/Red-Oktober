@@ -24,8 +24,8 @@ public:
 
 private:
 
-    int _connections = 0;
+    int _connections;
 
-    Node* _target = nullptr;
+    Node* _target;
 
 };

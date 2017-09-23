@@ -1,6 +1,6 @@
 #include "node.h"
 
-Node::Node(int x, int y, int nodeSize, QPoint point, int size):_connectionHandler(nodeSize), GridObject(x, y)
+Node::Node(int x, int y, int nodeSize, QPoint point, int size): GridObject(x, y),_connectionHandler(nodeSize)
 {
     _pos = point;
     this->setRect(_pos.x(), _pos.y(), size, size);
@@ -75,7 +75,6 @@ std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::
         {Direction::bottom,this->getPotentialLinesDir(Direction::bottom,board)},
         {Direction::left,this->getPotentialLinesDir(Direction::left,board)},
     };
-
     return potentialLines;
 }
 
@@ -174,7 +173,5 @@ std::vector<GridObject *> Node::getPotentialLinesDir(Direction direction, std::v
             }
             break;
     }
-
-    int a = 5;
     return potentialLines;
 }
