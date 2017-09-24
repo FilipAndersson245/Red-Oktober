@@ -64,9 +64,9 @@ private:
 
     Orientation _orientation;
 
-    QGraphicsRectItem *_lineRect;
+    QGraphicsRectItem *_lineRect = nullptr;
 
-    QGraphicsRectItem *_secondLineRect;
+    QGraphicsRectItem *_secondLineRect = nullptr;
 
     int _gridSize;
 };

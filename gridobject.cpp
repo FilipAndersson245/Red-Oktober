@@ -1,9 +1,7 @@
 #include "gridobject.h"
 
-GridObject::GridObject(int x, int y)
+GridObject::GridObject(int x, int y):_xVectorPos(x),_yVectorPos(y)
 {
-    _xVectorPos = x;
-    _yVectorPos = y;
     setAcceptHoverEvents(true);
     //qDebug() << "rect created";
 }

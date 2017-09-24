@@ -102,8 +102,16 @@ void Line::removeSecondLine()
     _isDouble = false;
     _itemGroup->removeFromGroup(_lineRect);
     _itemGroup->removeFromGroup(_secondLineRect);
-    delete _secondLineRect;
-    delete _lineRect;
+
+    if(this->_secondLineRect != nullptr)
+    {
+        delete _secondLineRect;
+    }
+    if(this->_lineRect != nullptr)
+    {
+        delete _lineRect;
+    }
+
     QBrush brush2(Qt::black);
     QPen pen2(Qt::black);
     switch(_orientation)

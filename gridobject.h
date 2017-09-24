@@ -60,7 +60,7 @@ protected:
 
     QGraphicsItemGroup *_itemGroup;
 
-    int _xVectorPos;
+    int _xVectorPos ;
 
     int _yVectorPos;
 
