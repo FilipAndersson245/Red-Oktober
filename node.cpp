@@ -38,17 +38,22 @@ void Node::connectNodes(Direction side, Node *nodePtr)
 
 void Node::addBridge(Direction side)
 {
-    //add
-    this->_connectionHandler.selectConnection(side)->addBridge();
-    this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() + 1);
-    this->updateColor();
+    if(this->_connectionHandler.selectConnection(side)->getAmountOfConnects() < 2)
+    {
+        this->_connectionHandler.selectConnection(side)->addBridge();
+        this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() + 1);
+        this->updateColor();
+    }
 }
 
 void Node::removeBridge(Direction side)
 {
-    this->_connectionHandler.selectConnection(side)->removeBridge();
-    this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() - 1);
-    this->updateColor();
+    if(this->_connectionHandler.selectConnection(side)->getAmountOfConnects() > 0)
+    {
+        this->_connectionHandler.selectConnection(side)->removeBridge();
+        this->_connectionHandler.setConnections(this->_connectionHandler.getConnections() - 1);
+        this->updateColor();
+    }
 }
 
 int Node::getRemaining()

@@ -13,7 +13,7 @@ void NodeConnect::connect(Node *target)
 
 bool NodeConnect::addBridge()
 {
-    if(this->_connections<2)
+    if(this->_connections < 2)
     {
         this->_connections++;
         return true;
@@ -23,7 +23,7 @@ bool NodeConnect::addBridge()
 
 bool NodeConnect::removeBridge()
 {
-    if(this->_connections>1)
+    if(this->_connections > 0)
     {
         this->_connections--;
         return true;

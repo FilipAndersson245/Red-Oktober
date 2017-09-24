@@ -71,6 +71,10 @@ private:
 
     static bool isDirectionOrientationAligned(Direction, Orientation);
 
+    void enterMouseGridObjLine(GridObject *gridObj);
+
+    void updateCurrentDirection(GridObject *gridObj);
+
 
     QPoint _activeNodeCoords;
 
