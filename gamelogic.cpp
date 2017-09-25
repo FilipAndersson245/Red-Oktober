@@ -1,6 +1,6 @@
 #include "gamelogic.h"
 
-GameLogic::GameLogic():_won(false) {}
+GameLogic::GameLogic(int size):_won(false), _gameGridSize(size) {}
 
 void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 {
@@ -28,7 +28,7 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
                 }
             }
             boardFile.close();
-            if(nodePositionDataFormatted.length() != (GAMEGRIDSIZE*GAMEGRIDSIZE))
+            if(nodePositionDataFormatted.length() != (_gameGridSize*_gameGridSize))
             {
                 throw (QString("Board file data is wrong/corrupt please fix"));
             }
@@ -48,43 +48,35 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
     QPoint passVectorElementIDAsPOS;
     int currentNumber;
 
-    for (int i = 0; i < GAMEGRIDSIZE; ++i)
+    for (int i = 0; i < _gameGridSize; ++i)
     {
+        int zValue;
         vector<GridObject*> temp;
-        for (int j = 0; j < GAMEGRIDSIZE; j++)
+        for (int j = 0; j < _gameGridSize; j++)
         {
-            currentNumber = (infoFromFile[(j * GAMEGRIDSIZE) + i]-'0');
-            passVectorElementIDAsPOS.setX(i*DISPLACEMENTX);
-            passVectorElementIDAsPOS.setY(j*DISPLACEMENTY);
+            currentNumber = (infoFromFile[(j * _gameGridSize) + i]-'0');
+            passVectorElementIDAsPOS.setX(i*(WINDOWSIZE/_gameGridSize));
+            passVectorElementIDAsPOS.setY(j*(WINDOWSIZE/_gameGridSize));
             if(currentNumber == EMPTY)
             {
-                pushThisToVector = new Empty(i, j, passVectorElementIDAsPOS, WINDOWSIZE/GAMEGRIDSIZE);
+                pushThisToVector = new Empty(i, j, passVectorElementIDAsPOS, WINDOWSIZE/_gameGridSize);
                 connect(pushThisToVector, SIGNAL(clickedEmpty(Empty*)), this, SLOT(clickedEmpty(Empty*)));
             }
             else
             {
-                pushThisToVector = new Node(i, j, (currentNumber), passVectorElementIDAsPOS, WINDOWSIZE/GAMEGRIDSIZE);
+                pushThisToVector = new Node(i, j, (currentNumber), passVectorElementIDAsPOS, WINDOWSIZE/_gameGridSize);
                 connect(pushThisToVector, SIGNAL(mouseEnter(Node*)), this, SLOT(enterMouseNode(Node*)));
                 connect(pushThisToVector, SIGNAL(mouseLeave(Node*)), this, SLOT(exitMouseNode(Node*)));
+                zValue = 20 - (i + j);
+                pushThisToVector->setZValue(zValue);
+
             }
             connect(pushThisToVector, SIGNAL(hoverEnter(GridObject*)), this, SLOT(enterMouseGridObj(GridObject*)));
             connect(pushThisToVector, SIGNAL(hoverLeft(GridObject*)), this, SLOT(exitMouseGridObj(GridObject*)));
             temp.push_back(pushThisToVector);
         }
-        tempBackwardsGameObjects.push_back(temp);
+        _allGameObjects.push_back(temp);
     }
-
-    for(int j = tempBackwardsGameObjects.size(); j > 0; j--)
-    {
-        vector<GridObject *> temp;
-        for(int i = tempBackwardsGameObjects.size(); i > 0; i--)
-        {
-            temp.insert(temp.begin(), tempBackwardsGameObjects[j - 1][i - 1]);
-        }
-        _allGameObjects.insert(_allGameObjects.begin(), temp);
-    }
-
-
     qDebug() << "boardLoaded";
 }
 
@@ -217,7 +209,7 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
 {
     int x = empty->getXPos();
     int y = empty->getYPos();
-    QPoint point(x*(WINDOWSIZE/GAMEGRIDSIZE), y*(WINDOWSIZE/GAMEGRIDSIZE));
+    QPoint point(x*(WINDOWSIZE/_gameGridSize), y*(WINDOWSIZE/_gameGridSize));
 
     Orientation ori;
     if(_currentDirection == Direction::right || _currentDirection == Direction::left)
@@ -234,7 +226,7 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
         ori = Orientation::vertical;
     }
 
-    GridObject* line = new Line(x, y, ori, point, WINDOWSIZE/GAMEGRIDSIZE, conn1, conn2);
+    GridObject* line = new Line(x, y, ori, point, WINDOWSIZE/_gameGridSize, conn1, conn2);
 
     connect(line, SIGNAL(clickedLine(Line*)), this, SLOT(clickedLine(Line*)));
     connect(line, SIGNAL(rightClickedLine(Line*)), this, SLOT(rightClickedLine(Line*)));
@@ -265,8 +257,8 @@ void GameLogic::linetoEmpty(Line *line)
 {
     int x = line->getXPos();
     int y = line->getYPos();
-    QPoint point(x*(WINDOWSIZE/GAMEGRIDSIZE), y*(WINDOWSIZE/GAMEGRIDSIZE));
-    GridObject* empty = new Empty(x, y, point, WINDOWSIZE/GAMEGRIDSIZE);
+    QPoint point(x*(WINDOWSIZE/_gameGridSize), y*(WINDOWSIZE/_gameGridSize));
+    GridObject* empty = new Empty(x, y, point, WINDOWSIZE/_gameGridSize);
     connect(empty, SIGNAL(clickedEmpty(Empty*)), this, SLOT(clickedEmpty(Empty*)));
 
     connect(empty, SIGNAL(hoverEnter(GridObject*)), this, SLOT(enterMouseGridObj(GridObject*)));
@@ -412,27 +404,27 @@ void GameLogic::exitMouseNode(Node *node)
 // CRAZY FUNCTION!!! WTF ARE WE DOING NEED TO MAKE MORE READABLE
 void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *>> board)
 {
-    for(int x = 0; x<GAMEGRIDSIZE; x++)
+    for(int x = 0; x<_gameGridSize; x++)
     {
         vector<int> tempIntVec;
-        for(int y = 0; y<GAMEGRIDSIZE; y++)
+        for(int y = 0; y<_gameGridSize; y++)
         {
-            tempIntVec.push_back(infoFromFile[y*GAMEGRIDSIZE + x] - 48);
+            tempIntVec.push_back(infoFromFile[y*_gameGridSize + x] - 48);
         }
         _gridTypeIndicator.push_back(tempIntVec);
     }
 
 
-    for(int x = 0; x<GAMEGRIDSIZE; x++)
+    for(int x = 0; x<_gameGridSize; x++)
     {
-        for(int y = 0; y<GAMEGRIDSIZE; y++)
+        for(int y = 0; y<_gameGridSize; y++)
         {
             if(_gridTypeIndicator[x][y] != EMPTY)
             {
                 Node * currentNode = dynamic_cast<Node *>(board[x][y]);
 
                 //right
-                for(int i = x + 1; i<GAMEGRIDSIZE; i++)
+                for(int i = x + 1; i<_gameGridSize; i++)
                 {
                     if(_gridTypeIndicator[i][y] != EMPTY)
                     {
@@ -452,7 +444,7 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
                 }
 
                 //bottom
-                for(int i = y + 1; i<GAMEGRIDSIZE; i++)
+                for(int i = y + 1; i<_gameGridSize; i++)
                 {
                     if(_gridTypeIndicator[x][i] != EMPTY)
                     {

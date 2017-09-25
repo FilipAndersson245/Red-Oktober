@@ -8,7 +8,6 @@
 #include <QGraphicsItemGroup>
 #include <QGraphicsSceneMouseEvent>
 
-#define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
 
 enum class Orientation

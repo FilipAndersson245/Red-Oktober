@@ -48,6 +48,7 @@ void Hashlife::addMenuGraphics()
 
 void Hashlife::newGame()
 {
+    _logic = new GameLogic(_gridSizeSelection);
     int gridSizePref = 0;
     int difficultyPref = 0;
     if (_btnEasy->isChecked())
@@ -87,14 +88,18 @@ void Hashlife::newGame()
     _mainScene->removeItem(_btnHard->graphicsProxyWidget());
     _mainScene->removeItem(_btnStart->graphicsProxyWidget());
     _mainScene->removeItem(_btnReturn->graphicsProxyWidget());
+    _mainScene->removeItem(_difficultyLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_gridLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_boardLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_comboGridLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_comboDifficultyLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_boardSelector->graphicsProxyWidget());
     ui->menuBar->show();
     ui->_graphicsView->fitInView( _mainScene->sceneRect(), Qt::KeepAspectRatio);
     qDebug() << "new game";
     try
     {
-        int difficultyChoosen = 2;
-        int boardSizeChoosen = 1;
-        choosenMap(difficultyChoosen,boardSizeChoosen);
+        chosenMap();
 
     }catch(QString ERRORCODE)
     {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();}
@@ -147,12 +152,61 @@ void Hashlife::returnToMenu()
     _mainScene->removeItem(_btnHard->graphicsProxyWidget());
     _mainScene->removeItem(_btnStart->graphicsProxyWidget());
     _mainScene->removeItem(_btnReturn->graphicsProxyWidget());
+    _mainScene->removeItem(_difficultyLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_gridLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_boardLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_comboGridLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_comboDifficultyLabel->graphicsProxyWidget());
+    _mainScene->removeItem(_boardSelector->graphicsProxyWidget());
     addMenuGraphics();
+}
+
+void Hashlife::difficultyClicked()
+{
+    qDebug() << "Difficulty button was clicked";
+    _boardSelector->setCurrentIndex(0);
+    switch(_grpDifficulty->checkedId())
+    {
+    case 0:
+        _comboDifficultyLabel->setText("Easy:");
+        break;
+    case 1:
+        _comboDifficultyLabel->setText("Medium:");;
+        break;
+    case 2:
+        _comboDifficultyLabel->setText("Hard:");;
+        break;
+    default:
+        break;
+    }
+}
+
+void Hashlife::gridClicked()
+{
+    qDebug() << "Grid button was clicked" << _grpGridSize->checkedId();
+    _boardSelector->setCurrentIndex(0);
+    switch(_grpGridSize->checkedId())
+    {
+    case 0:
+        _gridSizeSelection = 9;
+        _comboGridLabel->setText("9 x 9:");
+        break;
+    case 1:
+        _gridSizeSelection = 13;
+        _comboGridLabel->setText("13 x 13:");;
+        break;
+    case 2:
+        _gridSizeSelection = 17;
+        _comboGridLabel->setText("17 x 17:");;
+        break;
+    default:
+        break;
+    }
 }
 
 void Hashlife::setupGameGraphics()
 {
-    _logic.addGameGraphics(_mainScene);
+    _logic->addGameGraphics(_mainScene);
 }
 
 void Hashlife::resizeEvent(QResizeEvent *event)
@@ -183,16 +237,30 @@ void Hashlife::setupGame()
     _mainScene->removeItem(_btnExit->graphicsProxyWidget());
     qDebug() << "Tried to create game";
     _btnReturn = new QPushButton;
-    _btnReturn->setGeometry(QRect(0, 0, 40, 15));
+    _btnReturn->setGeometry(QRect(160, 0, 40, 15));
     _btnReturn->setText("Return");
     _btnReturn->setFont(QFont("Helvetica", 6, QFont::Bold, true));;
     _btnReturn->setMaximumSize(40, 15);
     _proxyReturn = new QGraphicsProxyWidget;
     _proxyReturn = _mainScene->addWidget(_btnReturn);
-    connect(_btnReturn, SIGNAL(released()), this, SLOT(returnToMenu()));
+
+
+
+    connect(_btnReturn, SIGNAL(clicked()), this, SLOT(returnToMenu()));
+
+
+
+    _gridLabel = new QLabel;
+    _gridLabel->setText("Select Grid Size:");
+    _gridLabel->setFont(QFont("Helvetica", 4, QFont::Bold, false));
+    _gridLabel->setGeometry(QRect(79, 10, 50, 10));
+    _gridLabel->setStyleSheet("background-color: rgba(0,0,0,0%)");
+    _proxyGridLabel = new QGraphicsProxyWidget;
+    _proxyGridLabel = _mainScene->addWidget(_gridLabel);
+
     _btnGrid10 = new QPushButton;
-    _btnGrid10->setGeometry(QRect(30, 30, 40, 40));
-    _btnGrid10->setText("10 x 10");
+    _btnGrid10->setGeometry(QRect(30, 20, 40, 40));
+    _btnGrid10->setText("9 x 9");
     _btnGrid10->setFont(QFont("Helvetica", 6, QFont::Bold, true));
     _btnGrid10->setCheckable(true);
     _btnGrid10->setChecked(true);
@@ -200,23 +268,33 @@ void Hashlife::setupGame()
     _proxyGrid10 = new QGraphicsProxyWidget;
     _proxyGrid10 = _mainScene->addWidget(_btnGrid10);
     _btnGrid15 = new QPushButton;
-    _btnGrid15->setGeometry(QRect(80, 30, 40, 40));
-    _btnGrid15->setText("15 x 15");
+    _btnGrid15->setGeometry(QRect(80, 20, 40, 40));
+    _btnGrid15->setText("13 x 13");
     _btnGrid15->setFont(QFont("Helvetica", 6, QFont::Bold, true));
     _btnGrid15->setCheckable(true);
     _btnGrid15->setMaximumSize(40, 40);
     _proxyGrid15 = new QGraphicsProxyWidget;
     _proxyGrid15 = _mainScene->addWidget(_btnGrid15);
     _btnGrid20 = new QPushButton;
-    _btnGrid20->setGeometry(QRect(130, 30, 40, 40));
-    _btnGrid20->setText("20 x 20");
+    _btnGrid20->setGeometry(QRect(130, 20, 40, 40));
+    _btnGrid20->setText("17 x 17");
     _btnGrid20->setFont(QFont("Helvetica", 6, QFont::Bold, true));
     _btnGrid20->setCheckable(true);
     _btnGrid20->setMaximumSize(40, 40);
     _proxyGrid20 = new QGraphicsProxyWidget;
     _proxyGrid20 = _mainScene->addWidget(_btnGrid20);
+
+    _difficultyLabel = new QLabel;
+    _difficultyLabel->setText("Select Difficulty:");
+    _difficultyLabel->setFont(QFont("Helvetica", 4, QFont::Bold, false));
+    _difficultyLabel->setGeometry(QRect(78, 60, 50, 10));
+    _difficultyLabel->setStyleSheet("background-color: rgba(0,0,0,0%)");
+    _proxyDifficultyLabel = new QGraphicsProxyWidget;
+    _proxyDifficultyLabel = _mainScene->addWidget(_difficultyLabel);
+
+
     _btnEasy = new QPushButton;
-    _btnEasy->setGeometry(QRect(30, 80, 40, 40));
+    _btnEasy->setGeometry(QRect(30, 70, 40, 40));
     _btnEasy->setText("Easy");
     _btnEasy->setFont(QFont("Helvetica", 6, QFont::Bold, true));
     _btnEasy->setCheckable(true);
@@ -225,7 +303,7 @@ void Hashlife::setupGame()
     _proxyEasy = new QGraphicsProxyWidget;
     _proxyEasy = _mainScene->addWidget(_btnEasy);
     _btnMedium = new QPushButton;
-    _btnMedium->setGeometry(QRect(80, 80, 40, 40));
+    _btnMedium->setGeometry(QRect(80, 70, 40, 40));
     _btnMedium->setText("Medium");
     _btnMedium->setFont(QFont("Helvetica", 6, QFont::Bold, true));
     _btnMedium->setCheckable(true);
@@ -233,7 +311,7 @@ void Hashlife::setupGame()
     _proxyMedium = new QGraphicsProxyWidget;
     _proxyMedium = _mainScene->addWidget(_btnMedium);
     _btnHard = new QPushButton;
-    _btnHard->setGeometry(QRect(130, 80, 40, 40));
+    _btnHard->setGeometry(QRect(130, 70, 40, 40));
     _btnHard->setText("Hard");
     _btnHard->setFont(QFont("Helvetica", 6, QFont::Bold, true));
     _btnHard->setCheckable(true);
@@ -246,37 +324,70 @@ void Hashlife::setupGame()
     _btnStart->setFont(QFont("Helvetica", 6, QFont::Bold, true));;
     _proxyStart = new QGraphicsProxyWidget;
     _proxyStart = _mainScene->addWidget(_btnStart);
-    connect(_btnStart, SIGNAL(released()), this, SLOT(newGame()));
+    connect(_btnStart, SIGNAL(clicked()), this, SLOT(newGame()));
+
+    _boardLabel = new QLabel;
+    _boardLabel->setText("Select Game Board:");
+    _boardLabel->setFont(QFont("Helvetica", 4, QFont::Bold, false));
+    _boardLabel->setGeometry(QRect(76, 110, 50, 10));
+    _boardLabel->setStyleSheet("background-color: rgba(0,0,0,0%)");
+    _proxyBoardLabel = new QGraphicsProxyWidget;
+    _proxyBoardLabel = _mainScene->addWidget(_boardLabel);
+
+    _comboDifficultyLabel = new QLabel;
+    _comboDifficultyLabel->setText("Easy:");
+    _comboDifficultyLabel->setFont(QFont("Helvetica", 4, QFont::Bold, false));
+    _comboDifficultyLabel->setGeometry(QRect(52, 121, 30, 10));
+    _comboDifficultyLabel->setStyleSheet("background-color: rgba(0,0,0,0%)");
+    _proxyComboDifficultyLabel = new QGraphicsProxyWidget;
+    _proxyComboDifficultyLabel = _mainScene->addWidget(_comboDifficultyLabel);
+
+    _comboGridLabel = new QLabel;
+    _comboGridLabel->setText("9 x 9:");
+    _comboGridLabel->setFont(QFont("Helvetica", 4, QFont::Bold, false));
+    _comboGridLabel->setGeometry(QRect(30, 121, 30, 10));
+    _comboGridLabel->setStyleSheet("background-color: rgba(0,0,0,0%)");
+    _proxyComboGridLabel = new QGraphicsProxyWidget;
+    _proxyComboGridLabel = _mainScene->addWidget(_comboGridLabel);
 
     _grpGridSize = new QButtonGroup;
     _grpGridSize->addButton(_btnGrid10, 0);
     _grpGridSize->addButton(_btnGrid15, 1);
     _grpGridSize->addButton(_btnGrid20, 2);
 
+    connect(_grpGridSize, SIGNAL(buttonClicked(int)), this, SLOT(gridClicked()));
+
     _grpDifficulty = new QButtonGroup;
     _grpDifficulty->addButton(_btnEasy, 0);
     _grpDifficulty->addButton(_btnMedium, 1);
     _grpDifficulty->addButton(_btnHard, 2);
 
+    connect(_grpDifficulty, SIGNAL(buttonClicked(int)), this, SLOT(difficultyClicked()));
 
 
-    _boardSelector = new QComboBox(this);
+
+    _boardSelector = new QComboBox;
+    _boardSelector->setGeometry(QRect(75, 120, 95, 12));
+    _boardSelector->setFont(QFont("Helvetica", 4, QFont::Bold, false));
+    _boardSelector->setMaximumSize(95, 12);
     _boardSelector->insertItem(0, "Random");
-    _boardSelector->insertItem(1, "Board A");
-    _boardSelector->insertItem(2, "Board B");
-    _boardSelector->insertItem(3, "Board C");
-    _boardSelector->insertItem(4, "Board D");
-    _boardSelector->insertItem(5, "Board E");
+    _boardSelector->insertItem(1, "Level 1");
+    _boardSelector->insertItem(2, "Level 2");
+    _boardSelector->insertItem(3, "Level 3");
+    _boardSelector->insertItem(4, "Level 4");
+    _boardSelector->insertItem(5, "Level 5");
+    _boardSelector->insertItem(6, "Level 6");
+    _boardSelector->insertItem(7, "Level 7");
+    _boardSelector->setIconSize(QSize(3, 3));
     _proxyBoardSelector = new QGraphicsProxyWidget;
     _proxyBoardSelector = _mainScene->addWidget(_boardSelector);
 
 }
 
-
 void Hashlife::on_actionEnd_Game_triggered()
 {
     _mainScene->clear();
-    _logic.endGame();
+    _logic->endGame();
     addMenuGraphics();
 }
 
@@ -284,67 +395,47 @@ void Hashlife::on_actionHelp_triggered()
 {
     help();
 }
-void Hashlife::choosenMap(int userDifficultyChoice, int userBoardSize)
+void Hashlife::chosenMap()
 {
     QString loadThisTypeOfBoard = ROOTDIR;
-    switch (userDifficultyChoice)
+    switch (_grpGridSize->checkedId())
     {
-
+    case 0:
+        loadThisTypeOfBoard.append("9x9/");
+        break;
     case 1:
-    {
-        loadThisTypeOfBoard.append("EASY");
-    }
+        loadThisTypeOfBoard.append("13x13/");
         break;
     case 2:
-    {
-        loadThisTypeOfBoard.append("MEDIUM");
-    }
-        break;
-    case 3:
-    {
-        loadThisTypeOfBoard.append("HARD");
-    }
+        loadThisTypeOfBoard.append("17x17/");
         break;
         // Never end up here //
     default:
-    {
         throw(QString ("something went wrong while computing user lever choice"));
     }
-    }
-    switch (userBoardSize)
+    switch (_grpDifficulty->checkedId())
     {
-
+    case 0:
+        loadThisTypeOfBoard.append("easy/");
+        break;
     case 1:
-    {
-        loadThisTypeOfBoard.append("_10x10");
-    }
+        loadThisTypeOfBoard.append("medium/");
         break;
     case 2:
-    {
-        loadThisTypeOfBoard.append("_15x15");
-    }
-        break;
-    case 3:
-    {
-        loadThisTypeOfBoard.append("_20x20");
-    }
+        loadThisTypeOfBoard.append("hard/");
         break;
         // Never end up here //
     default:
-    {
         throw(QString ("something went wrong while computing user lever choice"));
     }
-    }
+
     if (!loadThisTypeOfBoard.isEmpty())
     {
         // dot is for identification of new info //
-        loadThisTypeOfBoard.append("_level" + QString::number( /*returnRandom()*/ 1) +".hashiboard");
-
+        loadThisTypeOfBoard.append("level" + QString::number( /*returnRandom()*/ 1) +".hashiboard");
         qDebug() << "User level choice:" << loadThisTypeOfBoard;
-
-        _logic.loadGameBoardFromFile(loadThisTypeOfBoard);
+        _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
     }
-
 }
 int Hashlife::returnRandom(void)
 {

@@ -15,9 +15,6 @@
 // defines //
 #define LINE -1
 #define EMPTY 0
-#define GAMEGRIDSIZE 10
-#define DISPLACEMENTX 20
-#define  DISPLACEMENTY 20
 
 using namespace std;
 class GameLogic : public QObject
@@ -27,7 +24,7 @@ class GameLogic : public QObject
 
 public:
 
-    GameLogic();
+    GameLogic(int size);
 
     void addNodeToGameObjects(void);
 
@@ -59,6 +56,8 @@ public slots:
 
 private:
 
+    int _gameGridSize;
+
     void connectNodes(QByteArray infoFromFile,vector<vector<GridObject*>> board);
 
     void updateHighlighted();
@@ -78,9 +77,6 @@ private:
     void updateCurrentDirection(GridObject *gridObj);
 
     bool isGameFinished();
-
-
-
 
     QPoint _activeNodeCoords;
 

@@ -21,8 +21,6 @@
 #include <QMovie>
 #include <QDialog>
 
-#define BOARDPATH "./level1.hashiboard"
-#define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
 
 namespace Ui {
@@ -45,7 +43,9 @@ public:
     ~Hashlife();
 
     int returnRandom();
-    void choosenMap(int userDifficultyChoice, int userBoardSize);
+
+    void chosenMap();
+
 public slots:
 
     void setupGame();
@@ -57,6 +57,10 @@ public slots:
     void exit();
 
     void returnToMenu();
+
+    void difficultyClicked();
+
+    void gridClicked();
 
 private slots:
 
@@ -76,7 +80,9 @@ private:
 
     QGraphicsScene* _mainScene;
 
-    GameLogic _logic;
+    GameLogic *_logic;
+
+    int _gridSizeSelection = 9;
 
     QPushButton *_btnNewGame;
 
@@ -122,12 +128,32 @@ private:
 
     QGraphicsProxyWidget *_proxyStart;
 
-    QComboBox *_boardSelector = 0;
+    QComboBox *_boardSelector;
 
     QGraphicsProxyWidget *_proxyBoardSelector;
 
     QButtonGroup *_grpGridSize;
 
     QButtonGroup *_grpDifficulty;
+
+    QLabel *_gridLabel;
+
+    QGraphicsProxyWidget *_proxyGridLabel;
+
+    QLabel *_difficultyLabel;
+
+    QGraphicsProxyWidget *_proxyDifficultyLabel;
+
+    QLabel *_boardLabel;
+
+    QGraphicsProxyWidget *_proxyBoardLabel;
+
+    QLabel *_comboDifficultyLabel;
+
+    QGraphicsProxyWidget *_proxyComboDifficultyLabel;
+
+    QLabel *_comboGridLabel;
+
+    QGraphicsProxyWidget *_proxyComboGridLabel;
 
 };

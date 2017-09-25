@@ -1,6 +1,5 @@
 #pragma once
 
-#define GAMEGRIDSIZE 10
 #define WINDOWSIZE 200
 
 #include <QGraphicsItem>
@@ -20,8 +19,6 @@ public:
 
     GridObject(int x, int y);
 
-    //void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
@@ -36,17 +33,7 @@ public:
 
     bool isPotentialLine();
 
-public slots:
-
-    //void rectClicked();
-
-    //void rectEntered();
-
-    //void rectLeft();
-
 signals:
-
-    //void clicked();
 
     void hoverEnter(GridObject*);
 

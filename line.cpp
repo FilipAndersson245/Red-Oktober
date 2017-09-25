@@ -2,6 +2,7 @@
 
 Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* conn1, Node* conn2): GridObject(x, y)
 {
+
     _firstConnection = conn1;
     _secondConnection = conn2;
 
@@ -24,12 +25,12 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* 
     {
     case Orientation::horizontal:
 
-        _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2), _gridSize, _gridSize/40);
+        _lineRect = new QGraphicsRectItem(_pos.x() - 4, _pos.y() + (_gridSize/2), _gridSize * 1.4, _gridSize/40);
         break;
 
     case Orientation::vertical:
 
-        _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y(), _gridSize/40, _gridSize);
+        _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y() - 4, _gridSize/40, _gridSize * 1.4);
         break;
     }
 
@@ -37,6 +38,7 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* 
     _itemGroup->addToGroup(_lineRect);
     _lineRect->setBrush(brush2);
     _lineRect->setPen(pen2);
+    _lineRect->setAcceptHoverEvents(false);
 }
 
 //emit left or right click function
@@ -87,13 +89,13 @@ void Line::addSecondLine()
     switch(_orientation)
     {
         case Orientation::horizontal:
-            _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2.5), _gridSize, _gridSize/40);
-            _secondLineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/1.66), _gridSize, _gridSize/40);
+            _lineRect = new QGraphicsRectItem(_pos.x() - 4, _pos.y() + (_gridSize/2.5), _gridSize * 1.4, _gridSize/40);
+            _secondLineRect = new QGraphicsRectItem(_pos.x() - 4, _pos.y() + (_gridSize/1.66), _gridSize * 1.4, _gridSize/40);
             break;
 
         case Orientation::vertical:
-            _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2.5), _pos.y(), _gridSize/40, _gridSize);
-            _secondLineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/1.66), _pos.y(), _gridSize/40, _gridSize);
+            _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2.5), _pos.y() - 4, _gridSize/40, _gridSize * 1.4);
+            _secondLineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/1.66), _pos.y() - 4, _gridSize/40, _gridSize * 1.4);
             break;
     }
     _itemGroup->addToGroup(_lineRect);
@@ -102,6 +104,8 @@ void Line::addSecondLine()
     _itemGroup->addToGroup(_secondLineRect);
     _secondLineRect->setBrush(brush);
     _secondLineRect->setPen(pen);
+    _lineRect->setAcceptHoverEvents(false);
+    _secondLineRect->setAcceptHoverEvents(false);
 }
 
 void Line::removeSecondLine()
@@ -126,16 +130,17 @@ void Line::removeSecondLine()
     switch(_orientation)
     {
         case Orientation::horizontal:
-            _lineRect = new QGraphicsRectItem(_pos.x(), _pos.y() + (_gridSize/2), _gridSize, _gridSize/40);
+            _lineRect = new QGraphicsRectItem(_pos.x() - 4, _pos.y() + (_gridSize/2), _gridSize * 1.4, _gridSize/40);
             break;
         case Orientation::vertical:
-            _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y(), _gridSize/40, _gridSize);
+            _lineRect = new QGraphicsRectItem(_pos.x() + (_gridSize/2), _pos.y() - 4, _gridSize/40, _gridSize * 1.4);
             break;
     }
 
     _itemGroup->addToGroup(_lineRect);
     _lineRect->setBrush(brush2);
     _lineRect->setPen(pen2);
+    _lineRect->setAcceptHoverEvents(false);
 }
 
 Line::~Line()

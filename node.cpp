@@ -10,7 +10,6 @@ Node::Node(int x, int y, int nodeSize, QPoint point, int size): GridObject(x, y)
     this->setPen(pen);
 
     _nodeCircle = new QGraphicsEllipseItem(_pos.x(), _pos.y(), size, size);
-    _nodeCircle->setZValue(1000);
     QGraphicsDropShadowEffect * _dropShadow = new QGraphicsDropShadowEffect();
     _dropShadow->setBlurRadius(12);
     _dropShadow->setColor(QColor(0,0,0,200));
@@ -22,7 +21,6 @@ Node::Node(int x, int y, int nodeSize, QPoint point, int size): GridObject(x, y)
     _nodeText->setDefaultTextColor(Qt::white);
     _nodeText->setFont(serifFont);
     _nodeText->setPos(point.x() + (4-_nodeText->boundingRect().width()/8)  , point.y()-7);
-    _nodeText->setZValue(1010);
     _nodeText->setAcceptHoverEvents(false);
     _itemGroup = new QGraphicsItemGroup(this);
     _itemGroup->addToGroup(_nodeCircle);
