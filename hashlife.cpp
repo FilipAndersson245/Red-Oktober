@@ -338,7 +338,7 @@ void Hashlife::choosenMap(int userDifficultyChoice, int userBoardSize)
     if (!loadThisTypeOfBoard.isEmpty())
     {
         // dot is for identification of new info //
-        loadThisTypeOfBoard.append("_level" + QString::number(returnRandom()) +".hashiboard");
+        loadThisTypeOfBoard.append("_level" + QString::number( /*returnRandom()*/ 1) +".hashiboard");
 
         qDebug() << "User level choice:" << loadThisTypeOfBoard;
 

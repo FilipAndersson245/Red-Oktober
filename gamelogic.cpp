@@ -43,6 +43,7 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 
 void GameLogic::loadLevel(QByteArray infoFromFile)
 {
+    vector<vector<GridObject *>> tempBackwardsGameObjects;
     GridObject* pushThisToVector;
     QPoint passVectorElementIDAsPOS;
     int currentNumber;
@@ -68,10 +69,22 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
             }
             connect(pushThisToVector, SIGNAL(hoverEnter(GridObject*)), this, SLOT(enterMouseGridObj(GridObject*)));
             connect(pushThisToVector, SIGNAL(hoverLeft(GridObject*)), this, SLOT(exitMouseGridObj(GridObject*)));
-            temp.insert(temp.begin(), pushThisToVector);
+            temp.push_back(pushThisToVector);
+        }
+        tempBackwardsGameObjects.push_back(temp);
+    }
+
+    for(int j = tempBackwardsGameObjects.size(); j > 0; j--)
+    {
+        vector<GridObject *> temp;
+        for(int i = tempBackwardsGameObjects.size(); i > 0; i--)
+        {
+            temp.insert(temp.begin(), tempBackwardsGameObjects[j - 1][i - 1]);
         }
         _allGameObjects.insert(_allGameObjects.begin(), temp);
     }
+
+
     qDebug() << "boardLoaded";
 }
 
