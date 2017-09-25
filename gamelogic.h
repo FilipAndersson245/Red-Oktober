@@ -37,6 +37,8 @@ public:
 
     void addGameGraphics(QGraphicsScene* aScene);
 
+    void endGame();
+
 public slots:
 
     void clickedLine(Line *line);
@@ -75,6 +77,10 @@ private:
 
     void updateCurrentDirection(GridObject *gridObj);
 
+    bool isGameFinished();
+
+
+
 
     QPoint _activeNodeCoords;
 
@@ -87,6 +93,8 @@ private:
     vector<vector<GridObject*> > _allGameObjects;
 
     QGraphicsScene *_gameScene;
+
+    bool _won;
 
     vector<vector<int>> _gridTypeIndicator; //0 = empty, positive = node, negative = line
 };

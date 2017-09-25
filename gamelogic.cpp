@@ -1,6 +1,6 @@
 #include "gamelogic.h"
 
-GameLogic::GameLogic() {}
+GameLogic::GameLogic():_won(false) {}
 
 void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 {
@@ -68,9 +68,9 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
             }
             connect(pushThisToVector, SIGNAL(hoverEnter(GridObject*)), this, SLOT(enterMouseGridObj(GridObject*)));
             connect(pushThisToVector, SIGNAL(hoverLeft(GridObject*)), this, SLOT(exitMouseGridObj(GridObject*)));
-            temp.push_back(pushThisToVector);
+            temp.insert(temp.begin(), pushThisToVector);
         }
-        _allGameObjects.push_back(temp);
+        _allGameObjects.insert(_allGameObjects.begin(), temp);
     }
     qDebug() << "boardLoaded";
 }
@@ -113,16 +113,8 @@ void GameLogic::clickedLine(Line *line)
     }
 }
 
-//right clicked
 void GameLogic::rightClickedLine(Line *line)
 {
-
-    //----------------------------------//
-    // ----- WARNING HÄR ÄR FELET ----- //
-    //----------------------------------//
-    //_currentDirection måste uppdateras här
-    //nvm kanske löste det???
-
     qDebug() << "rightClick on Line";
 
     Node * firstNode = line->getFirstConnection();
@@ -164,6 +156,7 @@ void GameLogic::rightClickedLine(Line *line)
                 selectedLine->removeSecondLine();
             }
         }
+        enterMouseGridObj(dynamic_cast<GridObject *>(line));
     }
     else
     {
@@ -196,6 +189,8 @@ void GameLogic::clickedEmpty(Empty *empty)
             emptyToLine(dynamic_cast<Empty *>(object), node1, node2);
             delete object;
             updateHighlighted();
+
+            this->_won = isGameFinished();
         }
     }
     else
@@ -570,4 +565,20 @@ void GameLogic::updateCurrentDirection(GridObject *gridObj)
     {
         activateDirection(Direction::left);
     }
+}
+
+//implement logic. should have vector with all nodes?
+bool GameLogic::isGameFinished()
+{
+    //for(int i=0; i<10; i++)//loop all nodes
+    //{
+    //    if(false)          //return if some is not full
+    //        return false
+    //}
+    return true;           //return true if all is full
+}
+
+void GameLogic::endGame()
+{
+    qDebug() << "Game ended";
 }

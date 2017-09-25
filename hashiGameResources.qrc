@@ -1,0 +1,17 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>levels/EASY_10x10_level1.hashiboard</file>
+    <file>levels/EASY_10x10_level2.hashiboard</file>
+    <file>levels/EASY_10x10_level3.hashiboard</file>
+    <file>levels/EASY_10x10_level4.hashiboard</file>
+	<file>levels/MEDIUM_10x10_level1.hashiboard</file>
+    <file>levels/MEDIUM_10x10_level2.hashiboard</file>
+    <file>levels/MEDIUM_10x10_level3.hashiboard</file>
+    <file>levels/MEDIUM_10x10_level4.hashiboard</file>
+	<file>levels/HARD_10x10_level1.hashiboard</file>
+    <file>levels/HARD_10x10_level2.hashiboard</file>
+    <file>levels/HARD_10x10_level3.hashiboard</file>
+    <file>levels/HARD_10x10_level4.hashiboard</file>
+	<file>gitgud.gif</file>
+</qresource>
+</RCC>

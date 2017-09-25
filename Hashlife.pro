@@ -48,3 +48,5 @@ FORMS += \
         hashlife.ui
 
 CONFIG += c++11
+RESOURCES += \
+hashiGameResources.qrc
