@@ -370,7 +370,7 @@ void Hashlife::setupGame()
     _boardSelector->setGeometry(QRect(75, 120, 95, 12));
     _boardSelector->setFont(QFont("Helvetica", 4, QFont::Bold, false));
     _boardSelector->setMaximumSize(95, 12);
-    _boardSelector->insertItem(0, "Random");
+    _boardSelector->insertItem(0, "Random Online");
     _boardSelector->insertItem(1, "Level 1");
     _boardSelector->insertItem(2, "Level 2");
     _boardSelector->insertItem(3, "Level 3");
@@ -395,6 +395,8 @@ void Hashlife::on_actionHelp_triggered()
 {
     help();
 }
+
+//Creates a string to the location of the target file based on player choices
 void Hashlife::chosenMap()
 {
     QString loadThisTypeOfBoard = ROOTDIR;
@@ -431,15 +433,43 @@ void Hashlife::chosenMap()
 
     if (!loadThisTypeOfBoard.isEmpty())
     {
-        // dot is for identification of new info //
-        loadThisTypeOfBoard.append("level" + QString::number( /*returnRandom()*/ 1) +".hashiboard");
+        int random = returnRandom();
+        switch(_boardSelector->currentIndex())
+        {
+        case 0: //Load random level
+            loadThisTypeOfBoard.append("level1.hashiboard");;
+            break;
+        case 1:
+            loadThisTypeOfBoard.append("level1.hashiboard");;
+            break;
+        case 2:
+            loadThisTypeOfBoard.append("level2.hashiboard");;;
+            break;
+        case 3:
+            loadThisTypeOfBoard.append("level3.hashiboard");;;
+            break;
+        case 4:
+            loadThisTypeOfBoard.append("level4.hashiboard");;;
+            break;
+        case 5:
+            loadThisTypeOfBoard.append("level5.hashiboard");;;
+            break;
+        case 6:
+            loadThisTypeOfBoard.append("level6.hashiboard");;;
+            break;
+        case 7:
+            loadThisTypeOfBoard.append("level7.hashiboard");;;
+            break;
+        default:
+            break;
+        }
         qDebug() << "User level choice:" << loadThisTypeOfBoard;
         _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
     }
 }
+
 int Hashlife::returnRandom(void)
 {
     srand((int)time(NULL));
-    int randNum = (rand() % NOOFLEVELS) + 1;
-    return randNum;
+    return (rand() % 7) + 1;
 }
