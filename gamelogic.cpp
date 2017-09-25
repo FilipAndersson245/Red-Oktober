@@ -43,7 +43,6 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 
 void GameLogic::loadLevel(QByteArray infoFromFile)
 {
-    vector<vector<GridObject *>> tempBackwardsGameObjects;
     GridObject* pushThisToVector;
     QPoint passVectorElementIDAsPOS;
     int currentNumber;
@@ -71,17 +70,7 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
             connect(pushThisToVector, SIGNAL(hoverLeft(GridObject*)), this, SLOT(exitMouseGridObj(GridObject*)));
             temp.push_back(pushThisToVector);
         }
-        tempBackwardsGameObjects.push_back(temp);
-    }
-
-    for(int j = tempBackwardsGameObjects.size(); j > 0; j--)
-    {
-        vector<GridObject *> temp;
-        for(int i = tempBackwardsGameObjects.size(); i > 0; i--)
-        {
-            temp.insert(temp.begin(), tempBackwardsGameObjects[j - 1][i - 1]);
-        }
-        _allGameObjects.insert(_allGameObjects.begin(), temp);
+        _allGameObjects.push_back(temp);
     }
 
 
@@ -110,16 +99,23 @@ void GameLogic::clickedLine(Line *line)
     {
         //adds double line
 
+        Node * node2 = line->getFirstConnection();
+        Node * node1 = line->getSecondConnection();
+
         enterMouseGridObjLine(dynamic_cast<GridObject *>(line));
 
-        line->getFirstConnection()->addBridge(_currentDirection);
-        line->getSecondConnection()->addBridge(DirConections::getOppositeDirection(_currentDirection));
+        node1->addBridge(_currentDirection);
+        node2->addBridge(DirConections::getOppositeDirection(_currentDirection));
         for(GridObject * item : _highLightedObjects[_currentDirection])
         {
             if(this->_gridTypeIndicator[item->getXPos()][item->getYPos()] == LINE)
             {
                 Line * highlightedLine = dynamic_cast<Line *>(item);
                 highlightedLine->addSecondLine();
+                if(node1->isFull() && node2->isFull())
+                {
+                    this->_won = isGameFinished();
+                }
             }
         }
 
@@ -194,16 +190,21 @@ void GameLogic::clickedEmpty(Empty *empty)
         Node * node1 = _activeNode;
         Node * node2 = _activeNode->getConnectedNodes()[_currentDirection];
 
-        node1->addBridge(_currentDirection);
-        node2->addBridge(DirConections::getOppositeDirection(_currentDirection));
-
-        for(GridObject * object : directionObjects)
+        if(node1 != nullptr && node2 != nullptr)
         {
-            emptyToLine(dynamic_cast<Empty *>(object), node1, node2);
-            delete object;
-            updateHighlighted();
+            node1->addBridge(_currentDirection);
+            node2->addBridge(DirConections::getOppositeDirection(_currentDirection));
 
-            this->_won = isGameFinished();
+            for(GridObject * object : directionObjects)
+            {
+                emptyToLine(dynamic_cast<Empty *>(object), node1, node2);
+                delete object;
+                updateHighlighted();
+                if(node1->isFull() && node2->isFull())
+                {
+                    this->_won = isGameFinished();
+                }
+            }
         }
     }
     else
@@ -583,13 +584,89 @@ void GameLogic::updateCurrentDirection(GridObject *gridObj)
 //implement logic. should have vector with all nodes?
 bool GameLogic::isGameFinished()
 {
-    //for(int i=0; i<10; i++)//loop all nodes
-    //{
-    //    if(false)          //return if some is not full
-    //        return false
-    //}
-    return true;           //return true if all is full
+    vector<Node *> allNodes;
+
+    for(int x = 0; x < GAMEGRIDSIZE; x++)
+    {
+        for(int y = 0; y < GAMEGRIDSIZE; y++)
+        {
+            if(_gridTypeIndicator[x][y] > 0)
+            {
+                Node * currentNode = dynamic_cast<Node *>(_allGameObjects[x][y]);
+                if(!currentNode->isFull())
+                {
+                    return false;
+                }
+                allNodes.push_back(currentNode);
+            }
+        }
+    }
+
+    vector<Node *> emptyVector;
+    vector<Node *> connectedNodeIsland = checkNodeConnected(allNodes[0],emptyVector);
+
+    for(Node * item : connectedNodeIsland)
+    {
+        item->setBrush(QBrush(Qt::black));
+    }
+
+    if(connectedNodeIsland.size() == allNodes.size())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
+
+vector<Node *> GameLogic::checkNodeConnected(Node * nodeToCheck, vector<Node *> nodesAdded)
+{
+    vector<Node *> nodesToReturn;
+
+    nodesAdded.push_back(nodeToCheck);
+
+    vector<Node *> nodesFromChildren;
+
+    for(int i = 0; i < 4; i++)
+    {
+        Direction directionToCheck = static_cast<Direction>(i+1);
+
+        Node * currentNode = nodeToCheck->getConnectedNodes()[directionToCheck];
+        int connectionInDirection = nodeToCheck->getSlotMap()[directionToCheck];
+
+        //kolla nod om det finns en anslutning i den riktningen
+        if(currentNode != nullptr && connectionInDirection)
+        {
+            //om noden vi kollar finns i de vi har gått genom
+            if( !(find(nodesAdded.begin(), nodesAdded.end(), currentNode) != nodesAdded.end()))
+            {
+                vector<Node *> checkedNodesVector = checkNodeConnected(currentNode, nodesAdded);
+                std::sort(checkedNodesVector.begin(), checkedNodesVector.end());
+                std::sort(nodesAdded.begin(), nodesAdded.end());
+                set_union(nodesAdded.begin(), nodesAdded.end(), checkedNodesVector.begin(), checkedNodesVector.end(), back_inserter(nodesFromChildren));
+            }
+        }
+    }
+
+
+
+    std::sort(nodesFromChildren.begin(), nodesFromChildren.end());
+    nodesFromChildren.erase( unique( nodesFromChildren.begin(), nodesFromChildren.end() ), nodesFromChildren.end() );
+    std::sort(nodesAdded.begin(), nodesAdded.end());
+    set_union(nodesAdded.begin(), nodesAdded.end(), nodesFromChildren.begin(), nodesFromChildren.end(), back_inserter(nodesToReturn));
+
+    qDebug() << " ---------------------- ";
+    qDebug() << "pos: " << nodeToCheck->getXPos() << ", " << nodeToCheck->getYPos();
+    qDebug() << "From Father: " << nodesAdded.size();
+    qDebug() << "From Child: " << nodesFromChildren.size();
+    qDebug() << "Returned: " << nodesToReturn.size();
+
+
+    return nodesToReturn;
+}
+
+
 
 void GameLogic::endGame()
 {

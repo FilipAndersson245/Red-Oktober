@@ -11,6 +11,7 @@
 #include <QByteArray>
 #include <QGraphicsScene>
 #include <QObject>
+#include <algorithm>
 
 // defines //
 #define LINE -1
@@ -78,6 +79,8 @@ private:
     void updateCurrentDirection(GridObject *gridObj);
 
     bool isGameFinished();
+
+    vector<Node *> checkNodeConnected(Node * nodeToCheck, vector<Node *> nodesAdded);
 
 
 

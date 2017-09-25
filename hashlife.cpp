@@ -16,6 +16,7 @@ Hashlife::Hashlife(QWidget *parent) :
     ui->_graphicsView->setScene(_mainScene);
     ui->_graphicsView->show();
     ui->_graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    ui->_graphicsView->setBackgroundBrush(QBrush(Qt::transparent));
     ui->menuBar->hide();
     autoScaleView();
     addMenuGraphics();
@@ -287,6 +288,7 @@ void Hashlife::on_actionHelp_triggered()
 void Hashlife::choosenMap(int userDifficultyChoice, int userBoardSize)
 {
     QString loadThisTypeOfBoard = ROOTDIR;
+    userDifficultyChoice = 1;  //delete
     switch (userDifficultyChoice)
     {
 
@@ -338,7 +340,7 @@ void Hashlife::choosenMap(int userDifficultyChoice, int userBoardSize)
     if (!loadThisTypeOfBoard.isEmpty())
     {
         // dot is for identification of new info //
-        loadThisTypeOfBoard.append("_level" + QString::number( /*returnRandom()*/ 1) +".hashiboard");
+        loadThisTypeOfBoard.append("_level" + QString::number( /*returnRandom()*/ 1) +".hashiboard");   //change back to random
 
         qDebug() << "User level choice:" << loadThisTypeOfBoard;
 
