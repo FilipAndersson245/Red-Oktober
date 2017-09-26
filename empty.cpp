@@ -1,6 +1,6 @@
 #include "empty.h"
 
-Empty::Empty(QPoint point, int size)
+Empty::Empty(int x, int y, QPoint point, int size): GridObject(x, y)
 {
     _pos = point;
     this->setRect(_pos.x(), _pos.y(), size, size);
@@ -8,4 +8,19 @@ Empty::Empty(QPoint point, int size)
     this->setBrush(brush);
     QPen pen(Qt::transparent);
     this->setPen(pen);
+    _itemGroup = new QGraphicsItemGroup(this);
+    this->setZValue(0);
+}
+
+void Empty::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        emit clickedEmpty(this);
+    }
+}
+
+Empty::~Empty()
+{
+
 }

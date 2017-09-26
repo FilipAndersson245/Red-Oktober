@@ -1,61 +1,46 @@
 #include "gridobject.h"
 
-GridObject::GridObject()
+GridObject::GridObject(int x, int y):_xVectorPos(x),_yVectorPos(y)
 {
     setAcceptHoverEvents(true);
-    connect(this, SIGNAL(clicked()), this, SLOT(rectClicked()));
-    connect(this, SIGNAL(hoverEnter()), this, SLOT(rectEntered()));
-    connect(this, SIGNAL(hoverLeft()), this, SLOT(rectLeft()));
-    qDebug() << "rect created";
-}
-
-void GridObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    emit clicked();
 }
 
 void GridObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    emit hoverEnter();
+    emit hoverEnter(this);
 }
 
 void GridObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    emit hoverLeft();
+    emit hoverLeft(this);
+}
+
+int GridObject::getXPos()
+{
+    return _xVectorPos;
+}
+
+int GridObject::getYPos()
+{
+    return _yVectorPos;
 }
 
 GridObject::~GridObject()
 {
-    delete this;
+    delete _itemGroup;
 }
 
-void GridObject::rectClicked()
+void GridObject::setPotentialLine(bool value)
 {
-    QBrush brush(Qt::red);
-    this->setBrush(brush);
-    qDebug() << "rect clicked";
-    _alreadyClicked = true;
+    this->_isPotentialLine = value;
 }
 
-void GridObject::rectEntered()
+bool GridObject::isPotentialLine()
 {
-    /*
-    if(!_alreadyClicked)
-    {
-        QBrush brush(Qt::lightGray);
-        this->setBrush(brush);
-    }
-    */
+    return this->_isPotentialLine;
 }
 
-void GridObject::rectLeft()
+QPoint GridObject::getPoint()
 {
-    /*
-    if(!_alreadyClicked)
-    {
-        QBrush brush(Qt::transparent);
-        this->setBrush(brush);
-    }
-    */
+    return _pos;
 }
-

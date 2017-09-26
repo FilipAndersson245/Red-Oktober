@@ -2,33 +2,31 @@
 
 NodeConnect::NodeConnect()
 {
-
+    this->_connections = 0;
+    this->_target = nullptr;
 }
 
-bool NodeConnect::connect(Node *target)
+void NodeConnect::connect(Node *target)
 {
-    if(this->_connections<2)
-    {
+    this->_target = target;
+}
 
-        this->_target = target;
+bool NodeConnect::addBridge()
+{
+    if(this->_connections < 2)
+    {
         this->_connections++;
         return true;
     }
     return false;
 }
 
-
-bool NodeConnect::disconnect()
+bool NodeConnect::removeBridge()
 {
-    if(this->_connections>1)
+    if(this->_connections > 0)
     {
         this->_connections--;
         return true;
-    }
-    else if(this->_connections==1)
-    {
-        this->_target = nullptr;
-        this->_connections--;
     }
     return false;
 }
@@ -43,12 +41,12 @@ Node *NodeConnect::getTarget()
     return this->_target;
 }
 
-bool NodeConnect::setAmountOfConnects(int amount)
+void NodeConnect::setAmountOfConnects(int amount)
 {
-
+    this->_connections = amount;
 }
 
-bool NodeConnect::setTarget(Node *target)
+void NodeConnect::setTarget(Node *target)
 {
-
+    this->_target = target;
 }

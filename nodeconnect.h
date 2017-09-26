@@ -5,19 +5,27 @@ class Node;
 class NodeConnect
 {
 public:
+
     NodeConnect();
 
-    bool connect(Node* target);
-    bool disconnect();
+    void connect(Node* target);
+
+    bool addBridge();
+
+    bool removeBridge();
+
     int getAmountOfConnects();
+
     Node *getTarget();
 
-    bool setAmountOfConnects(int amount);
-    bool setTarget(Node* target);
+    void setAmountOfConnects(int amount);
 
+    void setTarget(Node* target);
 
 private:
-    int _connections = 0;
-    Node* _target = nullptr;
+
+    int _connections;
+
+    Node* _target;
 
 };

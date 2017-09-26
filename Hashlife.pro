@@ -44,7 +44,11 @@ HEADERS += \
     nodeconnect.h \
     empty.h
 
+QT += network
+
 FORMS += \
         hashlife.ui
 
 CONFIG += c++11
+RESOURCES += \
+hashiGameResources.qrc

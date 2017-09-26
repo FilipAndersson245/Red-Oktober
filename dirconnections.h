@@ -2,6 +2,9 @@
 
 #include "nodeconnect.h"
 #include <map>
+#include <vector>
+
+#include <gridobject.h>
 
 enum class Direction
 {
@@ -10,21 +13,29 @@ enum class Direction
 
 class DirConections
 {
+
 public:
+
+    static Direction getOppositeDirection(Direction inDir);
+
     DirConections(int maxConnections);
 
     NodeConnect *selectConnection(Direction direction);
-    bool checkIfFull();
 
-    //todo
     std::map<Direction,int> getSlotMap();
 
+    int getRemaining();
+
+    void setConnections(int);
+
+    int getConnections();
+
 private:
-      const int _maximumConnections;
-            int _currentConnections = 0;
-    NodeConnect _leftValues;
-    NodeConnect _topValues;
-    NodeConnect _rightValues;
-    NodeConnect _bottomValues;
+
+    const int _maximumAmountOfBridges;
+
+    int _currentAmountOfBridges = 0;
+
+    std::map<Direction,NodeConnect> _DirConections;
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 
-#define GAMEGRIDSIZE 10
-#define WINDOWSIZE 200
+#define WINDOWSIZE 600
 
 #include <QGraphicsItem>
 #include <QObject>
@@ -18,31 +17,29 @@ class GridObject : public QObject, public QGraphicsRectItem
 
 public:
 
-    GridObject();
-
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    GridObject(int x, int y);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
+    int getXPos();
+
+    int getYPos();
+
+    void setPotentialLine(bool value);
+
+    bool isPotentialLine();
+
+    QPoint getPoint();
+
     virtual ~GridObject();
-
-public slots:
-
-    void rectClicked();
-
-    void rectEntered();
-
-    void rectLeft();
 
 signals:
 
-    void clicked();
+    void hoverEnter(GridObject*);
 
-    void hoverEnter();
-
-    void hoverLeft();
+    void hoverLeft(GridObject*);
 
 protected:
 
@@ -51,4 +48,11 @@ protected:
     bool _alreadyClicked = false;
 
     QGraphicsItemGroup *_itemGroup;
+
+    int _xVectorPos ;
+
+    int _yVectorPos;
+
+    bool _isPotentialLine = false;
+
 };

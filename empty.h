@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QDebug>
 #include <QGraphicsItemGroup>
+#include <QGraphicsSceneMouseEvent>
 
 class Empty : public GridObject
 {
@@ -13,6 +14,13 @@ class Empty : public GridObject
 
 public:
 
-    Empty(QPoint point, int size);
+    Empty(int x, int y, QPoint point, int size);
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+    ~Empty();
+
+signals:
+
+    void clickedEmpty(Empty*);
 };
