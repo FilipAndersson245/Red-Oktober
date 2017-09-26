@@ -43,7 +43,7 @@ HEADERS += \
     dirconnections.h \
     nodeconnect.h \
     empty.h
-
+QT += network
 FORMS += \
         hashlife.ui
 

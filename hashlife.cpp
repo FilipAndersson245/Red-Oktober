@@ -3,8 +3,12 @@
 // demo restricts level loading to 10x10 grid size //
 #define DEMO 1
 #define ROOTDIR ":/levels/"
-// how many levels of each grid and difficulty do we have //
-#define NOOFLEVELS 4
+
+#define WEBDEFAULTURL  "http://www.menneske.no/hashi/"
+#define WEB9X9URL "9x9/eng/random.html?"
+#define WEB13X13URL "13x13/eng/random.html?"
+#define WEB17X17URL "17x17/eng/random.html?"
+#define WEBDIFFICULTYURL "diff="
 
 Hashlife::Hashlife(QWidget *parent) :
     QMainWindow(parent),
@@ -48,7 +52,7 @@ void Hashlife::addMenuGraphics()
 
 void Hashlife::newGame()
 {
-    _logic = new GameLogic(_gridSizeSelection);
+    _logic = new GameLogic(_gridSizeSelection, _mainScene);
     int gridSizePref = 0;
     int difficultyPref = 0;
     if (_btnEasy->isChecked())
@@ -400,16 +404,20 @@ void Hashlife::on_actionHelp_triggered()
 void Hashlife::chosenMap()
 {
     QString loadThisTypeOfBoard = ROOTDIR;
+    QString loadThisFromWeb = WEBDEFAULTURL;
     switch (_grpGridSize->checkedId())
     {
     case 0:
         loadThisTypeOfBoard.append("9x9/");
+        loadThisFromWeb.append(WEB9X9URL);
         break;
     case 1:
         loadThisTypeOfBoard.append("13x13/");
+        loadThisFromWeb.append(WEB13X13URL);
         break;
     case 2:
         loadThisTypeOfBoard.append("17x17/");
+        loadThisFromWeb.append(WEB17X17URL);
         break;
         // Never end up here //
     default:
@@ -419,12 +427,18 @@ void Hashlife::chosenMap()
     {
     case 0:
         loadThisTypeOfBoard.append("easy/");
+        loadThisFromWeb.append(WEBDIFFICULTYURL);
+        loadThisFromWeb.append('1');
         break;
     case 1:
         loadThisTypeOfBoard.append("medium/");
+        loadThisFromWeb.append(WEBDIFFICULTYURL);
+        loadThisFromWeb.append('3');
         break;
     case 2:
         loadThisTypeOfBoard.append("hard/");
+        loadThisFromWeb.append(WEBDIFFICULTYURL);
+        loadThisFromWeb.append('4');
         break;
         // Never end up here //
     default:
@@ -433,7 +447,7 @@ void Hashlife::chosenMap()
 
     if (!loadThisTypeOfBoard.isEmpty())
     {
-        int random = returnRandom();
+
         switch(_boardSelector->currentIndex())
         {
         case 0: //Load random level
@@ -464,12 +478,100 @@ void Hashlife::chosenMap()
             break;
         }
         qDebug() << "User level choice:" << loadThisTypeOfBoard;
-        _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+
+
+
+
+
+        // online loading //
+        try{
+            qDebug () << "Calling with this url" << loadThisFromWeb;
+            onlineLoad(QUrl(loadThisFromWeb));
+
+        }catch(QString ERRORCODE)
+        {
+           qDebug () << ERRORCODE;
+        }
+
+        // offline loading //
+         //_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+
     }
 }
 
-int Hashlife::returnRandom(void)
+
+
+void Hashlife::onlineLoad(QUrl urlToSite)
 {
-    srand((int)time(NULL));
-    return (rand() % 7) + 1;
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(replyFinished(QNetworkReply*)));
+    QNetworkRequest request;
+    request.setUrl(urlToSite);
+    request.setRawHeader("Connection", "close");
+    manager->get(request);
+
+}
+
+void Hashlife::parseSiteData(QString dataFromSite)
+{
+    QByteArray result = "";
+    QString playingLevelID = "";
+
+    QRegularExpression checkForNode ("(ring)|(white)");
+    QRegularExpression checkBoardID ("(puzzle number:)");
+    QRegularExpressionMatchIterator match;
+    QRegularExpressionMatch foundNode;
+
+    QRegularExpressionMatch matchFoundBoardID;
+
+    matchFoundBoardID = checkBoardID.match(dataFromSite);
+    if (matchFoundBoardID.hasMatch())
+    {   // at largest 7 digits //
+        for (int i = 1;i < 7;++i)
+        {
+            playingLevelID.append(dataFromSite[matchFoundBoardID.capturedEnd()+i]);
+        }
+    }
+    match = checkForNode.globalMatch(dataFromSite);
+    while (match.hasNext())
+    {
+        foundNode = match.next();
+        qDebug() << foundNode.capturedTexts();
+        if(foundNode.captured() == "white")
+        {
+            result.append("0");
+            continue;
+        }
+        result.append(dataFromSite.at((foundNode.capturedEnd()+2)));
+    }
+    qDebug() << result;
+
+    qDebug() << "Level from site loaded " << sqrt(result.length()) << "X"  << sqrt(result.length()) << "=" << result.length() << "am i one short bitch?";
+    qDebug() << playingLevelID << result;
+
+    _logic->loadLevel(result);
+}
+
+void Hashlife::replyFinished(QNetworkReply *reply)
+{
+    QString dataFromSite = "";
+    if(reply->error() == QNetworkReply::NetworkError::NoError)
+    {
+        QByteArray readSite = reply->readAll();
+        // throw away data before and after //
+        for (int i = 7000; i < readSite.length(); ++i)
+        {
+            dataFromSite += readSite[i];
+        }
+        qDebug() << "Downloaded map data from server OK!" << reply->errorString();
+        // make call to parser to use this information //
+        parseSiteData(dataFromSite);
+        reply->deleteLater();
+    }
+    else
+    {
+        qDebug() << "something wrong with GET request, going offline";
+    }
+
 }

@@ -24,7 +24,7 @@ class GameLogic : public QObject
 
 public:
 
-    GameLogic(int size);
+    GameLogic(int size, QGraphicsScene* aScene);
 
     void addNodeToGameObjects(void);
 

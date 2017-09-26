@@ -20,6 +20,11 @@
 #include <QLabel>
 #include <QMovie>
 #include <QDialog>
+#include <QtNetwork/qnetworkrequest.h>
+#include <QUrl>
+#include <QtNetwork/qnetworkaccessmanager.h>
+#include <QtNetwork/qnetworkreply.h>
+#include <QMessageLogger>
 
 #define WINDOWSIZE 200
 
@@ -46,6 +51,9 @@ public:
 
     void chosenMap();
 
+    void parseSiteData(QString dataFromSite);
+
+    void onlineLoad(QUrl urlToSite);
 public slots:
 
     void setupGame();
@@ -67,6 +75,8 @@ private slots:
     void on_actionEnd_Game_triggered();
 
     void on_actionHelp_triggered();
+
+    void replyFinished(QNetworkReply *reply);
 
 private:
 

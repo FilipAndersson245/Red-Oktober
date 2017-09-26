@@ -1,6 +1,6 @@
 #include "gamelogic.h"
 
-GameLogic::GameLogic(int size):_won(false), _gameGridSize(size) {}
+GameLogic::GameLogic(int size, QGraphicsScene* aScene):_won(false), _gameGridSize(size), _gameScene(aScene) {}
 
 void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 {
@@ -35,14 +35,17 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
             else
             {
                 loadLevel(nodePositionDataFormatted);
-                connectNodes(nodePositionDataFormatted, this->_allGameObjects);
+
             }
         }
     }
 }
-
+// from file or web //
 void GameLogic::loadLevel(QByteArray infoFromFile)
 {
+
+
+
     vector<vector<GridObject *>> tempBackwardsGameObjects;
     GridObject* pushThisToVector;
     QPoint passVectorElementIDAsPOS;
@@ -77,7 +80,9 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
         }
         _allGameObjects.push_back(temp);
     }
-    qDebug() << "boardLoaded";
+    connectNodes(infoFromFile, this->_allGameObjects);
+    addGameGraphics(_gameScene);
+    qDebug() << "boardLoaded" << infoFromFile;
 }
 
 void GameLogic::addGameGraphics(QGraphicsScene* aScene)
@@ -85,7 +90,7 @@ void GameLogic::addGameGraphics(QGraphicsScene* aScene)
     _gameScene = aScene;
     for (size_t i = 0; i < _allGameObjects.size(); ++i)
     {
-        for (size_t j = 0; j < _allGameObjects.size(); j++)
+        for (size_t j = 0; j < _allGameObjects.size(); ++j)
         {
             aScene->addItem(_allGameObjects[i][j]);
         }
