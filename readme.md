@@ -1,29 +1,18 @@
-# Red-Oktober
-Project hashlife:
-To implement
-1. github spot for code with diagrams and list of features to implement.
+# Web loading
+Working in either offline or online mode.
+Fetches data from www.menneske.no/hashi/
+Loading board sizes and difficulties ok!
 
-2. general shell to get everyone to start working
 
-3. 
 ---
-## Todo list
-
-* Powerpoint
-* UML
-  * klassdiagram
-  * sekvensdiagram
-* Kolla hur Hashi gameboard funkar
-  * Försöka implementera EN spelplan i vårt program
-* Jobba på Node-klassen
-* Jobba på Line-klassen
-* Kolla hur Scene och view, graphic object funkar
+## Todo on this feature:
+Quality of response checking 
+Graphical response to answer from online call(?)
 
 
 ---
 
 ## Concept Mockup:
 
-**Board with color indications**
-
-![](https://i.imgur.com/vXNLupq.png)
+**Proof**
+![](https://i.imgur.com/5t9gY63.png)
