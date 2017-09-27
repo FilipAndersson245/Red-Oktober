@@ -16,14 +16,19 @@ Hashlife::Hashlife(QWidget *parent) :
     ui->_graphicsView->show();
     ui->_graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     ui->menuBar->hide();
-    autoScaleView();
     checkInternetConnection();
     checkWebLoadingEngine();
     addMenuGraphics();
+    autoScaleView();
 }
 
 void Hashlife::addMenuGraphics()
 {
+    //_backgroundImage = new QGraphicsPixmapItem(QPixmap(":/images/background_image.png"));
+    //_mainScene->addItem(_backgroundImage);
+    //ui->_graphicsView->fitInView(_backgroundImage, Qt::KeepAspectRatio);
+    //_mainScene->setBackgroundBrush(_backgroundImage);
+
     _btnNewGame = new QPushButton;
     _btnNewGame->setGeometry(QRect(120, 30, 360, 150));
     _btnNewGame->setText("New Game");
@@ -50,6 +55,7 @@ void Hashlife::addMenuGraphics()
 void Hashlife::newGame()
 {
     _logic = new GameLogic(_gridSizeSelection, _mainScene);
+    connect(_logic, SIGNAL(endGameButtonClickedSignal()), this, SLOT(on_actionEnd_Game_triggered()));
     _mainScene->removeItem(_btnGrid10->graphicsProxyWidget());
     _mainScene->removeItem(_btnGrid15->graphicsProxyWidget());
     _mainScene->removeItem(_btnGrid20->graphicsProxyWidget());
@@ -86,23 +92,38 @@ void Hashlife::help()
     QDialog* helpDialog = new QDialog();
     helpDialog->setFixedSize(QSize(width,height));
     helpDialog->setStyleSheet("background-color:#ffffff;");
-    QLabel gifExplain(helpDialog);
-    QMovie *pictureGif = new QMovie(":/gitgud.gif");
+
+    /*QLabel gifExplain(helpDialog);
+    QMovie *pictureGif = new QMovie(":/images/tutorial.mp4");
     gifExplain.setMovie(pictureGif);
     pictureGif->setScaledSize(QSize(width-marginRight,width-marginRight));
     pictureGif->start();
-    gifExplain.setGeometry(marginLeft,0,width-marginRight,width-marginRight);
+    gifExplain.setGeometry(marginLeft,0,width-marginRight,width-marginRight);*/
+
+    QMediaPlayer * player = new QMediaPlayer;
+    QVideoWidget * videoWidget = new QVideoWidget(helpDialog);
+    QMediaContent myVideo(QUrl("qrc:/images/tutorial.avi"));
+    player->setMedia(myVideo);
+    player->setVideoOutput(videoWidget);
+    videoWidget->show();
+    videoWidget->setGeometry(marginLeft,0,width-marginRight,width-marginRight);
+
+    player->play();
+
     QLabel ruleLabel("Rules:\n"
-                     "- You Play the game by connecting nodes together\n"
-                     "   - You Select a node by hovering over it and selecting one of the \n"
-                     "     valid bridges \n"
-                     "- NodeLines must not cross each other \n"
-                     "- There can be between 0-2 bridges to each node \n"
-                     "- bridges can only be vertical/horizental \n"
-                     "- All nodes need to be connected, can only be 1 island",
+                     "- The goal of the game is to connect nodes together via bridges.\n"
+                     "- The game ends when all nodes have as many bridges going out from \n"
+                     "     them as their own value.\n"
+                     "- All nodes must form one single connection.\n"
+                     "- Each node may contain 0, 1 or 2 bridges in any given direction.\n"
+                     "- You place a bridge by hovering over a node and selecting\n"
+                     "     a valid bridge by left clicking with the mouse.\n"
+                     "- You can remove a bridge by right clicking on it.\n"
+                     "- Bridges may not cross each other.\n"
+                     "- Bridges can only be vertical or horizontal.",
                      helpDialog);
-    ruleLabel.setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
-    ruleLabel.setGeometry(marginLeft,width+10,width-marginRight,height-width-120);
+    ruleLabel.setFont(QFont("Gill Sans MT", 11, QFont::Bold, false));
+    ruleLabel.setGeometry(marginLeft,width+10,width-marginRight,height-width);
     helpDialog->exec();
 }
 
@@ -192,6 +213,8 @@ void Hashlife::showEvent(QShowEvent *event)
 void Hashlife::autoScaleView()
 {
     ui->_graphicsView->fitInView( _mainScene->sceneRect(), Qt::KeepAspectRatio);
+
+    //_backgroundImage->setPos(ui->_graphicsView->mapToScene(QPoint(0,0)));
 }
 
 Hashlife::~Hashlife()

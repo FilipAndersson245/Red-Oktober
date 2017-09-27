@@ -25,6 +25,9 @@
 #include <QtNetwork/qnetworkaccessmanager.h>
 #include <QtNetwork/qnetworkreply.h>
 #include <QMessageLogger>
+#include <QPixmap>
+#include <QtMultimedia/QMediaPlayer>
+#include <QVideoWidget>
 
 #define WEBDEFAULTURL  "http://www.menneske.no/hashi/"
 #define WEB9X9URL "9x9/eng/random.html?"
@@ -179,4 +182,5 @@ private:
 
     QGraphicsProxyWidget *_proxyComboGridLabel;
 
+    QGraphicsPixmapItem* _backgroundImage;
 };

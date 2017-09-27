@@ -1,7 +1,19 @@
 #include "gamelogic.h"
 
 GameLogic::GameLogic(int size, QGraphicsScene* aScene):_won(false), _gameGridSize(size), _gameScene(aScene)
-{}
+{
+    _islandText = new QGraphicsTextItem("All nodes must form one single connection!");
+    _islandText->setZValue(400);
+    _islandText->setPos(0, 250);
+    _islandText->setFont(QFont("Gill Sans MT", 22, QFont::Bold, false));
+    QGraphicsDropShadowEffect * _dropShadow = new QGraphicsDropShadowEffect();
+    _dropShadow->setBlurRadius(12);
+    _dropShadow->setColor(QColor(0,0,0,200));
+    _dropShadow->setOffset(QPoint(2,2));
+    _islandText->setGraphicsEffect(_dropShadow);
+    this->_gameScene->addItem(_islandText);
+    _islandText->hide();
+}
 
 void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 {
@@ -40,6 +52,7 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
             }
         }
     }
+    _islandText->hide();
 }
 
 void GameLogic::loadLevel(QByteArray infoFromFile)
@@ -707,6 +720,7 @@ void GameLogic::checkGameFinished()
         for(Node * item : (*myIslandVector))
         {
             item->setEllipseColor(Qt::red);
+            _islandText->show();
         }
     }
 }
@@ -752,20 +766,30 @@ void GameLogic::finishGame()
     QApplication::setOverrideCursor(Qt::ArrowCursor);
     QGraphicsTextItem * victoryText = new QGraphicsTextItem("Congratulations, you won!");
     victoryText->setZValue(300);
-    victoryText->setPos(20, 230);
-    victoryText->setFont(QFont("Gill Sans MT", 30, QFont::Bold, true));
+    victoryText->setPos(25, 200);
+    victoryText->setFont(QFont("Gill Sans MT", 34, QFont::Bold, true));
     this->_gameScene->addItem(victoryText);
-    QGraphicsTextItem * victoryText2 = new QGraphicsTextItem("Click anywhere to return to menu");
-    victoryText2->setZValue(300);
-    victoryText2->setPos(60, 300);
-    victoryText2->setFont(QFont("Gill Sans MT", 20, QFont::Bold, false));
-    this->_gameScene->addItem(victoryText2);
+
+    _btnReturnMenu = new QPushButton;
+    _btnReturnMenu->setGeometry(QRect(120, 300, 360, 150));
+    _btnReturnMenu->setText("Return To Menu");
+    _btnReturnMenu->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));;
+    _proxyBtnReturnMenu = new QGraphicsProxyWidget;
+    _proxyBtnReturnMenu = _gameScene->addWidget(_btnReturnMenu);
+    _proxyBtnReturnMenu->setParentItem(overlay);
+    connect(_btnReturnMenu, SIGNAL(clicked()), this, SLOT(endGameButtonClicked()));
+}
+
+void GameLogic::endGameButtonClicked()
+{
+    _gameScene->removeItem(_btnReturnMenu->graphicsProxyWidget());
+    emit endGameButtonClickedSignal();
 }
 
 void GameLogic::endGame()
 {
     qDebug() << "Game ended";
-    _gameScene->setBackgroundBrush(QBrush(QColor(255, 255, 255)));
+    _gameScene->setBackgroundBrush(QBrush(Qt::transparent));
     delete this;
 }
 

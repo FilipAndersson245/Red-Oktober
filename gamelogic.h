@@ -14,6 +14,9 @@
 #include <QCursor>
 #include <QApplication>
 #include <QGraphicsRectItem>
+#include <QGraphicsTextItem>
+#include <QPushButton>
+#include <QGraphicsProxyWidget>
 
 // defines //
 #define LINE -1
@@ -43,6 +46,8 @@ public slots:
 
     void endGame();
 
+    void endGameButtonClicked();
+
     void clickedLine(Line *line);
 
     void rightClickedLine(Line *line);
@@ -60,6 +65,10 @@ public slots:
     void clickedNode(Node *node);
 
     void releasedMouseNode(Node *node);
+
+signals:
+
+    void endGameButtonClickedSignal();
 
 private:
 
@@ -100,6 +109,12 @@ private:
     vector<vector<GridObject*> > _allGameObjects;
 
     QGraphicsScene *_gameScene;
+
+    QGraphicsTextItem *_islandText;
+
+    QPushButton *_btnReturnMenu;
+
+    QGraphicsProxyWidget *_proxyBtnReturnMenu;
 
     bool _won;
 

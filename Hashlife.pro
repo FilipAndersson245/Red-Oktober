@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
+QT += multimediawidgets
+QT += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -52,3 +54,4 @@ FORMS += \
 CONFIG += c++11
 RESOURCES += \
 hashiGameResources.qrc
+RC_FILE = appdata.rc
