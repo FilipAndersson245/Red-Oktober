@@ -17,8 +17,8 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* 
     QPen pen(Qt::transparent);
     this->setPen(pen);
     _itemGroup = new QGraphicsItemGroup(this);
-    QBrush brush2(Qt::black);
-    QPen pen2(Qt::black);
+    QBrush brush2(QColor(88,88,88));
+    QPen pen2(QColor(88,88,88));
 
     //set orientation
     switch(_orientation)
@@ -83,8 +83,8 @@ void Line::addSecondLine()
     _itemGroup->removeFromGroup(_lineRect);
     delete _lineRect;
 
-    QBrush brush(Qt::black);
-    QPen pen(Qt::black);
+    QBrush brush(QColor(88,88,88));
+    QPen pen(QColor(88,88,88));
 
 
     switch(_orientation)
@@ -125,8 +125,8 @@ void Line::removeSecondLine()
         delete _lineRect;
     }
 
-    QBrush brush2(Qt::black);
-    QPen pen2(Qt::black);
+    QBrush brush2(QColor(88,88,88));
+    QPen pen2(QColor(88,88,88));
 
     switch(_orientation)
     {

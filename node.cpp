@@ -14,12 +14,16 @@ Node::Node(int x, int y, int nodeSize, QPoint point, int size): GridObject(x, y)
     this->setPen(pen);
     _rectBottom->setPen(pen);
     _rectBottom->setBrush(brush);
+    _rectBottom->setZValue(-1);
     _rectTop->setPen(pen);
     _rectTop->setBrush(brush);
+    _rectTop->setZValue(-1);
     _rectLeft->setPen(pen);
     _rectLeft->setBrush(brush);
+    _rectLeft->setZValue(-1);
     _rectRight->setPen(pen);
     _rectRight->setBrush(brush);
+    _rectRight->setZValue(-1);
     _nodeCircle = new QGraphicsEllipseItem(_pos.x(), _pos.y(), size, size);
     QGraphicsDropShadowEffect * _dropShadow = new QGraphicsDropShadowEffect();
     _dropShadow->setBlurRadius(12);
@@ -179,6 +183,38 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     emit mouseReleased(this);
+}
+
+void Node::fillBackground(Direction dir)
+{
+    QBrush backColor = QBrush(QColor(229,215,135));
+    switch(dir)
+    {
+        case Direction::top:
+            this->_rectTop->setBrush(backColor);
+            break;
+        case Direction::right:
+            this->_rectRight->setBrush(backColor);
+            break;
+        case Direction::bottom:
+            this->_rectBottom->setBrush(backColor);
+            break;
+        case Direction::left:
+            this->_rectLeft->setBrush(backColor);
+            break;
+        default:
+            qDebug() << "faulty direction";
+            break;
+    }
+}
+
+void Node::clearBackground()
+{
+    QBrush backColor = QBrush(Qt::transparent);
+    this->_rectTop->setBrush(backColor);
+    this->_rectRight->setBrush(backColor);
+    this->_rectBottom->setBrush(backColor);
+    this->_rectLeft->setBrush(backColor);
 }
 
 Node::~Node()

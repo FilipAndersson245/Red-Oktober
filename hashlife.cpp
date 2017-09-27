@@ -1,11 +1,9 @@
 #include "hashlife.h"
 #include "ui_hashlife.h"
 // demo restricts level loading to 10x10 grid size //
-#define DEMO 1
 #define ROOTDIR ":/levels/"
 // how many levels of each grid and difficulty do we have //
-#define NOOFLEVELS 4
-
+#define IPTESTURL "http://api.ipify.org"
 Hashlife::Hashlife(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Hashlife)
@@ -13,11 +11,14 @@ Hashlife::Hashlife(QWidget *parent) :
     ui->setupUi(this);
     _mainScene = new QGraphicsScene();
     _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
+    _levelFromWeb = "";
     ui->_graphicsView->setScene(_mainScene);
     ui->_graphicsView->show();
     ui->_graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     ui->menuBar->hide();
     autoScaleView();
+    checkInternetConnection();
+    checkWebLoadingEngine();
     addMenuGraphics();
 }
 
@@ -320,7 +321,11 @@ void Hashlife::setupGame()
     _boardSelector->setGeometry(QRect(225, 360, 285, 36));
     _boardSelector->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
     _boardSelector->setMaximumSize(285, 36);
-    _boardSelector->insertItem(0, "Random Online");
+    if (!_levelFromWeb.isEmpty())
+    {
+        _boardSelector->insertItem(0, "Random Online");
+    }
+
     _boardSelector->insertItem(1, "Level 1");
     _boardSelector->insertItem(2, "Level 2");
     _boardSelector->insertItem(3, "Level 3");
@@ -394,14 +399,26 @@ void Hashlife::chosenMap()
         switch(_boardSelector->currentIndex())
         {
         case 0: //Load random level
-            try
+
+            if(!_levelFromWeb.isEmpty())
             {
-                qDebug () << "Calling with this url" << loadThisFromWeb;
-                onlineLoad(QUrl(loadThisFromWeb));
-            }catch(QString ERRORCODE)
-            {
-               qDebug () << ERRORCODE;
+                try
+                {
+                    qDebug () << "Calling with this url" << loadThisFromWeb;
+                    onlineLoad(QUrl(loadThisFromWeb));
+                }catch(QString ERRORCODE)
+                {
+                    qDebug () << ERRORCODE;
+                }
             }
+            // never end up here but just in case... //
+            else
+            {
+                qDebug() << "No response or no quality of response from web, loading default offline ";
+                loadThisTypeOfBoard.append("level1.hashiboard");
+                _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            }
+
             break;
         case 1:
             loadThisTypeOfBoard.append("level1.hashiboard");
@@ -441,8 +458,16 @@ void Hashlife::chosenMap()
 void Hashlife::onlineLoad(QUrl urlToSite)
 {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(replyFinished(QNetworkReply*)));
+    if (urlToSite != QUrl(IPTESTURL))
+    {
+        connect(manager, SIGNAL(finished(QNetworkReply*)),
+                this, SLOT(replyFinished(QNetworkReply*)));
+    }
+    else
+    {
+        connect(manager, SIGNAL(finished(QNetworkReply*)),
+                this, SLOT(replyFromInternetTesting(QNetworkReply*)));
+    }
     QNetworkRequest request;
     request.setUrl(urlToSite);
     request.setRawHeader("Connection", "close");
@@ -450,21 +475,41 @@ void Hashlife::onlineLoad(QUrl urlToSite)
 
 }
 
+void Hashlife::checkInternetConnection()
+{
+    onlineLoad(QUrl(IPTESTURL));
+}
+void Hashlife::checkWebLoadingEngine()
+{
+    QString makeDefaultURL = WEBDEFAULTURL;
+    makeDefaultURL.append(WEB9X9URL);
+    onlineLoad(QUrl(makeDefaultURL));
+}
+
+
 void Hashlife::parseSiteData(QString dataFromSite)
 {
     QByteArray result = "";
     QString playingLevelID = "";
-
+// regexp to make level string //
     QRegularExpression checkForNode ("(ring)|(white)");
     QRegularExpression checkBoardID ("(puzzle number:)");
     QRegularExpressionMatchIterator match;
     QRegularExpressionMatch foundNode;
+// regexp to validate quality of levelstring //
+    QRegularExpression checkForDigit ("\\d");
+    QRegularExpressionMatchIterator foundDigit;
+    QRegularExpressionMatch matchDigit;
 
+
+
+
+// extra info level id //
     QRegularExpressionMatch matchFoundBoardID;
 
     matchFoundBoardID = checkBoardID.match(dataFromSite);
     if (matchFoundBoardID.hasMatch())
-    {   // at largest 7 digits //
+    {   // hopefully stores level id (this should be done using regexp instead) //
         for (int i = 1;i < 7;++i)
         {
             playingLevelID.append(dataFromSite[matchFoundBoardID.capturedEnd()+i]);
@@ -474,7 +519,6 @@ void Hashlife::parseSiteData(QString dataFromSite)
     while (match.hasNext())
     {
         foundNode = match.next();
-        qDebug() << foundNode.capturedTexts();
         if(foundNode.captured() == "white")
         {
             result.append("0");
@@ -482,27 +526,67 @@ void Hashlife::parseSiteData(QString dataFromSite)
         }
         result.append(dataFromSite.at((foundNode.capturedEnd()+2)));
     }
-    qDebug() << result;
-
-    qDebug() << "Level from site loaded " << sqrt(result.length()) << "X"  << sqrt(result.length()) << "=" << result.length() << "am i one short bitch?";
+    qDebug() << "Level from site loaded " << sqrt(result.length()) << "X"  << sqrt(result.length()) << "=" << result.length();
     qDebug() << playingLevelID << result;
 
-    _logic->loadLevel(result);
+
+   foundDigit = checkForDigit.globalMatch(result);
+   int foundDigits = 0;
+   while(foundDigit.hasNext())
+   {
+        matchDigit = foundDigit.next();
+       ++foundDigits;
+   }
+
+   if ((foundDigits == result.length()) && ((result.length() == 81) || (result.length() == 169) || (result.length() == 289 )))
+   {
+    qDebug() << "String looks good!";
+    if (_levelFromWeb.isEmpty())
+    {
+         _levelFromWeb = result;
+    }
+    else
+    {
+          // make call //
+        _logic->loadLevel(result);
+    }
+   }
+
+
+   else
+   {
+       _levelFromWeb = "";
+       qDebug() << "dirty string not loading";
+   }
+
+
+
+
+
+
+
+
 }
 
 void Hashlife::replyFinished(QNetworkReply *reply)
 {
+
     QString dataFromSite = "";
     if(reply->error() == QNetworkReply::NetworkError::NoError)
     {
+        if (_clientIP.isEmpty())
+        {
+            qDebug() << "this client surely has internet although im told otherwise";
+        }
         QByteArray readSite = reply->readAll();
-        // throw away data before and after //
+
+        // throw away data before viable data//
         for (int i = 7000; i < readSite.length(); ++i)
         {
             dataFromSite += readSite[i];
         }
         qDebug() << "Downloaded map data from server OK!" << reply->errorString();
-        // make call to parser to use this information //
+        // make call to parser to make use of this information //
         parseSiteData(dataFromSite);
         reply->deleteLater();
     }
@@ -511,4 +595,16 @@ void Hashlife::replyFinished(QNetworkReply *reply)
         qDebug() << "something wrong with GET request, going offline";
     }
 
+}
+void Hashlife::replyFromInternetTesting(QNetworkReply* reply)
+{
+    _clientIP = reply->readAll();
+    if (!_clientIP.isEmpty())
+    {
+        qDebug() << "Internet connection found at" << _clientIP;
+    }
+    else
+    {
+        qDebug() << "internet connection not found";
+    }
 }

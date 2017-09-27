@@ -50,6 +50,10 @@ public:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
+    void fillBackground(Direction dir);
+
+    void clearBackground();
+
     ~Node();
 
 signals:
@@ -72,13 +76,6 @@ private:
 
     QGraphicsTextItem *_nodeText;
 
-    bool _potentialRight = false;
-
-    bool _potentialLeft = false;
-
-    bool _potentialTop = false;
-
-    bool _potentialBottom = false;
 
     QGraphicsRectItem *_rectTop;
 

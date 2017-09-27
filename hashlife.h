@@ -59,6 +59,9 @@ public:
 
     void onlineLoad(QUrl urlToSite);
 
+    void checkInternetConnection();
+
+    void checkWebLoadingEngine();
 public slots:
 
     void setupGame();
@@ -83,6 +86,7 @@ private slots:
 
     void on_actionHelp_triggered();
 
+    void replyFromInternetTesting(QNetworkReply *reply);
 private:
 
     void resizeEvent(QResizeEvent *event) override;
@@ -90,6 +94,10 @@ private:
     void showEvent(QShowEvent *event) override;
 
     void autoScaleView();
+
+    QString _clientIP;
+
+    QByteArray _levelFromWeb;
 
     Ui::Hashlife *ui;
 

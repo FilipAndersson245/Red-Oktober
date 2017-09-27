@@ -211,6 +211,8 @@ void GameLogic::rightClickedLine(Line *line)
                 linetoEmpty(selectedLine);
             }
         }
+        clearHighlighted();
+        updateHighlighted();
     }
 }
 
@@ -358,6 +360,7 @@ void GameLogic::exitMouseGridObj(GridObject *gridObj)
 
 void GameLogic::enterMouseNode(Node *node)
 {
+    QApplication::restoreOverrideCursor();
     if(!node->isFull())
     {
         _activeNode = node;
@@ -534,17 +537,50 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
 //update what should be highlighted
 void GameLogic::updateHighlighted()
 {
+
+    //fill node current direction
+    if(_activeNode != nullptr)
+    {
+        if(_activeNode->isPotentialLine())
+        {
+            map<Direction, Node *> nodeConnections = _activeNode->getConnectedNodes();
+            for(int i = 0; i < _activeNode->getConnectedNodes().size(); i++)
+            {
+                Direction localCurrentDir = static_cast<Direction>(i+1);
+                if(nodeConnections[localCurrentDir] != nullptr)
+                {
+                    if(nodeConnections[localCurrentDir]->isPotentialLine())
+                    {
+                        _activeNode->fillBackground(localCurrentDir);
+                        nodeConnections[localCurrentDir]->fillBackground(DirConections::getOppositeDirection(localCurrentDir));
+                    }
+                }
+            }
+        }
+    }
+
+
     for (int i = 0; i < _allGameObjects.size(); ++i)
     {
         for (int j = 0; j < _allGameObjects.size(); j++)
         {
             if(_allGameObjects[i][j]->isPotentialLine())
             {
-                _allGameObjects[i][j]->setBrush(QBrush(QColor(229,215,135)));
+                if(_gridTypeIndicator[i][j] < 1)    //if not node
+                {
+                    _allGameObjects[i][j]->setBrush(QBrush(QColor(229,215,135)));
+                }
             }
             else
             {
-                _allGameObjects[i][j]->setBrush(QBrush(Qt::transparent));
+                if(_gridTypeIndicator[i][j] > 0)    //if node
+                {
+                    dynamic_cast<Node *>(_allGameObjects[i][j])->clearBackground();
+                }
+                else
+                {
+                    _allGameObjects[i][j]->setBrush(QBrush(Qt::transparent));
+                }
             }
         }
     }
@@ -570,10 +606,12 @@ void GameLogic::activateDirection(Direction direction)
 {
     _currentDirection = direction;
     vector<GridObject*> directionObjects = _highLightedObjects[direction];
+    _highLightedObjects.clear();
+    _highLightedObjects[direction] = directionObjects;
     clearHighlighted();
     _activeNode->setPotentialLine(true);
     _activeNode->getConnectedNodes()[direction]->setPotentialLine(true);
-    for(GridObject* item: directionObjects)
+    for(GridObject* item: _highLightedObjects[direction])
     {
         item->setPotentialLine(true);
     }

@@ -91,7 +91,7 @@ private:
 
     QPoint _activeNodeCoords;
 
-    Node * _activeNode;
+    Node * _activeNode = nullptr;
 
     Direction _currentDirection;
 
