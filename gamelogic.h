@@ -72,8 +72,6 @@ signals:
 
 private:
 
-    int _gameGridSize;
-
     void connectNodes(QByteArray infoFromFile,vector<vector<GridObject*>> board);
 
     void updateHighlighted();
@@ -97,6 +95,9 @@ private:
     void checkNodeConnected(Node * nodeToCheck, vector<Node *> * nodesAdded);
 
     void finishGame();
+
+
+    int _gameGridSize;
 
     QPoint _activeNodeCoords;
 

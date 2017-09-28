@@ -9,6 +9,7 @@ Hashlife::Hashlife(QWidget *parent) :
     ui(new Ui::Hashlife)
 {
     ui->setupUi(this);
+    ui->_graphicsView->setStyleSheet("background: url(:/images/background_image.png);");
     _mainScene = new QGraphicsScene();
     _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
     _levelFromWeb = "";
@@ -24,8 +25,6 @@ Hashlife::Hashlife(QWidget *parent) :
 
 void Hashlife::addMenuGraphics()
 {
-    ui->_graphicsView->setStyleSheet("background: url(:/images/background_image.png);");
-    //ui->_graphicsView->setStyleSheet("background-size: cover;");
 
     ui->menuBar->hide();
     _btnNewGame = new QPushButton;
@@ -100,18 +99,12 @@ void Hashlife::help()
     helpDialog->setFixedSize(QSize(width,height));
     helpDialog->setStyleSheet("background-color:#ffffff;");
 
-
-    _player = new QMediaPlayer;
-    QVideoWidget * videoWidget = new QVideoWidget(helpDialog);
-    QMediaContent myVideo(QUrl("qrc:/images/tutorial.avi"));
-    _player->setMedia(myVideo);
-    _player->setVideoOutput(videoWidget);
-    videoWidget->show();
-    videoWidget->setGeometry(marginLeft,0,width-marginRight,width-marginRight);
-
-    _player->play(); //only play once
-
-    connect(_player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), this, SLOT(videoFinished()));
+    QLabel gifExplain(helpDialog);
+    QMovie *pictureGif = new QMovie(":/images/tutorial.gif");
+    gifExplain.setMovie(pictureGif);
+    pictureGif->setScaledSize(QSize(width-marginRight,width-marginRight));
+    pictureGif->start();
+    gifExplain.setGeometry(marginLeft,0,width-marginRight,width-marginRight);
 
     QLabel ruleLabel("Rules:\n"
                      "- The goal of the game is to connect nodes together via bridges.\n"
