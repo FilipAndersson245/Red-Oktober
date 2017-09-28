@@ -363,7 +363,11 @@ void Hashlife::setupGame()
 void Hashlife::on_actionEnd_Game_triggered()
 {
     _mainScene->clear();
-    _logic->endGame();
+    if(this->_logic != nullptr)
+    {
+        _logic->endGame();
+        this->_logic = nullptr;
+    }
     addMenuGraphics();
 }
 

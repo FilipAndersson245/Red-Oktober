@@ -65,5 +65,6 @@
         <file>levels/17x17/hard/level7.hashiboard</file>
         <file>images/background_image.png</file>
         <file>images/tutorial.avi</file>
+        <file>images/HashiIcon.ico</file>
     </qresource>
 </RCC>
