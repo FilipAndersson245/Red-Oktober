@@ -28,7 +28,7 @@ void Hashlife::addMenuGraphics()
     //_mainScene->addItem(_backgroundImage);
     //ui->_graphicsView->fitInView(_backgroundImage, Qt::KeepAspectRatio);
     //_mainScene->setBackgroundBrush(_backgroundImage);
-
+    ui->menuBar->hide();
     _btnNewGame = new QPushButton;
     _btnNewGame->setGeometry(QRect(120, 30, 360, 150));
     _btnNewGame->setText("New Game");
@@ -50,6 +50,7 @@ void Hashlife::addMenuGraphics()
     _proxyExit = new QGraphicsProxyWidget;
     _proxyExit = _mainScene->addWidget(_btnExit);
     connect(_btnExit, SIGNAL(released()), this, SLOT(exit()));
+
 }
 
 void Hashlife::newGame()
@@ -89,16 +90,10 @@ void Hashlife::help()
     const int height = 800;
     const int marginLeft = 10;
     const int marginRight = 20;
-    QDialog* helpDialog = new QDialog();
+    QDialog* helpDialog = new QDialog(0,Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
     helpDialog->setFixedSize(QSize(width,height));
     helpDialog->setStyleSheet("background-color:#ffffff;");
 
-    /*QLabel gifExplain(helpDialog);
-    QMovie *pictureGif = new QMovie(":/images/tutorial.mp4");
-    gifExplain.setMovie(pictureGif);
-    pictureGif->setScaledSize(QSize(width-marginRight,width-marginRight));
-    pictureGif->start();
-    gifExplain.setGeometry(marginLeft,0,width-marginRight,width-marginRight);*/
 
     QMediaPlayer * player = new QMediaPlayer;
     QVideoWidget * videoWidget = new QVideoWidget(helpDialog);
@@ -108,7 +103,7 @@ void Hashlife::help()
     videoWidget->show();
     videoWidget->setGeometry(marginLeft,0,width-marginRight,width-marginRight);
 
-    player->play();
+    player->play(); //only play once
 
     QLabel ruleLabel("Rules:\n"
                      "- The goal of the game is to connect nodes together via bridges.\n"

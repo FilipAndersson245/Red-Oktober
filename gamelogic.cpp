@@ -227,6 +227,7 @@ void GameLogic::rightClickedLine(Line *line)
         clearHighlighted();
         updateHighlighted();
     }
+    _islandText->hide();
 }
 
 //
