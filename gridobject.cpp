@@ -35,6 +35,7 @@ void GridObject::setPotentialLine(bool value)
     this->_isPotentialLine = value;
 }
 
+//Check if a line can be placed on this GridObject
 bool GridObject::isPotentialLine()
 {
     return this->_isPotentialLine;

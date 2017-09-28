@@ -2,10 +2,8 @@
 
 Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* conn1, Node* conn2): GridObject(x, y)
 {
-
     _firstConnection = conn1;
     _secondConnection = conn2;
-
     _pos = point;
     _orientation = orientation;
     _gridSize = size;
@@ -42,7 +40,7 @@ Line::Line(int x, int y, Orientation orientation, QPoint point, int size, Node* 
     this->setZValue(0);
 }
 
-//emit left or right click function
+//Emit left or right click function to call slot in GameLogic class
 void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
@@ -55,16 +53,19 @@ void Line::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+//Get horizontal or vertical
 Orientation Line::getOrientation()
 {
     return this->_orientation;
 }
 
+//Return the first node this line is connected to
 Node *Line::getFirstConnection()
 {
     return this->_firstConnection;
 }
 
+//Return the second node this line is connected to
 Node *Line::getSecondConnection()
 {
     return this->_secondConnection;
@@ -78,14 +79,11 @@ bool Line::checkIsDouble()
 void Line::addSecondLine()
 {
     _isDouble = true;
-
-
     _itemGroup->removeFromGroup(_lineRect);
     delete _lineRect;
 
     QBrush brush(QColor(88,88,88));
     QPen pen(QColor(88,88,88));
-
 
     switch(_orientation)
     {
@@ -112,10 +110,8 @@ void Line::addSecondLine()
 void Line::removeSecondLine()
 {
     _isDouble = false;
-
     _itemGroup->removeFromGroup(_lineRect);
     _itemGroup->removeFromGroup(_secondLineRect);
-
     if(this->_secondLineRect != nullptr)
     {
         delete _secondLineRect;

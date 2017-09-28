@@ -3,7 +3,6 @@
 #include "nodeconnect.h"
 #include <map>
 #include <vector>
-
 #include <gridobject.h>
 
 enum class Direction

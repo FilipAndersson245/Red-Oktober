@@ -12,6 +12,7 @@ Empty::Empty(int x, int y, QPoint point, int size): GridObject(x, y)
     this->setZValue(0);
 }
 
+//Calls a slot in GameLogic class if user clicks on an empty grid
 void Empty::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)

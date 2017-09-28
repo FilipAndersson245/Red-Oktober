@@ -1,9 +1,6 @@
 #include "hashlife.h"
 #include "ui_hashlife.h"
-// demo restricts level loading to 10x10 grid size //
-#define ROOTDIR ":/levels/"
-// how many levels of each grid and difficulty do we have //
-#define IPTESTURL "http://api.ipify.org"
+
 Hashlife::Hashlife(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Hashlife)
@@ -23,9 +20,9 @@ Hashlife::Hashlife(QWidget *parent) :
     autoScaleView();
 }
 
+//Add menu graphics at start of application or after user ends a game
 void Hashlife::addMenuGraphics()
 {
-
     ui->menuBar->hide();
     _btnNewGame = new QPushButton;
     _btnNewGame->setGeometry(QRect(120, 30, 360, 150));
@@ -51,6 +48,7 @@ void Hashlife::addMenuGraphics()
 
 }
 
+//Removes menu and creates the game
 void Hashlife::newGame()
 {
     _logic = new GameLogic(_gridSizeSelection, _mainScene);
@@ -71,7 +69,6 @@ void Hashlife::newGame()
     _mainScene->removeItem(_boardSelector->graphicsProxyWidget());
     ui->menuBar->show();
     ui->_graphicsView->fitInView( _mainScene->sceneRect(), Qt::KeepAspectRatio);
-    qDebug() << "new game";
     try
     {
         chosenMap();
@@ -81,16 +78,9 @@ void Hashlife::newGame()
     setupGameGraphics();
 }
 
-void Hashlife::videoFinished()
-{
-    //replay video
-    _player->setPosition(0);
-    _player->play();
-}
-
+//Opens a window with an instructions and a gif
 void Hashlife::help()
 {
-    qDebug() << "seek help";
     const int width = 520;
     const int height = 800;
     const int marginLeft = 10;
@@ -128,9 +118,9 @@ void Hashlife::exit()
     qApp->exit();
 }
 
+//Called from the game initiating state if the user clicks the return button
 void Hashlife::returnToMenu()
 {
-    qDebug() << "Return";
     _mainScene->removeItem(_btnGrid10->graphicsProxyWidget());
     _mainScene->removeItem(_btnGrid15->graphicsProxyWidget());
     _mainScene->removeItem(_btnGrid20->graphicsProxyWidget());
@@ -148,9 +138,9 @@ void Hashlife::returnToMenu()
     addMenuGraphics();
 }
 
+//User selects difficulty in the game initiating state
 void Hashlife::difficultyClicked()
 {
-    qDebug() << "Difficulty button was clicked";
     _boardSelector->setCurrentIndex(0);
     switch(_grpDifficulty->checkedId())
     {
@@ -168,9 +158,9 @@ void Hashlife::difficultyClicked()
     }
 }
 
+//User selects game board size in the game initiating state
 void Hashlife::gridClicked()
 {
-    qDebug() << "Grid button was clicked" << _grpGridSize->checkedId();
     _boardSelector->setCurrentIndex(0);
     switch(_grpGridSize->checkedId())
     {
@@ -216,14 +206,13 @@ Hashlife::~Hashlife()
 
 }
 
-
+//Game initiating state called when the user clicks new game from main menu
 void Hashlife::setupGame()
 {
     _mainScene->removeItem(_btnNewGame->graphicsProxyWidget());
     _mainScene->removeItem(_btnHelp->graphicsProxyWidget());
     _mainScene->removeItem(_btnExit->graphicsProxyWidget());
     _gridSizeSelection = 9;
-    qDebug() << "Tried to create game";
     _btnReturn = new QPushButton;
     _btnReturn->setGeometry(QRect(480, 0, 120, 45));
     _btnReturn->setText("Return");
@@ -354,6 +343,7 @@ void Hashlife::setupGame()
     _proxyBoardSelector = _mainScene->addWidget(_boardSelector);
 }
 
+//Called when user decides to end game early or after a finished game
 void Hashlife::on_actionEnd_Game_triggered()
 {
     _mainScene->clear();
@@ -425,17 +415,14 @@ void Hashlife::chosenMap()
             {
                 try
                 {
-                    qDebug () << "Calling with this url" << loadThisFromWeb;
                     onlineLoad(QUrl(loadThisFromWeb));
                 }catch(QString ERRORCODE)
                 {
-                    qDebug () << ERRORCODE;
                 }
             }
             // never end up here but just in case... //
             else
             {
-                qDebug() << "No response or no quality of response from web, loading default offline ";
                 loadThisTypeOfBoard.append("level1.hashiboard");
                 _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             }
@@ -472,7 +459,6 @@ void Hashlife::chosenMap()
         default:
             break;
         }
-        qDebug() << "User level choice:" << loadThisTypeOfBoard;
     }
 }
 
@@ -500,6 +486,7 @@ void Hashlife::checkInternetConnection()
 {
     onlineLoad(QUrl(IPTESTURL));
 }
+
 void Hashlife::checkWebLoadingEngine()
 {
     QString makeDefaultURL = WEBDEFAULTURL;
@@ -507,7 +494,7 @@ void Hashlife::checkWebLoadingEngine()
     onlineLoad(QUrl(makeDefaultURL));
 }
 
-
+//Creates a QByteArray from online gameboard resource to be turned into a level
 void Hashlife::parseSiteData(QString dataFromSite)
 {
     QByteArray result = "";
@@ -521,9 +508,6 @@ void Hashlife::parseSiteData(QString dataFromSite)
     QRegularExpression checkForDigit ("\\d");
     QRegularExpressionMatchIterator foundDigit;
     QRegularExpressionMatch matchDigit;
-
-
-
 
 // extra info level id //
     QRegularExpressionMatch matchFoundBoardID;
@@ -547,57 +531,38 @@ void Hashlife::parseSiteData(QString dataFromSite)
         }
         result.append(dataFromSite.at((foundNode.capturedEnd()+2)));
     }
-    qDebug() << "Level from site loaded " << sqrt(result.length()) << "X"  << sqrt(result.length()) << "=" << result.length();
-    qDebug() << playingLevelID << result;
-
-
-   foundDigit = checkForDigit.globalMatch(result);
-   int foundDigits = 0;
-   while(foundDigit.hasNext())
-   {
-        matchDigit = foundDigit.next();
-       ++foundDigits;
-   }
-
-   if ((foundDigits == result.length()) && ((result.length() == 81) || (result.length() == 169) || (result.length() == 289 )))
-   {
-    qDebug() << "String looks good!";
-    if (_levelFromWeb.isEmpty())
+    foundDigit = checkForDigit.globalMatch(result);
+    int foundDigits = 0;
+    while(foundDigit.hasNext())
     {
-         _levelFromWeb = result;
+        matchDigit = foundDigit.next();
+        ++foundDigits;
+    }
+    if ((foundDigits == result.length()) && ((result.length() == 81) || (result.length() == 169) || (result.length() == 289 )))
+    {
+        if (_levelFromWeb.isEmpty())
+        {
+             _levelFromWeb = result;
+        }
+        else
+        {
+              // make call //
+            _logic->loadLevel(result);
+        }
     }
     else
     {
-          // make call //
-        _logic->loadLevel(result);
+        _levelFromWeb = "";
     }
-   }
-
-
-   else
-   {
-       _levelFromWeb = "";
-       qDebug() << "dirty string not loading";
-   }
-
-
-
-
-
-
-
-
 }
 
 void Hashlife::replyFinished(QNetworkReply *reply)
 {
-
     QString dataFromSite = "";
     if(reply->error() == QNetworkReply::NetworkError::NoError)
     {
         if (_clientIP.isEmpty())
         {
-            qDebug() << "this client surely has internet although im told otherwise";
         }
         QByteArray readSite = reply->readAll();
 
@@ -606,26 +571,18 @@ void Hashlife::replyFinished(QNetworkReply *reply)
         {
             dataFromSite += readSite[i];
         }
-        qDebug() << "Downloaded map data from server OK!" << reply->errorString();
         // make call to parser to make use of this information //
         parseSiteData(dataFromSite);
         reply->deleteLater();
     }
     else
     {
-        qDebug() << "something wrong with GET request, going offline";
     }
 
 }
+
 void Hashlife::replyFromInternetTesting(QNetworkReply* reply)
 {
     _clientIP = reply->readAll();
-    if (!_clientIP.isEmpty())
-    {
-        qDebug() << "Internet connection found at" << _clientIP;
-    }
-    else
-    {
-        qDebug() << "internet connection not found";
-    }
 }
+

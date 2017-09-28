@@ -16,6 +16,7 @@ GameLogic::GameLogic(int size, QGraphicsScene* aScene):_won(false), _gameGridSiz
     _islandText->hide();
 }
 
+//Reads data from a file and turns it into a QByteArray
 void GameLogic::loadGameBoardFromFile(QString pathToBoard)
 {
     QByteArray nodePositionData;
@@ -56,6 +57,7 @@ void GameLogic::loadGameBoardFromFile(QString pathToBoard)
     _islandText->hide();
 }
 
+//Passes a QByteArray to initiate a game board with nodes and empty slots
 void GameLogic::loadLevel(QByteArray infoFromFile)
 {
     vector<vector<GridObject *>> tempBackwardsGameObjects;
@@ -111,7 +113,6 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
                 }
                 pushThisToVector = new Node(i, j, (currentNumber), passVectorElementIDAsPOS, WINDOWSIZE/_gameGridSize);
                 connect(pushThisToVector, SIGNAL(mouseEnter(Node*)), this, SLOT(enterMouseNode(Node*)));
-                connect(pushThisToVector, SIGNAL(mouseLeave(Node*)), this, SLOT(exitMouseNode(Node*)));
                 connect(pushThisToVector, SIGNAL(mouseClicked(Node*)), this, SLOT(clickedNode(Node*)));
                 connect(pushThisToVector, SIGNAL(mouseReleased(Node*)), this, SLOT(releasedMouseNode(Node*)));
                 zValue = 100 - (i + j);
@@ -126,9 +127,9 @@ void GameLogic::loadLevel(QByteArray infoFromFile)
     }
     connectNodes(infoFromFile, this->_allGameObjects);
     addGameGraphics(_gameScene);
-    qDebug() << "boardLoaded" << infoFromFile;
 }
 
+//Adds all the items graphically to the QGraphicsScene
 void GameLogic::addGameGraphics(QGraphicsScene* aScene)
 {
     _gameScene = aScene;
@@ -137,21 +138,17 @@ void GameLogic::addGameGraphics(QGraphicsScene* aScene)
     {
         for (int j = 0; j < _allGameObjects.size(); j++)
         {
-            aScene->addItem(_allGameObjects[i][j]);
+            _gameScene->addItem(_allGameObjects[i][j]);
         }
     }
-    qDebug() << "all Scenes added";
 }
 
-//left clicked a line
+//Checks if a left clicked line is a valid placement, also checks if the added line finishes the game
 void GameLogic::clickedLine(Line *line)
 {
-    qDebug() << "leftClick on Line";
-
     if(line->isPotentialLine() && !line->checkIsDouble())
     {
         //adds double line
-
         enterMouseGridObjLine(dynamic_cast<GridObject *>(line));
 
         line->getFirstConnection()->addBridge(_currentDirection);
@@ -164,16 +161,13 @@ void GameLogic::clickedLine(Line *line)
                 highlightedLine->addSecondLine();
             }
         }
-
     }
-
     checkGameFinished();
 }
 
+//A line is rightclicked and checked if double or single, updates the nodes it connects to and the graphical interface
 void GameLogic::rightClickedLine(Line *line)
 {
-    qDebug() << "rightClick on Line";
-
     Node * firstNode = line->getFirstConnection();
     Node * secondNode = line->getSecondConnection();
 
@@ -231,12 +225,11 @@ void GameLogic::rightClickedLine(Line *line)
     _islandText->hide();
 }
 
-//
+//Checks if the empty spot clicked is a potential line and if a line can be added
 void GameLogic::clickedEmpty(Empty *empty)
 {
     if(empty->isPotentialLine())
     {
-        qDebug() << "potential empty clicked";
         vector<GridObject*> directionObjects = _highLightedObjects[_currentDirection];
         Node * node1 = _activeNode;
         Node * node2 = _activeNode->getConnectedNodes()[_currentDirection];
@@ -255,11 +248,11 @@ void GameLogic::clickedEmpty(Empty *empty)
     }
     else
     {
-        qDebug() << "non potential empty clicked";
+
     }
 }
 
-//convert empty to a line
+//Convert empty to a line
 void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
 {
     int x = empty->getXPos();
@@ -277,7 +270,6 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
     }
     else
     {
-        qDebug() << "ERR Orientation not set \n setting it to Vertical to prevent random resultat";
         ori = Orientation::vertical;
     }
 
@@ -296,7 +288,6 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
 
     if(conn1->isFull() || conn2->isFull())
     {
-        qDebug() << "one node is full!";
         clearHighlighted();
     }
     else
@@ -307,7 +298,7 @@ void GameLogic::emptyToLine(Empty *empty, Node* conn1, Node* conn2)
     }
 }
 
-//convert line to empty
+//Convert line to an empty
 void GameLogic::linetoEmpty(Line *line)
 {
     int x = line->getXPos();
@@ -325,7 +316,7 @@ void GameLogic::linetoEmpty(Line *line)
     QApplication::restoreOverrideCursor();
 }
 
-//look for alignment between two nodes
+//Look for alignment between two nodes
 bool GameLogic::isDirectionOrientationAligned(Direction dir, Orientation ori)
 {
     switch(ori)
@@ -347,6 +338,7 @@ bool GameLogic::isDirectionOrientationAligned(Direction dir, Orientation ori)
     }
 }
 
+//Checks if the mouse is over a potential line, updates the cursor to indicate if clickable or not
 void GameLogic::enterMouseGridObj(GridObject *gridObj)
 {
     if(this->_gridTypeIndicator[gridObj->getXPos()][gridObj->getYPos()] == LINE)  //hover line
@@ -367,12 +359,12 @@ void GameLogic::enterMouseGridObj(GridObject *gridObj)
     }
 }
 
-// remove???
 void GameLogic::exitMouseGridObj(GridObject *gridObj)
 {
     QApplication::restoreOverrideCursor();
 }
 
+//Highlights all the potential lines a user can place from the node that has a mouseover
 void GameLogic::enterMouseNode(Node *node)
 {
     QApplication::restoreOverrideCursor();
@@ -452,12 +444,7 @@ void GameLogic::enterMouseNode(Node *node)
     }
 }
 
-// remove???
-void GameLogic::exitMouseNode(Node *node)
-{
-
-}
-
+//Highlights all nodes that form a continuous connection with the node with an orange color
 void GameLogic::clickedNode(Node *node)
 {
     vector<Node *> * myIslandVector = new std::vector<Node *>();
@@ -470,6 +457,7 @@ void GameLogic::clickedNode(Node *node)
     }
 }
 
+//Removes orange color highlight
 void GameLogic::releasedMouseNode(Node *node)
 {
     vector<Node *> * myIslandVector = new std::vector<Node *>();
@@ -482,7 +470,7 @@ void GameLogic::releasedMouseNode(Node *node)
     }
 }
 
-// CRAZY FUNCTION!!! WTF ARE WE DOING NEED TO MAKE MORE READABLE
+// Form a connection between nodes that lie next to each other
 void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *>> board)
 {
     for(int x = 0; x<_gameGridSize; x++)
@@ -494,8 +482,6 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
         }
         _gridTypeIndicator.push_back(tempIntVec);
     }
-
-
     for(int x = 0; x<_gameGridSize; x++)
     {
         for(int y = 0; y<_gameGridSize; y++)
@@ -503,7 +489,6 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
             if(_gridTypeIndicator[x][y] != EMPTY)
             {
                 Node * currentNode = dynamic_cast<Node *>(board[x][y]);
-
                 //right
                 for(int i = x + 1; i<_gameGridSize; i++)
                 {
@@ -513,7 +498,6 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
                         break;
                     }
                 }
-
                 //left
                 for(int i = x - 1; i>=0; i--)
                 {
@@ -523,7 +507,6 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
                         break;
                     }
                 }
-
                 //bottom
                 for(int i = y + 1; i<_gameGridSize; i++)
                 {
@@ -533,7 +516,6 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
                         break;
                     }
                 }
-
                 //top
                 for(int i = y - 1; i>=0; i--)
                 {
@@ -543,16 +525,14 @@ void GameLogic::connectNodes(QByteArray infoFromFile, vector<vector<GridObject *
                         break;
                     }
                 }
-
             }
         }
     }
 }
 
-//update what should be highlighted
+//Highlight all the potential lines with a graphical indicator
 void GameLogic::updateHighlighted()
 {
-
     //fill node current direction
     if(_activeNode != nullptr)
     {
@@ -573,8 +553,6 @@ void GameLogic::updateHighlighted()
             }
         }
     }
-
-
     for (int i = 0; i < _allGameObjects.size(); ++i)
     {
         for (int j = 0; j < _allGameObjects.size(); j++)
@@ -601,7 +579,7 @@ void GameLogic::updateHighlighted()
     }
 }
 
-//clear what should be highlighted and update
+//Remove the potential line from all nodes and update graphically
 void GameLogic::clearHighlighted()
 {
 
@@ -616,7 +594,7 @@ void GameLogic::clearHighlighted()
     updateHighlighted();
 }
 
-//activate a specific direction
+//Activate a specific direction
 void GameLogic::activateDirection(Direction direction)
 {
     _currentDirection = direction;
@@ -633,6 +611,7 @@ void GameLogic::activateDirection(Direction direction)
     updateHighlighted();
 }
 
+//Update graphic highlighting when the user moves from a node to a gridobject
 void GameLogic::enterMouseGridObjLine(GridObject *gridObj)
 {
     clearHighlighted();
@@ -668,6 +647,7 @@ void GameLogic::enterMouseGridObjLine(GridObject *gridObj)
     }
 }
 
+//Sets the direction of the current connection a gridobject has
 void GameLogic::updateCurrentDirection(GridObject *gridObj)
 {
     if(gridObj->getYPos() < _activeNodeCoords.y())  //top
@@ -688,7 +668,7 @@ void GameLogic::updateCurrentDirection(GridObject *gridObj)
     }
 }
 
-//implement logic. should have vector with all nodes?
+//Check if the user has finished the game with all nodes in one continuous connection
 void GameLogic::checkGameFinished()
 {
     vector<Node *> allNodes;
@@ -727,6 +707,7 @@ void GameLogic::checkGameFinished()
     }
 }
 
+//Fills a list with the node connections from the nodeToCheck
 void GameLogic::checkNodeConnected(Node * nodeToCheck, vector<Node *> * nodesAdded)
 {
     //lägg till aktiv nod i listan
@@ -752,10 +733,10 @@ void GameLogic::checkNodeConnected(Node * nodeToCheck, vector<Node *> * nodesAdd
     }
 }
 
+//Add a victory message and a button to return to main menu after the game is finished
 void GameLogic::finishGame()
 {
     _won = true;
-    qDebug() << "a";
     QGraphicsRectItem * overlay = new QGraphicsRectItem(0,0,600,600);
     overlay->setBrush(QBrush(QColor(255,255,255,150)));
     overlay->setZValue(200);
@@ -793,7 +774,6 @@ void GameLogic::endGameButtonClicked()
 
 void GameLogic::endGame()
 {
-    qDebug() << "Game ended";
     _gameScene->setBackgroundBrush(QBrush(Qt::transparent));
     delete this;
 }

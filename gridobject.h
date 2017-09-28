@@ -1,7 +1,5 @@
 #pragma once
 
-#define WINDOWSIZE 600
-
 #include <QGraphicsItem>
 #include <QObject>
 #include <QBrush>
@@ -9,6 +7,8 @@
 #include <QHoverEvent>
 #include <QDebug>
 #include <QGraphicsItemGroup>
+
+#define WINDOWSIZE 600
 
 class GridObject : public QObject, public QGraphicsRectItem
 {

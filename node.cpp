@@ -112,6 +112,7 @@ bool Node::isFull()
     return false;
 }
 
+//Return a vector with all GridObjects that can have a line connected to the node
 std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::vector<std::vector<GridObject *> > *board)
 {
     std::map<Direction, std::vector<GridObject *>> potentialLines = {
@@ -128,9 +129,9 @@ bool Node::isHovered()
     return _nodeCircle->isUnderMouse();
 }
 
+//Return nodes that can be connected to the node
 std::map<Direction, Node *> Node::getConnectedNodes()
 {
-
     std::map<Direction, Node *> nodeMap = {
         {Direction::top,this->_connectionHandler.selectConnection(Direction::top)->getTarget()},
         {Direction::right,this->_connectionHandler.selectConnection(Direction::right)->getTarget()},
@@ -140,6 +141,7 @@ std::map<Direction, Node *> Node::getConnectedNodes()
     return nodeMap;
 }
 
+//Update color based on amount of bridges needed for a node
 void Node::updateColor()
 {
     QColor mycolor;
@@ -175,6 +177,7 @@ void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     emit mouseLeave(this);
 }
 
+//Emit a signal to GameLogic class to highlight all nodes that form one continuous connection with the node
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::RightButton)
@@ -183,11 +186,13 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+//Emit a signal to GameLogic to stop highlighting nodes
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     emit mouseReleased(this);
 }
 
+//Fills the sides of the background of the node to show potential line positions
 void Node::fillBackground(Direction dir)
 {
     QBrush backColor = QBrush(QColor(229,215,135));
@@ -206,7 +211,6 @@ void Node::fillBackground(Direction dir)
             this->_rectLeft->setBrush(backColor);
             break;
         default:
-            qDebug() << "faulty direction";
             break;
     }
 }
@@ -226,7 +230,7 @@ Node::~Node()
     delete _nodeText;
 }
 
-
+//Returns the potential lines in the specified direction from the node
 std::vector<GridObject *> Node::getPotentialLinesDir(Direction direction, std::vector<std::vector<GridObject *> > *board)
 {
     std::vector<GridObject *> potentialLines;
