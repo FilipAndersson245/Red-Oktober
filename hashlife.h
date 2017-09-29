@@ -68,6 +68,8 @@ public:
     void checkInternetConnection();
 
     void checkWebLoadingEngine();
+	
+	bool checkFirstRun();
 
 public slots:
 

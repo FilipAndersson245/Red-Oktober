@@ -407,7 +407,7 @@ void Hashlife::chosenMap()
         throw(QString ("something went wrong while computing user lever choice"));
     }
 
-    if (!loadThisTypeOfBoard.isEmpty())
+     if (!loadThisTypeOfBoard.isEmpty())
     {
         switch(this->_boardSelector->currentIndex())
         {
@@ -417,6 +417,10 @@ void Hashlife::chosenMap()
             {
                 try
                 {
+                    if (checkFirstRun())
+                    {
+                        help();
+                    }
                     onlineLoad(QUrl(loadThisFromWeb));
                 }catch(QString ERRORCODE)
                 {
@@ -432,30 +436,58 @@ void Hashlife::chosenMap()
             break;
         case 1:
             loadThisTypeOfBoard.append("level1.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 2:
             loadThisTypeOfBoard.append("level2.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 3:
             loadThisTypeOfBoard.append("level3.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 4:
             loadThisTypeOfBoard.append("level4.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 5:
             loadThisTypeOfBoard.append("level5.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 6:
             loadThisTypeOfBoard.append("level6.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 7:
             loadThisTypeOfBoard.append("level7.hashiboard");
+            if (checkFirstRun())
+            {
+                help();
+            }
             this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         default:
@@ -587,4 +619,23 @@ void Hashlife::replyFromInternetTesting(QNetworkReply* reply)
 {
     this->_clientIP = reply->readAll();
 }
+bool Hashlife::checkFirstRun()
+{
+    QString lookHere = QApplication::applicationDirPath();
+   lookHere.append("/firstRun.isit");
+   QFile firstRunfile(lookHere);
+   if (!firstRunfile.open(QIODevice::ReadOnly | QIODevice::Text))
+{
+       firstRunfile.open(QIODevice::ReadWrite | QIODevice::Text);
+       QTextStream stream(&firstRunfile);
+       stream<<"i think therefore i am";
+       firstRunfile.close();
 
+       return true;
+}
+
+   else
+   {
+       return false;
+   }
+}
