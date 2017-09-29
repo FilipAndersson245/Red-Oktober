@@ -17,17 +17,17 @@ void GridObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 int GridObject::getXPos()
 {
-    return _xVectorPos;
+    return this->_xVectorPos;
 }
 
 int GridObject::getYPos()
 {
-    return _yVectorPos;
+    return this->_yVectorPos;
 }
 
 GridObject::~GridObject()
 {
-    delete _itemGroup;
+    delete this->_itemGroup;
 }
 
 void GridObject::setPotentialLine(bool value)
@@ -43,5 +43,5 @@ bool GridObject::isPotentialLine()
 
 QPoint GridObject::getPoint()
 {
-    return _pos;
+    return this->_pos;
 }

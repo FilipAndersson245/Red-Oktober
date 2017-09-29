@@ -7,9 +7,9 @@ Hashlife::Hashlife(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->_graphicsView->setStyleSheet("background: url(:/images/background_image.png);");
-    _mainScene = new QGraphicsScene();
-    _mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
-    _levelFromWeb = "";
+    this->_mainScene = new QGraphicsScene();
+    this->_mainScene->setSceneRect(QRectF(0, 0, WINDOWSIZE, WINDOWSIZE));
+    this->_levelFromWeb = "";
     ui->_graphicsView->setScene(_mainScene);
     ui->_graphicsView->show();
     ui->_graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -24,26 +24,26 @@ Hashlife::Hashlife(QWidget *parent) :
 void Hashlife::addMenuGraphics()
 {
     ui->menuBar->hide();
-    _btnNewGame = new QPushButton;
-    _btnNewGame->setGeometry(QRect(120, 30, 360, 150));
-    _btnNewGame->setText("New Game");
-    _btnNewGame->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _proxyNewGame = new QGraphicsProxyWidget;
-    _proxyNewGame = _mainScene->addWidget(_btnNewGame);
+    this->_btnNewGame = new QPushButton;
+    this->_btnNewGame->setGeometry(QRect(120, 30, 360, 150));
+    this->_btnNewGame->setText("New Game");
+    this->_btnNewGame->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_proxyNewGame = new QGraphicsProxyWidget;
+    this->_proxyNewGame = _mainScene->addWidget(_btnNewGame);
     connect(_btnNewGame, SIGNAL(released()), this, SLOT(setupGame()));
-    _btnHelp = new QPushButton;
-    _btnHelp->setGeometry(QRect(120, 225, 360, 150));
-    _btnHelp->setText("Help");
-    _btnHelp->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _proxyHelp = new QGraphicsProxyWidget;
-    _proxyHelp = _mainScene->addWidget(_btnHelp);
+    this->_btnHelp = new QPushButton;
+    this->_btnHelp->setGeometry(QRect(120, 225, 360, 150));
+    this->_btnHelp->setText("Help");
+    this->_btnHelp->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_proxyHelp = new QGraphicsProxyWidget;
+    this->_proxyHelp = _mainScene->addWidget(_btnHelp);
     connect(_btnHelp, SIGNAL(released()), this, SLOT(help()));
-    _btnExit = new QPushButton;
-    _btnExit->setGeometry(QRect(120, 420, 360, 150));
-    _btnExit->setText("Exit");
-    _btnExit->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _proxyExit = new QGraphicsProxyWidget;
-    _proxyExit = _mainScene->addWidget(_btnExit);
+    this->_btnExit = new QPushButton;
+    this->_btnExit->setGeometry(QRect(120, 420, 360, 150));
+    this->_btnExit->setText("Exit");
+    this->_btnExit->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_proxyExit = new QGraphicsProxyWidget;
+    this->_proxyExit = _mainScene->addWidget(_btnExit);
     connect(_btnExit, SIGNAL(released()), this, SLOT(exit()));
 
 }
@@ -51,30 +51,32 @@ void Hashlife::addMenuGraphics()
 //Removes menu and creates the game
 void Hashlife::newGame()
 {
-    _logic = new GameLogic(_gridSizeSelection, _mainScene);
+    this->_logic = new GameLogic(_gridSizeSelection, _mainScene);
     connect(_logic, SIGNAL(endGameButtonClickedSignal()), this, SLOT(on_actionEnd_Game_triggered()));
-    _mainScene->removeItem(_btnGrid10->graphicsProxyWidget());
-    _mainScene->removeItem(_btnGrid15->graphicsProxyWidget());
-    _mainScene->removeItem(_btnGrid20->graphicsProxyWidget());
-    _mainScene->removeItem(_btnEasy->graphicsProxyWidget());
-    _mainScene->removeItem(_btnMedium->graphicsProxyWidget());
-    _mainScene->removeItem(_btnHard->graphicsProxyWidget());
-    _mainScene->removeItem(_btnStart->graphicsProxyWidget());
-    _mainScene->removeItem(_btnReturn->graphicsProxyWidget());
-    _mainScene->removeItem(_difficultyLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_gridLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_boardLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_comboGridLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_comboDifficultyLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_boardSelector->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnGrid10->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnGrid15->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnGrid20->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnEasy->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnMedium->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnHard->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnStart->graphicsProxyWidget());
+    this->_mainScene->removeItem(_btnReturn->graphicsProxyWidget());
+    this->_mainScene->removeItem(_difficultyLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(_gridLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(_boardLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(_comboGridLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(_comboDifficultyLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(_boardSelector->graphicsProxyWidget());
     ui->menuBar->show();
     ui->_graphicsView->fitInView( _mainScene->sceneRect(), Qt::KeepAspectRatio);
     try
     {
-        chosenMap();
-
-    }catch(QString ERRORCODE)
-    {QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();}
+        chosenMap();    
+    }
+    catch(QString ERRORCODE)
+    {
+        QErrorMessage fileProblem(this); fileProblem.showMessage(ERRORCODE); fileProblem.exec();
+    }
     setupGameGraphics();
 }
 
@@ -121,37 +123,37 @@ void Hashlife::exit()
 //Called from the game initiating state if the user clicks the return button
 void Hashlife::returnToMenu()
 {
-    _mainScene->removeItem(_btnGrid10->graphicsProxyWidget());
-    _mainScene->removeItem(_btnGrid15->graphicsProxyWidget());
-    _mainScene->removeItem(_btnGrid20->graphicsProxyWidget());
-    _mainScene->removeItem(_btnEasy->graphicsProxyWidget());
-    _mainScene->removeItem(_btnMedium->graphicsProxyWidget());
-    _mainScene->removeItem(_btnHard->graphicsProxyWidget());
-    _mainScene->removeItem(_btnStart->graphicsProxyWidget());
-    _mainScene->removeItem(_btnReturn->graphicsProxyWidget());
-    _mainScene->removeItem(_difficultyLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_gridLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_boardLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_comboGridLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_comboDifficultyLabel->graphicsProxyWidget());
-    _mainScene->removeItem(_boardSelector->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnGrid10->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnGrid15->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnGrid20->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnEasy->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnMedium->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnHard->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnStart->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnReturn->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_difficultyLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_gridLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_boardLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_comboGridLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_comboDifficultyLabel->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_boardSelector->graphicsProxyWidget());
     addMenuGraphics();
 }
 
 //User selects difficulty in the game initiating state
 void Hashlife::difficultyClicked()
 {
-    _boardSelector->setCurrentIndex(0);
-    switch(_grpDifficulty->checkedId())
+    this->_boardSelector->setCurrentIndex(0);
+    switch(this->_grpDifficulty->checkedId())
     {
     case 0:
-        _comboDifficultyLabel->setText("Easy:");
+        this->_comboDifficultyLabel->setText("Easy:");
         break;
     case 1:
-        _comboDifficultyLabel->setText("Medium:");;
+        this->_comboDifficultyLabel->setText("Medium:");;
         break;
     case 2:
-        _comboDifficultyLabel->setText("Hard:");;
+        this->_comboDifficultyLabel->setText("Hard:");;
         break;
     default:
         break;
@@ -161,20 +163,20 @@ void Hashlife::difficultyClicked()
 //User selects game board size in the game initiating state
 void Hashlife::gridClicked()
 {
-    _boardSelector->setCurrentIndex(0);
-    switch(_grpGridSize->checkedId())
+    this->_boardSelector->setCurrentIndex(0);
+    switch(this->_grpGridSize->checkedId())
     {
     case 0:
-        _gridSizeSelection = 9;
-        _comboGridLabel->setText("9 x 9:");
+        this->_gridSizeSelection = 9;
+        this->_comboGridLabel->setText("9 x 9:");
         break;
     case 1:
-        _gridSizeSelection = 13;
-        _comboGridLabel->setText("13 x 13:");;
+        this->_gridSizeSelection = 13;
+        this->_comboGridLabel->setText("13 x 13:");;
         break;
     case 2:
-        _gridSizeSelection = 17;
-        _comboGridLabel->setText("17 x 17:");;
+        this->_gridSizeSelection = 17;
+        this->_comboGridLabel->setText("17 x 17:");;
         break;
     default:
         break;
@@ -183,7 +185,7 @@ void Hashlife::gridClicked()
 
 void Hashlife::setupGameGraphics()
 {
-    _logic->addGameGraphics(_mainScene);
+    this->_logic->addGameGraphics(this->_mainScene);
 }
 
 void Hashlife::resizeEvent(QResizeEvent *event)
@@ -193,12 +195,12 @@ void Hashlife::resizeEvent(QResizeEvent *event)
 
 void Hashlife::showEvent(QShowEvent *event)
 {
-    ui->_graphicsView->fitInView( _mainScene->sceneRect(), Qt::KeepAspectRatio);
+    ui->_graphicsView->fitInView( this->_mainScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void Hashlife::autoScaleView()
 {
-    ui->_graphicsView->fitInView( _mainScene->sceneRect(), Qt::KeepAspectRatio);
+    ui->_graphicsView->fitInView( this->_mainScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
 Hashlife::~Hashlife()
@@ -209,138 +211,138 @@ Hashlife::~Hashlife()
 //Game initiating state called when the user clicks new game from main menu
 void Hashlife::setupGame()
 {
-    _mainScene->removeItem(_btnNewGame->graphicsProxyWidget());
-    _mainScene->removeItem(_btnHelp->graphicsProxyWidget());
-    _mainScene->removeItem(_btnExit->graphicsProxyWidget());
-    _gridSizeSelection = 9;
-    _btnReturn = new QPushButton;
-    _btnReturn->setGeometry(QRect(480, 0, 120, 45));
-    _btnReturn->setText("Return");
-    _btnReturn->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));;
-    _btnReturn->setMaximumSize(120, 45);
-    _proxyReturn = new QGraphicsProxyWidget;
-    _proxyReturn = _mainScene->addWidget(_btnReturn);
-    connect(_btnReturn, SIGNAL(clicked()), this, SLOT(returnToMenu()));
-    _gridLabel = new QLabel;
-    _gridLabel->setText("Select Grid Size:");
-    _gridLabel->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
-    _gridLabel->setGeometry(QRect(237, 30, 150, 30));
-    _gridLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
-    _proxyGridLabel = new QGraphicsProxyWidget;
-    _proxyGridLabel = _mainScene->addWidget(_gridLabel);
-    _btnGrid10 = new QPushButton;
-    _btnGrid10->setGeometry(QRect(90, 60, 120, 120));
-    _btnGrid10->setText("9 x 9");
-    _btnGrid10->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _btnGrid10->setCheckable(true);
-    _btnGrid10->setChecked(true);
-    _btnGrid10->setMaximumSize(120, 120);
-    _proxyGrid10 = new QGraphicsProxyWidget;
-    _proxyGrid10 = _mainScene->addWidget(_btnGrid10);
-    _btnGrid15 = new QPushButton;
-    _btnGrid15->setGeometry(QRect(240, 60, 120, 120));
-    _btnGrid15->setText("13 x 13");
-    _btnGrid15->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _btnGrid15->setCheckable(true);
-    _btnGrid15->setMaximumSize(120, 120);
-    _proxyGrid15 = new QGraphicsProxyWidget;
-    _proxyGrid15 = _mainScene->addWidget(_btnGrid15);
-    _btnGrid20 = new QPushButton;
-    _btnGrid20->setGeometry(QRect(390, 60, 120, 120));
-    _btnGrid20->setText("17 x 17");
-    _btnGrid20->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _btnGrid20->setCheckable(true);
-    _btnGrid20->setMaximumSize(120, 120);
-    _proxyGrid20 = new QGraphicsProxyWidget;
-    _proxyGrid20 = _mainScene->addWidget(_btnGrid20);
-    _difficultyLabel = new QLabel;
-    _difficultyLabel->setText("Select Difficulty:");
-    _difficultyLabel->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
-    _difficultyLabel->setGeometry(QRect(234, 180, 150, 30));
-    _difficultyLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
-    _proxyDifficultyLabel = new QGraphicsProxyWidget;
-    _proxyDifficultyLabel = _mainScene->addWidget(_difficultyLabel);
-    _btnEasy = new QPushButton;
-    _btnEasy->setGeometry(QRect(90, 210, 120, 120));
-    _btnEasy->setText("Easy");
-    _btnEasy->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _btnEasy->setCheckable(true);
-    _btnEasy->setChecked(true);
-    _btnEasy->setMaximumSize(120, 120);
-    _proxyEasy = new QGraphicsProxyWidget;
-    _proxyEasy = _mainScene->addWidget(_btnEasy);
-    _btnMedium = new QPushButton;
-    _btnMedium->setGeometry(QRect(240, 210, 120, 120));
-    _btnMedium->setText("Medium");
-    _btnMedium->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _btnMedium->setCheckable(true);
-    _btnMedium->setMaximumSize(120, 120);
-    _proxyMedium = new QGraphicsProxyWidget;
-    _proxyMedium = _mainScene->addWidget(_btnMedium);
-    _btnHard = new QPushButton;
-    _btnHard->setGeometry(QRect(390, 210, 120, 120));
-    _btnHard->setText("Hard");
-    _btnHard->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
-    _btnHard->setCheckable(true);
-    _btnHard->setMaximumSize(120, 120);
-    _proxyHard = new QGraphicsProxyWidget;
-    _proxyHard = _mainScene->addWidget(_btnHard);
-    _btnStart = new QPushButton;
-    _btnStart->setGeometry(QRect(120, 420, 360, 150));
-    _btnStart->setText("Start Game");
-    _btnStart->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));;
-    _proxyStart = new QGraphicsProxyWidget;
-    _proxyStart = _mainScene->addWidget(_btnStart);
+    this->_mainScene->removeItem(this->_btnNewGame->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnHelp->graphicsProxyWidget());
+    this->_mainScene->removeItem(this->_btnExit->graphicsProxyWidget());
+    this->_gridSizeSelection = 9;
+    this->_btnReturn = new QPushButton;
+    this->_btnReturn->setGeometry(QRect(480, 0, 120, 45));
+    this->_btnReturn->setText("Return");
+    this->_btnReturn->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));;
+    this->_btnReturn->setMaximumSize(120, 45);
+    this->_proxyReturn = new QGraphicsProxyWidget;
+    this->_proxyReturn = this->_mainScene->addWidget(this->_btnReturn);
+    this->connect(this->_btnReturn, SIGNAL(clicked()), this, SLOT(returnToMenu()));
+    this->_gridLabel = new QLabel;
+    this->_gridLabel->setText("Select Grid Size:");
+    this->_gridLabel->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
+    this->_gridLabel->setGeometry(QRect(237, 30, 150, 30));
+    this->_gridLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
+    this->_proxyGridLabel = new QGraphicsProxyWidget;
+    this->_proxyGridLabel = this->_mainScene->addWidget(this->_gridLabel);
+    this->_btnGrid10 = new QPushButton;
+    this->_btnGrid10->setGeometry(QRect(90, 60, 120, 120));
+    this->_btnGrid10->setText("9 x 9");
+    this->_btnGrid10->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_btnGrid10->setCheckable(true);
+    this->_btnGrid10->setChecked(true);
+    this->_btnGrid10->setMaximumSize(120, 120);
+    this->_proxyGrid10 = new QGraphicsProxyWidget;
+    this->_proxyGrid10 = this->_mainScene->addWidget(this->_btnGrid10);
+    this->_btnGrid15 = new QPushButton;
+    this->_btnGrid15->setGeometry(QRect(240, 60, 120, 120));
+    this->_btnGrid15->setText("13 x 13");
+    this->_btnGrid15->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_btnGrid15->setCheckable(true);
+    this->_btnGrid15->setMaximumSize(120, 120);
+    this->_proxyGrid15 = new QGraphicsProxyWidget;
+    this->_proxyGrid15 = this->_mainScene->addWidget(this->_btnGrid15);
+    this->_btnGrid20 = new QPushButton;
+    this->_btnGrid20->setGeometry(QRect(390, 60, 120, 120));
+    this->_btnGrid20->setText("17 x 17");
+    this->_btnGrid20->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_btnGrid20->setCheckable(true);
+    this->_btnGrid20->setMaximumSize(120, 120);
+    this->_proxyGrid20 = new QGraphicsProxyWidget;
+    this->_proxyGrid20 = this->_mainScene->addWidget(this->_btnGrid20);
+    this->_difficultyLabel = new QLabel;
+    this->_difficultyLabel->setText("Select Difficulty:");
+    this->_difficultyLabel->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
+    this->_difficultyLabel->setGeometry(QRect(234, 180, 150, 30));
+    this->_difficultyLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
+    this->_proxyDifficultyLabel = new QGraphicsProxyWidget;
+    this->_proxyDifficultyLabel = this->_mainScene->addWidget(this->_difficultyLabel);
+    this->_btnEasy = new QPushButton;
+    this->_btnEasy->setGeometry(QRect(90, 210, 120, 120));
+    this->_btnEasy->setText("Easy");
+    this->_btnEasy->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_btnEasy->setCheckable(true);
+    this->_btnEasy->setChecked(true);
+    this->_btnEasy->setMaximumSize(120, 120);
+    this->_proxyEasy = new QGraphicsProxyWidget;
+    this->_proxyEasy = this->_mainScene->addWidget(this->_btnEasy);
+    this->_btnMedium = new QPushButton;
+    this->_btnMedium->setGeometry(QRect(240, 210, 120, 120));
+    this->_btnMedium->setText("Medium");
+    this->_btnMedium->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_btnMedium->setCheckable(true);
+    this->_btnMedium->setMaximumSize(120, 120);
+    this->_proxyMedium = new QGraphicsProxyWidget;
+    this->_proxyMedium = this->_mainScene->addWidget(this->_btnMedium);
+    this->_btnHard = new QPushButton;
+    this->_btnHard->setGeometry(QRect(390, 210, 120, 120));
+    this->_btnHard->setText("Hard");
+    this->_btnHard->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));
+    this->_btnHard->setCheckable(true);
+    this->_btnHard->setMaximumSize(120, 120);
+    this->_proxyHard = new QGraphicsProxyWidget;
+    this->_proxyHard = this->_mainScene->addWidget(this->_btnHard);
+    this->_btnStart = new QPushButton;
+    this->_btnStart->setGeometry(QRect(120, 420, 360, 150));
+    this->_btnStart->setText("Start Game");
+    this->_btnStart->setFont(QFont("Gill Sans MT", 18, QFont::Bold, true));;
+    this->_proxyStart = new QGraphicsProxyWidget;
+    this->_proxyStart = this->_mainScene->addWidget(this->_btnStart);
     connect(_btnStart, SIGNAL(clicked()), this, SLOT(newGame()));
-    _boardLabel = new QLabel;
-    _boardLabel->setText("Select Game Board:");
-    _boardLabel->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
-    _boardLabel->setGeometry(QRect(228, 330, 160, 30));
-    _boardLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
-    _proxyBoardLabel = new QGraphicsProxyWidget;
-    _proxyBoardLabel = _mainScene->addWidget(_boardLabel);
-    _comboDifficultyLabel = new QLabel;
-    _comboDifficultyLabel->setText("Easy:");
-    _comboDifficultyLabel->setFont(QFont("Gill Sans MT", 11, QFont::Bold, false));
-    _comboDifficultyLabel->setGeometry(QRect(156, 363, 90, 30));
-    _comboDifficultyLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
-    _proxyComboDifficultyLabel = new QGraphicsProxyWidget;
-    _proxyComboDifficultyLabel = _mainScene->addWidget(_comboDifficultyLabel);
-    _comboGridLabel = new QLabel;
-    _comboGridLabel->setText("9 x 9:");
-    _comboGridLabel->setFont(QFont("Gill Sans MT", 11, QFont::Bold, false));
-    _comboGridLabel->setGeometry(QRect(90, 363, 90, 30));
-    _comboGridLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
-    _proxyComboGridLabel = new QGraphicsProxyWidget;
-    _proxyComboGridLabel = _mainScene->addWidget(_comboGridLabel);
-    _grpGridSize = new QButtonGroup;
-    _grpGridSize->addButton(_btnGrid10, 0);
-    _grpGridSize->addButton(_btnGrid15, 1);
-    _grpGridSize->addButton(_btnGrid20, 2);
+    this->_boardLabel = new QLabel;
+    this->_boardLabel->setText("Select Game Board:");
+    this->_boardLabel->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
+    this->_boardLabel->setGeometry(QRect(228, 330, 160, 30));
+    this->_boardLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
+    this->_proxyBoardLabel = new QGraphicsProxyWidget;
+    this->_proxyBoardLabel = this->_mainScene->addWidget(this->_boardLabel);
+    this->_comboDifficultyLabel = new QLabel;
+    this->_comboDifficultyLabel->setText("Easy:");
+    this->_comboDifficultyLabel->setFont(QFont("Gill Sans MT", 11, QFont::Bold, false));
+    this->_comboDifficultyLabel->setGeometry(QRect(156, 363, 90, 30));
+    this->_comboDifficultyLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
+    this->_proxyComboDifficultyLabel = new QGraphicsProxyWidget;
+    this->_proxyComboDifficultyLabel = this->_mainScene->addWidget(this->_comboDifficultyLabel);
+    this->_comboGridLabel = new QLabel;
+    this->_comboGridLabel->setText("9 x 9:");
+    this->_comboGridLabel->setFont(QFont("Gill Sans MT", 11, QFont::Bold, false));
+    this->_comboGridLabel->setGeometry(QRect(90, 363, 90, 30));
+    this->_comboGridLabel->setStyleSheet("background-color: rgba(0,0,0,0%); color: white;");
+    this->_proxyComboGridLabel = new QGraphicsProxyWidget;
+    this->_proxyComboGridLabel = this->_mainScene->addWidget(this->_comboGridLabel);
+    this->_grpGridSize = new QButtonGroup;
+    this->_grpGridSize->addButton(this->_btnGrid10, 0);
+    this->_grpGridSize->addButton(this->_btnGrid15, 1);
+    this->_grpGridSize->addButton(this->_btnGrid20, 2);
     connect(_grpGridSize, SIGNAL(buttonClicked(int)), this, SLOT(gridClicked()));
-    _grpDifficulty = new QButtonGroup;
-    _grpDifficulty->addButton(_btnEasy, 0);
-    _grpDifficulty->addButton(_btnMedium, 1);
-    _grpDifficulty->addButton(_btnHard, 2);
+    this->_grpDifficulty = new QButtonGroup;
+    this->_grpDifficulty->addButton(this->_btnEasy, 0);
+    this->_grpDifficulty->addButton(this->_btnMedium, 1);
+    this->_grpDifficulty->addButton(this->_btnHard, 2);
     connect(_grpDifficulty, SIGNAL(buttonClicked(int)), this, SLOT(difficultyClicked()));
-    _boardSelector = new QComboBox;
-    _boardSelector->setGeometry(QRect(225, 360, 285, 36));
-    _boardSelector->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
-    _boardSelector->setMaximumSize(285, 36);
+    this->_boardSelector = new QComboBox;
+    this->_boardSelector->setGeometry(QRect(225, 360, 285, 36));
+    this->_boardSelector->setFont(QFont("Gill Sans MT", 12, QFont::Bold, false));
+    this->_boardSelector->setMaximumSize(285, 36);
     if (!_levelFromWeb.isEmpty())
     {
         _boardSelector->insertItem(0, "Random Online");
     }
 
-    _boardSelector->insertItem(1, "Level 1");
-    _boardSelector->insertItem(2, "Level 2");
-    _boardSelector->insertItem(3, "Level 3");
-    _boardSelector->insertItem(4, "Level 4");
-    _boardSelector->insertItem(5, "Level 5");
-    _boardSelector->insertItem(6, "Level 6");
-    _boardSelector->insertItem(7, "Level 7");
-    _proxyBoardSelector = new QGraphicsProxyWidget;
-    _proxyBoardSelector = _mainScene->addWidget(_boardSelector);
+    this->_boardSelector->insertItem(1, "Level 1");
+    this->_boardSelector->insertItem(2, "Level 2");
+    this->_boardSelector->insertItem(3, "Level 3");
+    this->_boardSelector->insertItem(4, "Level 4");
+    this->_boardSelector->insertItem(5, "Level 5");
+    this->_boardSelector->insertItem(6, "Level 6");
+    this->_boardSelector->insertItem(7, "Level 7");
+    this->_proxyBoardSelector = new QGraphicsProxyWidget;
+    this->_proxyBoardSelector = _mainScene->addWidget(_boardSelector);
 }
 
 //Called when user decides to end game early or after a finished game
@@ -407,11 +409,11 @@ void Hashlife::chosenMap()
 
     if (!loadThisTypeOfBoard.isEmpty())
     {
-        switch(_boardSelector->currentIndex())
+        switch(this->_boardSelector->currentIndex())
         {
         case 0: //Load random level
 
-            if(!_levelFromWeb.isEmpty())
+            if(! this->_levelFromWeb.isEmpty())
             {
                 try
                 {
@@ -424,37 +426,37 @@ void Hashlife::chosenMap()
             else
             {
                 loadThisTypeOfBoard.append("level1.hashiboard");
-                _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+                this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             }
 
             break;
         case 1:
             loadThisTypeOfBoard.append("level1.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 2:
             loadThisTypeOfBoard.append("level2.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 3:
             loadThisTypeOfBoard.append("level3.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 4:
             loadThisTypeOfBoard.append("level4.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 5:
             loadThisTypeOfBoard.append("level5.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 6:
             loadThisTypeOfBoard.append("level6.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         case 7:
             loadThisTypeOfBoard.append("level7.hashiboard");
-            _logic->loadGameBoardFromFile(loadThisTypeOfBoard);
+            this->_logic->loadGameBoardFromFile(loadThisTypeOfBoard);
             break;
         default:
             break;
@@ -540,19 +542,19 @@ void Hashlife::parseSiteData(QString dataFromSite)
     }
     if ((foundDigits == result.length()) && ((result.length() == 81) || (result.length() == 169) || (result.length() == 289 )))
     {
-        if (_levelFromWeb.isEmpty())
+        if (this->_levelFromWeb.isEmpty())
         {
-             _levelFromWeb = result;
+             this->_levelFromWeb = result;
         }
         else
         {
               // make call //
-            _logic->loadLevel(result);
+            this->_logic->loadLevel(result);
         }
     }
     else
     {
-        _levelFromWeb = "";
+        this->_levelFromWeb = "";
     }
 }
 
@@ -561,7 +563,7 @@ void Hashlife::replyFinished(QNetworkReply *reply)
     QString dataFromSite = "";
     if(reply->error() == QNetworkReply::NetworkError::NoError)
     {
-        if (_clientIP.isEmpty())
+        if (this->_clientIP.isEmpty())
         {
         }
         QByteArray readSite = reply->readAll();
@@ -583,6 +585,6 @@ void Hashlife::replyFinished(QNetworkReply *reply)
 
 void Hashlife::replyFromInternetTesting(QNetworkReply* reply)
 {
-    _clientIP = reply->readAll();
+    this->_clientIP = reply->readAll();
 }
 

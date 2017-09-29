@@ -2,34 +2,34 @@
 
 Node::Node(int x, int y, int nodeSize, QPoint point, int size): GridObject(x, y),_connectionHandler(nodeSize)
 {
-    _pos = point;
+    this->_pos = point;
     this->setRect(_pos.x(), _pos.y(), size, size);
-    _rectBottom = new QGraphicsRectItem(_pos.x(), _pos.y() + (size/2), size, size/2 + 1);
-    _rectTop = new QGraphicsRectItem(_pos.x(), _pos.y(), size, size/2);
-    _rectLeft = new QGraphicsRectItem(_pos.x(), _pos.y(), size/2, size);
-    _rectRight = new QGraphicsRectItem(_pos.x() + (size/2), _pos.y(), size/2 + 1, size);
+    this->_rectBottom = new QGraphicsRectItem(_pos.x(), _pos.y() + (size/2), size, size/2 + 1);
+    this->_rectTop = new QGraphicsRectItem(_pos.x(), _pos.y(), size, size/2);
+    this->_rectLeft = new QGraphicsRectItem(_pos.x(), _pos.y(), size/2, size);
+    this->_rectRight = new QGraphicsRectItem(_pos.x() + (size/2), _pos.y(), size/2 + 1, size);
     QBrush brush(Qt::transparent);
     this->setBrush(brush);
     QPen pen(Qt::transparent);
     this->setPen(pen);
-    _rectBottom->setPen(pen);
-    _rectBottom->setBrush(brush);
-    _rectBottom->setZValue(-1);
-    _rectTop->setPen(pen);
-    _rectTop->setBrush(brush);
-    _rectTop->setZValue(-1);
-    _rectLeft->setPen(pen);
-    _rectLeft->setBrush(brush);
-    _rectLeft->setZValue(-1);
-    _rectRight->setPen(pen);
-    _rectRight->setBrush(brush);
-    _rectRight->setZValue(-1);
-    _nodeCircle = new QGraphicsEllipseItem(_pos.x(), _pos.y(), size, size);
-    QGraphicsDropShadowEffect * _dropShadow = new QGraphicsDropShadowEffect();
-    _dropShadow->setBlurRadius(12);
-    _dropShadow->setColor(QColor(0,0,0,200));
-    _dropShadow->setOffset(QPoint(2,2));
-    _nodeCircle->setGraphicsEffect(_dropShadow);
+    this->_rectBottom->setPen(pen);
+    this->_rectBottom->setBrush(brush);
+    this->_rectBottom->setZValue(-1);
+    this->_rectTop->setPen(pen);
+    this->_rectTop->setBrush(brush);
+    this->_rectTop->setZValue(-1);
+    this->_rectLeft->setPen(pen);
+    this->_rectLeft->setBrush(brush);
+    this->_rectLeft->setZValue(-1);
+    this->_rectRight->setPen(pen);
+    this->_rectRight->setBrush(brush);
+    this->_rectRight->setZValue(-1);
+    this->_nodeCircle = new QGraphicsEllipseItem(_pos.x(), _pos.y(), size, size);
+    QGraphicsDropShadowEffect * dropShadow = new QGraphicsDropShadowEffect();
+    dropShadow->setBlurRadius(12);
+    dropShadow->setColor(QColor(0,0,0,200));
+    dropShadow->setOffset(QPoint(2,2));
+    this->_nodeCircle->setGraphicsEffect(dropShadow);
     QString nodeString = QString::number(nodeSize);
     QFont serifFont("Gill Sans MT", 38);
     switch(size)
@@ -44,31 +44,31 @@ Node::Node(int x, int y, int nodeSize, QPoint point, int size): GridObject(x, y)
         serifFont.setPixelSize(26);
         break;
     }
-    _nodeText = new QGraphicsTextItem(nodeString);
-    _nodeText->setDefaultTextColor(Qt::white);
-    _nodeText->setFont(serifFont);
+    this->_nodeText = new QGraphicsTextItem(nodeString);
+    this->_nodeText->setDefaultTextColor(Qt::white);
+    this->_nodeText->setFont(serifFont);
     switch(size)
     {
     case 66: //9x9
-        _nodeText->setPos(point.x() + (23 - _nodeText->boundingRect().width()/8)  , point.y() + 2);;
+        this->_nodeText->setPos(point.x() + (23 - this->_nodeText->boundingRect().width()/8)  , point.y() + 2);;
         break;
     case 46: //13x13
-        _nodeText->setPos(point.x() + (14 - _nodeText->boundingRect().width()/8)  , point.y() - 5);;
+        this->_nodeText->setPos(point.x() + (14 - this->_nodeText->boundingRect().width()/8)  , point.y() - 5);;
         break;
     case 35: //17x17
-        _nodeText->setPos(point.x() + (10 - _nodeText->boundingRect().width()/8)  , point.y() - 6);;
+        this->_nodeText->setPos(point.x() + (10 - this->_nodeText->boundingRect().width()/8)  , point.y() - 6);;
         break;
     }
-    _nodeText->setAcceptHoverEvents(false);
-    _itemGroup = new QGraphicsItemGroup(this);
-    _itemGroup->addToGroup(_rectTop);
-    _itemGroup->addToGroup(_rectBottom);
-    _itemGroup->addToGroup(_rectLeft);
-    _itemGroup->addToGroup(_rectRight);
-    _itemGroup->addToGroup(_nodeCircle);
-    _itemGroup->addToGroup(_nodeText);
+    this->_nodeText->setAcceptHoverEvents(false);
+    this->_itemGroup = new QGraphicsItemGroup(this);
+    this->_itemGroup->addToGroup(this->_rectTop);
+    this->_itemGroup->addToGroup(this->_rectBottom);
+    this->_itemGroup->addToGroup(this->_rectLeft);
+    this->_itemGroup->addToGroup(this->_rectRight);
+    this->_itemGroup->addToGroup(this->_nodeCircle);
+    this->_itemGroup->addToGroup(this->_nodeText);
     updateColor();
-    _nodeCircle->setPen(pen);
+    this->_nodeCircle->setPen(pen);
 }
 
 void Node::connectNodes(Direction side, Node *nodePtr)
@@ -126,7 +126,7 @@ std::map<Direction, std::vector<GridObject *> > Node::getAllPotentialLines(std::
 
 bool Node::isHovered()
 {
-    return _nodeCircle->isUnderMouse();
+    return this->_nodeCircle->isUnderMouse();
 }
 
 //Return nodes that can be connected to the node
