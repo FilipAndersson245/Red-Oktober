@@ -35,6 +35,8 @@
 #define WEB13X13URL "13x13/eng/random.html?"
 #define WEB17X17URL "17x17/eng/random.html?"
 #define WEBDIFFICULTYURL "diff="
+#define ROOTDIR ":/levels/"
+#define IPTESTURL "http://api.ipify.org"
 #define WINDOWSIZE 600
 
 namespace Ui
@@ -66,6 +68,9 @@ public:
     void checkInternetConnection();
 
     void checkWebLoadingEngine();
+	
+	bool checkFirstRun();
+
 public slots:
 
     void setupGame();
@@ -84,8 +89,6 @@ public slots:
 
     void replyFinished(QNetworkReply *reply);
 
-    void videoFinished();
-
 private slots:
 
     void on_actionEnd_Game_triggered();
@@ -93,6 +96,7 @@ private slots:
     void on_actionHelp_triggered();
 
     void replyFromInternetTesting(QNetworkReply *reply);
+
 private:
 
     void resizeEvent(QResizeEvent *event) override;

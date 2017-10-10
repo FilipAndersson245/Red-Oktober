@@ -10,7 +10,7 @@ DirConections::DirConections(int size): _maximumAmountOfBridges(size)
     };
 }
 
-//return the reverse direction
+//Return the reverse direction
 Direction DirConections::getOppositeDirection(Direction inDir)
 {
     switch(inDir)
@@ -24,19 +24,18 @@ Direction DirConections::getOppositeDirection(Direction inDir)
     case Direction::left:
         return Direction::right;
     default:
-        qDebug() << "getOppositeDirection (direction does not exist)";
         return Direction::none;
     }
 }
 
-//return pointer to the side asked for in the parameter
+//Return pointer to the side asked for in the parameter
 NodeConnect *DirConections::selectConnection(Direction direction)
 {
     return &this->_DirConections[direction];
 
 }
 
-//get map with amount of bridges each side has
+//Get map with amount of bridges each side has
 std::map<Direction,int> DirConections::getSlotMap()
 {
     std::map<Direction,int> freeSlots = {
@@ -48,19 +47,19 @@ std::map<Direction,int> DirConections::getSlotMap()
     return freeSlots;
 }
 
-//get how many bridges left until full
+//Get how many bridges left until full
 int DirConections::getRemaining()
 {
     return this->_maximumAmountOfBridges - this->_currentAmountOfBridges;
 }
 
-//set the amount of bridges connected to this node
+//Set the amount of bridges connected to this node
 void DirConections::setConnections(int newVal)
 {
     this->_currentAmountOfBridges = newVal;
 }
 
-//get amount of bridges connected to the node
+//Get amount of bridges connected to the node
 int DirConections::getConnections()
 {
     return this->_currentAmountOfBridges;

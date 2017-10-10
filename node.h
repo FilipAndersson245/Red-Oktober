@@ -6,7 +6,6 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 
-
 class Node : public GridObject
 {
 
@@ -15,8 +14,6 @@ class Node : public GridObject
 public:
 
     Node(int x, int y, int nodeSize, QPoint point, int size);
-
-    void paintMember(QPainter &painter);
 
     void connectNodes(Direction side,Node* nodePtr);
 
@@ -27,8 +24,6 @@ public:
     std::map<Direction,int> getSlotMap();
 
     bool isFull();
-
-    void paint();
 
     int getRemaining();
 
@@ -75,7 +70,6 @@ private:
     QGraphicsEllipseItem *_nodeCircle;
 
     QGraphicsTextItem *_nodeText;
-
 
     QGraphicsRectItem *_rectTop;
 

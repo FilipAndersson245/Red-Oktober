@@ -1,6 +1,5 @@
 #pragma once
 
-// includes //
 #include <vector>
 #include "gridobject.h"
 #include "line.h"
@@ -18,7 +17,6 @@
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
 
-// defines //
 #define LINE -1
 #define EMPTY 0
 
@@ -60,8 +58,6 @@ public slots:
 
     void enterMouseNode(Node *node);
 
-    void exitMouseNode(Node *node);
-
     void clickedNode(Node *node);
 
     void releasedMouseNode(Node *node);
@@ -95,7 +91,6 @@ private:
     void checkNodeConnected(Node * nodeToCheck, vector<Node *> * nodesAdded);
 
     void finishGame();
-
 
     int _gameGridSize;
 
